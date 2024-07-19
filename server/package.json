@@ -1,0 +1,18 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "This is backend of an Edtech project",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "Sem4_FSD_Group_Project"
+  },
+  "author": "Jay Doshi",
+  "license": "ISC",
+  "dependencies": {
+    "@prisma/client": "^5.17.0"
+  }
+}

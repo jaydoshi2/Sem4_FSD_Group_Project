@@ -1,0 +1,86 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+datasource db {
+  provider = "postgresql" // Use your preferred database
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id            Int       @id @default(autoincrement())
+  username      String    @unique
+  email         String    @unique
+  password      String
+  profilePic    String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  courses       UserCourse[]
+  progress      UserProgress[]
+  videoProgress UserVideoProgress[]
+}
+
+model Course {
+  id          Int       @id @default(autoincrement())
+  title       String
+  description String
+  chapters    Chapter[]
+  users       UserCourse[]
+  progress    UserProgress[]
+}
+
+model Chapter {
+  id          Int      @id @default(autoincrement())
+  title       String
+  courseId    Int
+  course      Course   @relation(fields: [courseId], references: [id])
+  videos      Video[]
+  progress    UserProgress[]
+}
+
+model Video {
+  id          Int      @id @default(autoincrement())
+  title       String
+  chapterId   Int
+  videoLink   String
+  video_Transcript_Path String
+  chapter     Chapter  @relation(fields: [chapterId], references: [id])
+  progress    UserVideoProgress[]
+}
+
+model UserCourse {
+  id          Int      @id @default(autoincrement())
+  userId      Int
+  courseId    Int
+  enrolledAt  DateTime @default(now())
+  completed   Boolean  @default(false) // Track course completion status
+  user        User     @relation(fields: [userId], references: [id])
+  course      Course   @relation(fields: [courseId], references: [id])
+}
+
+model UserProgress {
+  id            Int      @id @default(autoincrement())
+  userId        Int
+  courseId      Int
+  chapterId     Int
+  completed     Boolean  @default(false) // Track chapter completion status
+  completionPct Float    @default(0.0)
+  user          User     @relation(fields: [userId], references: [id])
+  course        Course   @relation(fields: [courseId], references: [id])
+  chapter       Chapter  @relation(fields: [chapterId], references: [id])
+}
+
+model UserVideoProgress {
+  id          Int      @id @default(autoincrement())
+  userId      Int
+  videoId     Int
+  completed   Boolean  @default(false) // Track video completion status
+  user        User     @relation(fields: [userId], references: [id])
+  video       Video    @relation(fields: [videoId], references: [id])
+}
