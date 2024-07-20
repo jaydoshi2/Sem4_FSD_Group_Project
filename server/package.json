@@ -13,6 +13,9 @@
   "author": "Jay Doshi",
   "license": "ISC",
   "dependencies": {
-    "@prisma/client": "^5.17.0"
+    "@prisma/client": "^5.17.0",
+    "cors": "^2.8.5",
+    "express": "^4.19.2",
+    "nodemon": "^3.1.4"
   }
 }
