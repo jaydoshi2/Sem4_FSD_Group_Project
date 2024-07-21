@@ -1,0 +1,5 @@
+1 : {Which of the following is a tool used for developing Java programs?} a : (Java Runtime Environment) b : (Java Development Kit) c : (Integrated Development Environment) d : (Source Code editor) answer : [Java Development Kit]
+2 : {What is the process in which Java source code is converted into machine code?} a : (Compilation) b : (Interpretation) c : (Execution) d : (Deployment) answer : [Compilation]
+3 : {Which of the following is NOT a feature of Java?} a : (Portability) b : (Object-oriented programming) c : ( Procedural programming) d : (Reliability) answer : [Procedural programming]
+4 : {What is the function of system.out.println() in Java?} a : (To store data) b : (To print output) c : (To read input) d : (To control the flow of execution) answer : [To print output]
+5 : {Which of the following IDEs is recommended for beginners in Java?} a : (Eclipse) b : (Visual Studio) c : (IntelliJ IDEA) d : (NetBeans) answer : [IntelliJ IDEA]
