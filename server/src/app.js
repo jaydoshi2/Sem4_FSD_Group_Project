@@ -42,6 +42,7 @@ app.post('/generate-mcqs', async (req, res) => {
   try {
     console.log("GENERATING TRANSCRIPT ");
     const transcript = await TranscriptAPI.getTranscript('ntLJmHOJ0ME');
+    console.log(transcript)
     const text = transcript.map(item => item.text).join(' ');
     console.log(text);
     // Write the transcript to data.txt

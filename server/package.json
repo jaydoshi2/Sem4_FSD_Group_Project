@@ -21,6 +21,7 @@
     "express": "^4.19.2",
     "fs": "^0.0.1-security",
     "nodemon": "^3.1.4",
+    "prisma": "^5.17.0",
     "youtube-transcript-api": "^1.1.2"
   }
 }
