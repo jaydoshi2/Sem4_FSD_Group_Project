@@ -7,39 +7,43 @@ generator client {
   provider = "prisma-client-js"
 }
 
-
-
 model User {
   user_id                   String                @id @default(uuid())
+  google_id                 String?               @unique
   username                  String                @unique
   email                     String                @unique
   first_name                String
   last_name                 String
-  password                  String
-  profilePic                String?
+  password                  String?
+  profilePic                String
   BirthDate                 DateTime
-  createdAt                 DateTime              @default(now())
+  SignedupAt                DateTime              @default(now())
   Bio                       String
   Accuracy                  Float                 @default(0.0)
   Number_of_question_Solved Int                   @default(0)
   correct_questions         Int                   @default(0)
   points                    Int                   @default(0)
-  certificate_link          String
   course_progress           UserCourseProgress[]
   chapter_progress          UserChapterProgress[]
   video_progress            UserVideoProgress[]
   videoInteractions         VideoInteraction[]
+  Certificates              Certificates[]
 }
 
 model Course {
-  course_id           Int                   @id @default(autoincrement())
-  title               String
-  description         String
-  thumbnail_pic_link  String
-  Enrollment_Counts   Int                   @default(0)
-  chapters            Chapter[]
-  course_progress     UserCourseProgress[]
-  UserChapterProgress UserChapterProgress[]
+  course_id                Int                   @id @default(autoincrement())
+  title                    String           
+  course_type              String                
+  description              String                
+  thumbnail_pic_link       String
+  certificate_preview_link String                
+  points_providing         Int                   @default(0)
+  Enrollment_Counts        Int                   @default(0)
+  price                    Int                   @default(0) // Adding price field
+  chapters                 Chapter[]
+  course_progress          UserCourseProgress[]
+  UserChapterProgress      UserChapterProgress[]
+  Certificates             Certificates[]
 }
 
 model Chapter {
@@ -100,9 +104,20 @@ model VideoInteraction {
   userId  String
   videoId Int
   liked   Boolean
-  dislike Boolean
+  dislike Boolean 
   user    User    @relation(fields: [userId], references: [user_id])
   video   Video   @relation(fields: [videoId], references: [video_id])
 
   @@unique([userId, videoId]) // Ensure a user can only like/dislike a video once
+}
+
+model Certificates {
+  id               Int    @id @default(autoincrement()) // Adding id as primary key
+  certificate_link String
+  userId           String
+  courseId         Int
+  user             User   @relation(fields: [userId], references: [user_id])
+  course           Course @relation(fields: [courseId], references: [course_id])
+
+  @@unique([userId, courseId]) // Ensure a user can only have one certificate per course
 }
