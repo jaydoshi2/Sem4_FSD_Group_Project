@@ -9,6 +9,7 @@ exports.getCourses = async (req, res) => {
         thumbnail_pic_link: true,
         course_type: true,
       },
+      
     });
     console.log(courses);
     res.status(200).json(courses);
