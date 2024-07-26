@@ -37,6 +37,7 @@ model Course {
   description              String                
   thumbnail_pic_link       String
   certificate_preview_link String                
+  Rate                     Float                 @default(0)
   points_providing         Int                   @default(0)
   Enrollment_Counts        Int                   @default(0)
   price                    Int                   @default(0) // Adding price field

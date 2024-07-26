@@ -1,5 +1,8 @@
 const app = require('./app');
 const { PrismaClient } = require('@prisma/client');
+const dotenv = require('dotenv');
+
+dotenv.config();
 
 const prisma = new PrismaClient();
 const PORT = process.env.PORT || 3000;
