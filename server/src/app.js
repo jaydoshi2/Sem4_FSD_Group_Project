@@ -122,9 +122,6 @@ async function readTempFile() {
   });
 }
 
-const courseRouter = require("./routes/courseRoutes");
-app.use("/course", courseRouter);
-
 app.listen(process.env.PORT, () => {
   console.log(`Server is running on port`, process.env.PORT);
 });
