@@ -1,0 +1,136 @@
+/* src/Styles/Course.css */
+
+/* Define CSS variables for light and dark themes */
+:root {
+  --background-color: #ffffff;
+  --text-color: #000000;
+  --primary-color: #007bff;
+  --secondary-color: #6c757d;
+  --card-background: #ffffff;
+  --card-border-color: #dee2e6;
+}
+
+[data-theme='dark'] {
+  --background-color: #121212;
+  --text-color: #e0e0e0;
+  --primary-color: #bb86fc;
+  --secondary-color: #03dac6;
+  --card-background: #1f1f1f;
+  --card-border-color: #333333;
+}
+
+/* Apply CSS variables */
+body {
+  background-color: var(--background-color);
+  color: var(--text-color);
+  overflow-x: hidden;
+}
+
+/* Slider Container */
+.slider-container {
+  padding: 50px;
+  position: relative;
+  width: 100vw;
+  height: 100vh; /* Full viewport height */
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Slider Track */
+.slider-track {
+  display: flex;
+  transition: transform 0.5s ease;
+  width: 100%;
+}
+
+/* Slide Item */
+.slide {
+  min-width: 100%; /* Each slide takes full width */
+  box-sizing: border-box;
+  padding: 0 20px; /* Spacing between slides */
+}
+
+/* Card */
+.card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background-color: var(--card-background);
+  border-radius: 8px; /* Rounded corners */
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+  overflow: hidden;
+  height: 100%;
+  max-height: 100%; /* Prevent card from expanding too much */
+}
+
+/* Card Image */
+.card-img-top {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+/* Card Body */
+.card-body {
+  padding: 15px; /* Padding inside the card body */
+}
+
+/* Card Title */
+.card-title {
+  font-size: 1.25rem; /* Font size for the card title */
+  font-weight: bold;
+  margin: 0;
+  color: var(--primary-color);
+}
+
+/* Card Text */
+.card-text {
+  color: var(--secondary-color); /* Slightly muted color for text */
+}
+
+/* Navigation Buttons */
+.nav-button {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+  border: none;
+  color: #fff;
+  border-radius: 50%;
+  padding: 10px;
+  cursor: pointer;
+  z-index: 1;
+  transition: background-color 0.3s ease;
+}
+
+/* Previous Button */
+.nav-button.prev {
+  left: 20px;
+}
+
+/* Next Button */
+.nav-button.next {
+  right: 20px;
+}
+
+/* Hover Effect for Buttons */
+.nav-button:hover {
+  background-color: rgba(0, 0, 0, 0.7);
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .card-img-top {
+    height: 150px; /* Adjust image height for smaller screens */
+  }
+
+  .card-body {
+    padding: 10px; /* Adjust padding for smaller screens */
+  }
+
+  .card-title {
+    font-size: 1rem; /* Adjust font size for smaller screens */
+  }
+}

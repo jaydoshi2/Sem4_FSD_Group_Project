@@ -1,42 +1,100 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
+body {
+  font-family: Arial, sans-serif;
+  --darkmode-background-color: rgb(0, 0, 0);
+  --darkmode-font-color: rgb(255, 255, 255);
+  background-color: #f4f4f9;
+  color:blue ;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+.card-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: left;
+  padding: 20px;
+}
+
+.course-card {
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  width: calc(25% - 20px);
+  /* Initial width for four cards in a row */
+  transition: transform 0.2s ease-in-out, width 0.2s ease-in-out, height 0.2s ease-in-out;
+  cursor: pointer;
+}
+
+.course-card:hover {
+  transform: translateY(-10px);
+}
+
+.card-image img {
+  width: 100%;
+  height: 200px;
+  /* Keeping the height same as before */
+  object-fit: cover;
+}
+
+.course-card div {
+  padding: 15px;
+  /* Increased padding for more space inside the card */
   text-align: center;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+.course-card div:first-of-type {
+  font-weight: bold;
+  font-size: 1.4em;
+  /* Increased font size */
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
+.course-card div:last-of-type {
+  color: #555;
+}
+
+/* Responsive design */
+@media (max-width: 1200px) {
+  .course-card {
+    width: calc(33.33% - 20px);
+    /* Three cards in a row */
   }
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
+@media (max-width: 900px) {
+  .course-card {
+    width: calc(50% - 20px);
+    /* Two cards in a row */
   }
 }
 
-.card {
-  padding: 2em;
+@media (max-width: 600px) {
+  .course-card {
+    width: calc(100% - 20px);
+    /* Full width for small screens */
+  }
 }
 
-.read-the-docs {
-  color: #888;
+@media (max-width: 400px) {
+  .course-card {
+    width: 100%;
+    /* Full width for very small screens */
+    max-width: 400px;
+    /* Maximum width to prevent it from becoming too large */
+  }
+
+  .card-image img {
+    height: 150px;
+    /* Adjusted height for smaller screens */
+  }
+
+  .course-card div:first-of-type {
+    font-size: 1.2em;
+    /* Adjusted font size for smaller screens */
+  }
 }
