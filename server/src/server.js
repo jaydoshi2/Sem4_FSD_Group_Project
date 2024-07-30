@@ -2,12 +2,20 @@ const app = require('./app');
 const { PrismaClient } = require('@prisma/client');
 const dotenv = require('dotenv');
 const passportConfig = require('./config/passportConfig');
+const cors = require('cors');
+const express = require('express');
+
 
 dotenv.config();
 
 const prisma = new PrismaClient();
 const PORT = process.env.PORT || 3000;
 
+
+app.use(cors({
+  origin: 'http://your-frontend-domain.com', // Replace with your frontend URL
+  credentials: true
+}));
 async function startServer() {
   try {
     await prisma.$connect();
