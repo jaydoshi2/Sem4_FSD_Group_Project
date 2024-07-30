@@ -6,7 +6,6 @@ datasource db {
 generator client {
   provider = "prisma-client-js"
 }
-
 model User {
   user_id                   String                @id @default(uuid())
   google_id                 String?               @unique
@@ -15,19 +14,23 @@ model User {
   first_name                String
   last_name                 String
   password                  String?
-  profilePic                String
-  BirthDate                 DateTime
-  SignedupAt                DateTime              @default(now())
-  Bio                       String
-  Accuracy                  Float                 @default(0.0)
-  Number_of_question_Solved Int                   @default(0)
-  correct_questions         Int                   @default(0)
+  profilePic                String?
+  birthDate                 DateTime?
+  signedUpAt                DateTime              @default(now())
+  bio                       String?
+  refreshToken              String?
+  accuracy                  Float                 @default(0.0)
+  numberOfQuestionsSolved   Int                   @default(0)
+  correctQuestions          Int                   @default(0)
   points                    Int                   @default(0)
   course_progress           UserCourseProgress[]
   chapter_progress          UserChapterProgress[]
   video_progress            UserVideoProgress[]
   videoInteractions         VideoInteraction[]
-  Certificates              Certificates[]
+  certificates              Certificates[]
+
+  @@index([email])
+  @@index([username])
 }
 
 model Course {

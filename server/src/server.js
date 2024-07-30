@@ -1,6 +1,7 @@
 const app = require('./app');
 const { PrismaClient } = require('@prisma/client');
 const dotenv = require('dotenv');
+const passportConfig = require('./config/passportConfig');
 
 dotenv.config();
 
