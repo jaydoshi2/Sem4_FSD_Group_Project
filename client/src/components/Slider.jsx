@@ -12,15 +12,15 @@ const Slider = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const cardsToShow = 3;
-  const MY_IP = import.meta.env.VITE_MY_IP
+  const myIP = import.meta.env.VITE_MY_IP
   useHotkeys('left', () => prevSlide());
   useHotkeys('right', () => nextSlide());
 
   useEffect(() => {
     const fetchCourses = async () => {
       try {
-        console.log(MY_IP)
-        const response = await fetch(`http://${MY_IP}:3000/course`, { method: 'GET' });
+        console.log(myIP)
+        const response = await fetch(`http://${myIP}:3000/course`, { method: 'GET' });
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
