@@ -3,6 +3,7 @@ const express = require('express');
 const TranscriptAPI = require('youtube-transcript-api');
 const cors = require('cors'); // Import the CORS middleware
 const fs = require('fs');
+const dotenv = require('dotenv')
 const { GoogleGenerativeAI } = require("@google/generative-ai");
 const { AssemblyAI } = require('assemblyai');
 
