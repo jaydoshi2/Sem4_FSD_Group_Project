@@ -22,7 +22,7 @@ router.post(
   );
 router.post('/login', authController.login);
 router.get('/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
-router.get('/google/callback', passport.authenticate('google', {     successRedirect: "http://localhost:3000/Main",
+router.get('/google/callback', passport.authenticate('google', {     successRedirect: "http://localhost:3000/Home",
   failureRedirect: "http://localhost:3000/login"}), authController.googleCallback);
 router.post('/logout', authenticate, authController.logout); // Change this line
 router.post('/refresh-token', authController.refreshToken); // Add this line

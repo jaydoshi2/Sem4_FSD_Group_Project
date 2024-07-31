@@ -7,42 +7,13 @@ const clientID = process.env.GOOGLE_CLIENT_ID
 const clientSecret = process.env.GOOGLE_CLIENT_SECRET
 const prisma = new PrismaClient();
 
-// passport.use(new OAuth2Strategy(
-//     {
-//     clientID: clientID,
-//     clientSecret: clientSecret,
-//     callbackURL: "/auth/google/callback",
-//     scope: ["profile", "email"]
-// },
-// async (accessToken, refreshToken, profile, done) => {
-//     try {
-//         let user = await prisma.user.findUnique({ where: { google_id: profile.id } });
-
-//         if (!user) {
-//             user = await prisma.user.create({
-//                 data: {
-//                     google_id: profile.id,
-//                     email: profile.emails[0].value,
-//                     first_name: profile.name.givenName,
-//                     last_name: profile.name.familyName,
-//                     username: `user${Math.floor(Math.random() * 10000)}`,
-//                     profilePic: profile.photos[0].value
-//                 }
-//             });
-//         }
-
-//         return done(null, user);
-//     } catch (error) {
-//         return done(error, null);
-//     }
-// }));
 passport.serializeUser((user, done) => {
-    done(null, user.id);
+    done(null, user.user_id);
   });
   
-  passport.deserializeUser(async (id, done) => {
+  passport.deserializeUser(async (user_id, done) => {
     try {
-      const user = await prisma.user.findUnique({ where: { id } });
+      const user = await prisma.user.findUnique({ where: { user_id } });
       done(null, user);
     } catch (error) {
       done(error, null);
