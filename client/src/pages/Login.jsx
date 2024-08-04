@@ -1,16 +1,27 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "../styles/Login.css"; // Ensure this path is correct
 
 const Login = () => {
-    const loginwithgoogle = async () => {
-        window.open("http://localhost:3000/auth/google/callback", "_self");
-        localStorage.setItem("token", "data");
-    }
-
     const [data, setData] = useState({ email: "", password: "" });
     const [error, setError] = useState("");
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        checkAuthStatus();
+    }, []);
+
+    const checkAuthStatus = async () => {
+        try {
+            const response = await axios.get("http://localhost:3000/auth/check-auth", { withCredentials: true });
+            if (response.data.isAuthenticated) {
+                navigate("/Course");
+            }
+        } catch (error) {
+            console.error("Auth check failed", error);
+        }
+    };
 
     const handleChange = ({ currentTarget: input }) => {
         setData({ ...data, [input.name]: input.value });
@@ -19,20 +30,21 @@ const Login = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const url = "http://localhost:6005/api/auth";
-            const { data: res } = await axios.post(url, data);
-            localStorage.setItem("token", res.data);
-            window.location = "/";
+          const url = "http://localhost:3000/auth/login";
+          const response = await axios.post(url, data, { withCredentials: true });
+          
+          localStorage.setItem("user", JSON.stringify(response.data.user));
+          navigate("/Course");
         } catch (error) {
-            if (
-                error.response &&
-                error.response.status >= 400 &&
-                error.response.status <= 500
-            ) {
-                setError(error.response.data.message);
-            }
+          if (error.response && error.response.status >= 400 && error.response.status <= 500) {
+            setError(error.response.data.message);
+          }
         }
-    };
+      };
+      
+      const loginWithGoogle = () => {
+        window.open("http://localhost:3000/auth/google", "_self");
+      };
 
     return (
         <div className="login_container">
@@ -71,7 +83,7 @@ const Login = () => {
                             Sign Up
                         </button>
                     </Link>
-                    <button className="login_with_google_btn" onClick={loginwithgoogle}>
+                    <button className="login_with_google_btn" onClick={loginWithGoogle}>
                         Sign In With Google
                     </button>
                 </div>

@@ -13,6 +13,9 @@
   "author": "Jay Doshi",
   "license": "ISC",
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.621.0",
+    "@aws-sdk/s3-presigned-post": "^3.621.0",
+    "@aws-sdk/s3-request-presigner": "^3.621.0",
     "@google/generative-ai": "^0.15.0",
     "@prisma/client": "^5.17.0",
     "assemblyai": "^4.6.1",
