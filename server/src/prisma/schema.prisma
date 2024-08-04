@@ -1,0 +1,127 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+model User {
+  user_id                   String                @id @default(uuid())
+  google_id                 String?               @unique
+  username                  String                @unique
+  email                     String                @unique
+  first_name                String
+  last_name                 String
+  password                  String?
+  profilePic                String?
+  birthDate                 DateTime?
+  signedUpAt                DateTime              @default(now())
+  bio                       String?
+  refreshToken              String?
+  accuracy                  Float                 @default(0.0)
+  numberOfQuestionsSolved   Int                   @default(0)
+  correctQuestions          Int                   @default(0)
+  points                    Int                   @default(0)
+  course_progress           UserCourseProgress[]
+  chapter_progress          UserChapterProgress[]
+  video_progress            UserVideoProgress[]
+  videoInteractions         VideoInteraction[]
+  certificates              Certificates[]
+
+  @@index([email])
+  @@index([username])
+}
+
+model Course {
+  course_id                Int                   @id @default(autoincrement())
+  title                    String           
+  course_type              String                
+  description              String                
+  thumbnail_pic_link       String
+  certificate_preview_link String                
+  Rate                     Float                 @default(0)
+  points_providing         Int                   @default(0)
+  Enrollment_Counts        Int                   @default(0)
+  price                    Int                   @default(0) // Adding price field
+  chapters                 Chapter[]
+  course_progress          UserCourseProgress[]
+  UserChapterProgress      UserChapterProgress[]
+  Certificates             Certificates[]
+}
+
+model Chapter {
+  chapter_id Int                   @id @default(autoincrement())
+  title      String
+  courseId   Int
+  course     Course                @relation(fields: [courseId], references: [course_id])
+  videos     Video[]
+  progress   UserChapterProgress[]
+}
+
+model Video {
+  video_id      Int                 @id @default(autoincrement())
+  title         String
+  chapterId     Int
+  videoLink     String
+  chapter       Chapter             @relation(fields: [chapterId], references: [chapter_id])
+  progress      UserVideoProgress[]
+  likesCount    Int                 @default(0)
+  dislikesCount Int                 @default(0)
+  interactions  VideoInteraction[]
+}
+
+model UserCourseProgress {
+  id               Int      @id @default(autoincrement())
+  userId           String
+  courseId         Int
+  enrolledAt       DateTime @default(now())
+  completed        Boolean  @default(false)
+  completed_course Float    @default(0.0)
+  user             User     @relation(fields: [userId], references: [user_id])
+  course           Course   @relation(fields: [courseId], references: [course_id])
+}
+
+model UserChapterProgress {
+  id                 Int     @id @default(autoincrement())
+  userId             String
+  courseId           Int
+  chapterId          Int
+  completed          Boolean @default(false)
+  completed_chapters Float   @default(0.0)
+  user               User    @relation(fields: [userId], references: [user_id])
+  course             Course  @relation(fields: [courseId], references: [course_id])
+  chapter            Chapter @relation(fields: [chapterId], references: [chapter_id])
+}
+
+model UserVideoProgress {
+  id        Int     @id @default(autoincrement())
+  userId    String
+  videoId   Int
+  completed Boolean @default(false)
+  user      User    @relation(fields: [userId], references: [user_id])
+  video     Video   @relation(fields: [videoId], references: [video_id])
+}
+
+model VideoInteraction {
+  id      Int     @id @default(autoincrement())
+  userId  String
+  videoId Int
+  liked   Boolean
+  dislike Boolean 
+  user    User    @relation(fields: [userId], references: [user_id])
+  video   Video   @relation(fields: [videoId], references: [video_id])
+
+  @@unique([userId, videoId]) // Ensure a user can only like/dislike a video once
+}
+
+model Certificates {
+  id               Int    @id @default(autoincrement()) // Adding id as primary key
+  certificate_link String
+  userId           String
+  courseId         Int
+  user             User   @relation(fields: [userId], references: [user_id])
+  course           Course @relation(fields: [courseId], references: [course_id])
+
+  @@unique([userId, courseId]) // Ensure a user can only have one certificate per course
+}
