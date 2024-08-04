@@ -4,7 +4,7 @@ const cors = require('cors');
 const dotenv = require('dotenv');
 const authRoutes = require('./routes/authRoutes');
 const courseRouter = require("./routes/courseRoutes");
-const passport = require('passport')
+const passport = require('passport');
 const session = require('express-session');
 const errorHandler = require('./middleware/error_handler');
 
@@ -12,21 +12,33 @@ dotenv.config();
 
 const app = express();
 
+const corsOptions = {
+    origin: (origin, callback) => {
+        const allowedOrigins = ['http://localhost:5173', 'http://192.168.155.65:5173'];
+        if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
+    methods: "GET,POST,PUT,DELETE",
+    credentials: true
+};
+
+app.use(cors(corsOptions));
 app.use(session({
     secret: process.env.SESSION_SECRET,
     saveUninitialized: true,
-    cookie: { secure: process.env.NODE_ENV === 'production' }
-}))
+    resave: false, // Add this line to avoid saving an unmodified session
+    cookie: { secure: process.env.NODE_ENV === 'production' ? true : false }
+}));
 
 // Middleware setup
 app.use(express.json());
 app.use(cookieParser());
-app.use(cors());
 app.use(passport.session());
 app.use(passport.initialize());
 app.use(express.static('public'));
-
-
 
 // Routes setup
 app.use('/auth', authRoutes);
