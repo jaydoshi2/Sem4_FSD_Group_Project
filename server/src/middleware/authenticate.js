@@ -10,7 +10,7 @@ exports.authenticate = async (req, res, next) => {
     const accessToken = req.cookies.accessToken;
     const refreshToken = req.cookies.refreshToken;
 
-    if (accessToken && refreshToken) {
+    if (accessToken || refreshToken) {
       console.error('Cookie is present');
       
     }

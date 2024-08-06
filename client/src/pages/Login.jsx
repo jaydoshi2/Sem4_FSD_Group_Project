@@ -7,14 +7,15 @@ const Login = () => {
     const [data, setData] = useState({ email: "", password: "" });
     const [error, setError] = useState("");
     const navigate = useNavigate();
-
+    const myIP = import.meta.env.VITE_MY_IP
+    console.log(myIP)
     useEffect(() => {
         checkAuthStatus();
     }, []);
 
     const checkAuthStatus = async () => {
         try {
-            const response = await axios.get("http://localhost:3000/auth/check-auth", { withCredentials: true });
+            const response = await axios.get(`http://${myIP}:3000/auth/check-auth`, { withCredentials: true });
             if (response.data.isAuthenticated) {
                 navigate("/Course");
             }
@@ -30,7 +31,7 @@ const Login = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-          const url = "http://localhost:3000/auth/login";
+          const url = `http://${myIP}:3000/auth/login`;
           const response = await axios.post(url, data, { withCredentials: true });
           
           localStorage.setItem("user", JSON.stringify(response.data.user));
@@ -43,7 +44,7 @@ const Login = () => {
       };
       
       const loginWithGoogle = () => {
-        window.open("http://localhost:3000/auth/google", "_self");
+        window.open(`http://${myIP}:3000/auth/google`, "_self");
       };
 
     return (
