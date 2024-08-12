@@ -12,7 +12,8 @@ exports.authenticate = async (req, res, next) => {
 
     if (accessToken && refreshToken) {
       console.error('Cookie is present');
-      
+    }else{
+      console.error('Cookie is not present');
     }
 
     if (accessToken) {
@@ -27,7 +28,6 @@ exports.authenticate = async (req, res, next) => {
         return next();
       } catch (error) {
         console.error('Access token invalid or expired', error);
-        // Try refresh token
       }
     }
 
@@ -51,8 +51,7 @@ exports.authenticate = async (req, res, next) => {
         console.error('Invalid refresh token', error);
         return next(new AppError('Invalid refresh token', 401));
       }
-    }
-    else{
+    } else {
       return res.json({ isAuthenticated: false });
     }
   } catch (error) {

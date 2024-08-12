@@ -1,33 +1,32 @@
 const express = require('express');
 const { body } = require('express-validator');
 const authController = require('../controllers/authController');
-const { authenticate } = require('../middleware/authenticate'); // Change this line
+const { authenticate } = require('../middleware/authenticate');
 const passport = require('passport');
 const { validate } = require('../middleware/validate');
 const passportConfig = require('../config/passportConfig');
 
 const router = express.Router();
 
-router.post(
-  '/signup',
-  validate([
-    body('email').isEmail().normalizeEmail(),
-    body('password').isLength({ min: 6 }),
-    body('username').trim().isLength({ min: 3 }),
-    body('first_name').trim().notEmpty(),
-    body('last_name').trim().notEmpty(),
-    body('birthDate').optional().isISO8601().toDate(),
-  ]),
-  authController.signup
-);
+router.post('/signup', [
+  body('email').isEmail().withMessage('Please enter a valid email'),
+  body('password').isLength({ min: 6 }).withMessage('Password must be at least 6 characters long')
+], validate, authController.signup);
+
 router.post('/login', authController.login);
-router.get('/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
+
+router.get('/google', passport.authenticate('google', {
+  scope: ['profile', 'email'],
+  session: false
+}));
+
 router.get('/google/callback', passport.authenticate('google', {
-  failureRedirect: "http://localhost:5173/login"
+  failureRedirect: '/login',
+  session: false
 }), authController.googleCallback);
-router.post('/logout', authenticate, authController.logout); // Change this line
-router.post('/refresh-token', authController.refreshToken); // Add this line
-router.get('/presignedurl', authController.presignedurl)
+
+router.post('/logout', authenticate, authController.logout);
+
 router.get('/check-auth', authenticate, authController.checkAuth);
 
 module.exports = router;
