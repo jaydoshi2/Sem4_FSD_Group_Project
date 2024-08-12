@@ -115,6 +115,10 @@ body {
   right: 20px;
 }
 
+.logout-btn{
+  margin-left: 200px;
+}
+
 /* Hover Effect for Buttons */
 .nav-button:hover {
   background-color: rgba(0, 0, 0, 0.7);
