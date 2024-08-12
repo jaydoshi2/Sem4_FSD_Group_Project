@@ -16,13 +16,11 @@ const s3Client = new S3Client({
   region: "eu-north-1"
 });
 
-
+// authController.js
 exports.signup = async (req, res, next) => {
   try {
     const user = await authService.createUser(req.body);
-    console.log("THE USER IS ", user)
     const accessToken = generateAccessToken(user.user_id);
-    console.log("THE USER ID IS ", user.user_id)
     const refreshToken = generateRefreshToken(user.user_id);
 
     await authService.saveRefreshToken(user.user_id, refreshToken);
@@ -30,35 +28,41 @@ exports.signup = async (req, res, next) => {
     res.cookie('refreshToken', refreshToken, { httpOnly: true, secure: process.env.NODE_ENV === 'production' });
     res.status(201).json({ message: 'User created successfully', user, accessToken });
   } catch (error) {
+    // Handle specific errors like email already exists
+    if (error.message.includes('Email already exists')) {
+      return next(new AppError('Email already exists', 400));
+    }
     next(new AppError(error.message, 500));
   }
 };
-
 
 exports.login = async (req, res, next) => {
   try {
     const { email, password } = req.body;
     const user = await authService.authenticateUser(email, password);
 
-    const { accessToken, refreshToken } = setTokens(res, user);
+    if (!user) {
+      return next(new AppError('Email not found', 400));
+    }
 
+    const { accessToken, refreshToken } = setTokens(res, user);
     await authService.saveRefreshToken(user.user_id, refreshToken);
 
     res.json({
       message: 'Logged in successfully',
       user: {
         user_id: user.user_id,
-        // email: user.email,
-        // first_name: user.first_name,
-        // last_name: user.last_name,
-        // profilePic: user.profilePic
       }
     });
 
   } catch (error) {
+    if (error.message.includes('Incorrect password')) {
+      return next(new AppError('Incorrect password', 400));
+    }
     next(new AppError(error.message, 401));
   }
 };
+
 exports.googleCallback = async (req, res, next) => {
   try {
     const { accessToken, refreshToken } = setTokens(res, req.user);
