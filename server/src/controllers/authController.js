@@ -59,32 +59,35 @@ exports.login = async (req, res, next) => {
     next(new AppError(error.message, 401));
   }
 };
-
 exports.googleCallback = async (req, res, next) => {
   try {
     const { accessToken, refreshToken } = setTokens(res, req.user);
 
-
     await authService.saveRefreshToken(req.user.user_id, refreshToken);
-    console.log(accessToken,refreshToken," are sent")
+    console.log(accessToken, refreshToken, " are sent");
+
     res.cookie('accessToken', accessToken, { httpOnly: true, secure: process.env.NODE_ENV === 'production' });
     res.cookie('refreshToken', refreshToken, { httpOnly: true, secure: process.env.NODE_ENV === 'production' });
-    
-    res.redirect('http://localhost:5173/Course');
+
+    res.redirect(`http://${process.env.MY_IP}:5173/Course`); // Redirect to Course page
   } catch (error) {
     next(new AppError('Error processing Google login', 500));
   }
 };
 
+
+
 exports.checkAuth = async (req, res) => {
   const accessToken = req.cookies.accessToken;
   const refreshToken = req.cookies.refreshToken;
+  console.log("ACCESS TOKEN ", accessToken)
 
-  if (!req.user && !accessToken && !refreshToken) {
-    console.log("True")
+  if (!req.user || !accessToken || !refreshToken) {
+    // console.log("True")
+    console.log("Some Cookie is not present")
     return res.json({ isAuthenticated: false });
   }
-
+  // console.log("COOKIES ARE PRESENT")
   const user = req.user;
   res.json({
     isAuthenticated: true,
@@ -96,7 +99,9 @@ exports.checkAuth = async (req, res) => {
       profilePic: user.profilePic
     }
   });
+  console.log("THE CHECK AUTH USER",user)
 };
+
 
 exports.logout = (req, res) => {
   res.clearCookie('refreshToken');

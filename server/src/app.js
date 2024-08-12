@@ -11,10 +11,10 @@ const errorHandler = require('./middleware/error_handler');
 dotenv.config();
 
 const app = express();
-
+const MYIP = process.env.MY_IP
 const corsOptions = {
     origin: (origin, callback) => {
-        const allowedOrigins = ['http://localhost:5173', 'http://192.168.155.65:5173'];
+        const allowedOrigins =  `http://${MYIP}:5173`;
         if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
             callback(null, true);
         } else {

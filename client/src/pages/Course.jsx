@@ -1,25 +1,29 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useNavigate,Link } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import '../styles/Course.css';
 import axios from 'axios';
+
 const Course = () => {
   const [user, setUser] = useState(null);
-  const [loading, setLoading ] = useState(true);
+  const [loading, setLoading] = useState(true);
   const [courses, setCourses] = useState([]);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const carouselRef = useRef(null);
   const navigate = useNavigate();
+  const myIP = import.meta.env.VITE_MY_IP;
 
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await axios.get("http://localhost:3000/auth/check-auth", { withCredentials: true });
+        const response = await axios.get(`http://${myIP}:3000/auth/check-auth`, { withCredentials: true });
+        console.log(response);
         if (response.data.isAuthenticated) {
           setUser(response.data.user);
-          setLoading(false)
+          setLoading(false);
           setIsAuthenticated(true);
+          localStorage.setItem('user', JSON.stringify(response.data.user)); // Store user in local storage
         } else {
-          setLoading(false)
+          setLoading(false);
           setIsAuthenticated(false);
         }
       } catch (error) {
@@ -28,8 +32,25 @@ const Course = () => {
       }
     };
 
+    const fetchVariable = async () => {
+      try {
+        const response = await axios.post(
+          'http://localhost:8000/new_server_module/handle-api-keys/',
+          { api_key: "apiKey" },
+          {
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          }
+        );
+        console.log(response.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
     fetchUserData();
-    
+    fetchVariable();
 
     // Fetch courses data
     const fetchCourses = async () => {
@@ -84,6 +105,7 @@ const Course = () => {
       ];
       setCourses(courses);
     };
+
     fetchCourses();
   }, [navigate]);
 
@@ -102,7 +124,7 @@ const Course = () => {
   };
 
   const logout = () => {
-    axios.post('http://localhost:3000/auth/logout', {}, { withCredentials: true })
+    axios.post(`http://${myIP}:3000/auth/logout`, {}, { withCredentials: true })
       .then(() => {
         localStorage.removeItem('user');
         navigate('/Login');
@@ -142,6 +164,6 @@ const Course = () => {
       <button className="next-btn" onClick={handleNext}>Next</button>
     </div>
   );
-}
+};
 
 export default Course;
