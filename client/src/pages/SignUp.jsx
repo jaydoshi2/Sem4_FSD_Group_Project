@@ -56,6 +56,7 @@ const Signup = () => {
 
         const imageUrl = `${CLOUDFRONT_URL}/${response.data.fields["key"]}`;
         setData({ ...data, profilePic: imageUrl });
+        console.log("Profile pic ",data.profilePic)
       }
 
       // Submit the form data

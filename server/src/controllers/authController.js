@@ -19,7 +19,9 @@ const s3Client = new S3Client({
 // authController.js
 exports.signup = async (req, res, next) => {
   try {
+    console.log("STARTED SIGNING UP ")
     const user = await authService.createUser(req.body);
+    console.log('USER GENERATED ',user)
     const accessToken = generateAccessToken(user.user_id);
     const refreshToken = generateRefreshToken(user.user_id);
 
@@ -69,11 +71,18 @@ exports.googleCallback = async (req, res, next) => {
 
     await authService.saveRefreshToken(req.user.user_id, refreshToken);
     console.log(accessToken, refreshToken, " are sent");
-
-    res.cookie('accessToken', accessToken, { httpOnly: true, secure: process.env.NODE_ENV === 'production' });
-    res.cookie('refreshToken', refreshToken, { httpOnly: true, secure: process.env.NODE_ENV === 'production' });
-
-    res.redirect(`http://${process.env.MY_IP}:5173/Course`); // Redirect to Course page
+   
+    res.cookie('accessToken', accessToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'None'
+    });
+    res.cookie('refreshToken', refreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'None'
+    });
+    res.redirect(`http://${process.env.MY_IP}:5173/Course`); // Redirect to Course page  
   } catch (error) {
     next(new AppError('Error processing Google login', 500));
   }
@@ -134,20 +143,25 @@ exports.refreshToken = async (req, res, next) => {
   }
 };
 exports.presignedurl = async (req, res) => {
-  const userId = 124;
-  const mimeType = req.query.mimeType || 'image/png'; // Default to 'image/png' if not provided
+  const mimeType = req.query.mimeType || 'image/png';
 
-  const { url, fields } = await createPresignedPost(s3Client, {
-    Bucket: 'firstbucketofjd',
-    Key: `fiverr/${userId}/${Math.random()}/image.jpg`,
-    Conditions: [
-      ['content-length-range', 0, 5 * 1024 * 1024] // 5 MB max
-    ],
-    Fields: {
-      'Content-Type': mimeType
-    },
-    Expires: 3600
-  });
+  try {
+    const { url, fields } = await createPresignedPost(s3Client, {
+      Bucket: 'firstbucketofjd',
+      Key: `fiverr/${Date.now()}/image.${mimeType.split('/')[1]}`,
+      Conditions: [
+        ['content-length-range', 0, 5 * 1024 * 1024] // 5 MB max
+      ],
+      Fields: {
+        'Content-Type': mimeType
+      },
+      Expires: 3600
+    });
 
-  res.json({ url, fields });
+    console.log("Presigned URL generated:", { url, fields });
+    res.json({ url, fields });
+  } catch (error) {
+    console.error("Error generating presigned URL:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
 };

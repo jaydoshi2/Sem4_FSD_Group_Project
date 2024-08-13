@@ -15,22 +15,25 @@ const Course = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await axios.get(`http://${myIP}:3000/auth/check-auth`, { withCredentials: true });
+        const response = await axios.get(`http://${myIP}:3000/auth/check-auth`, {
+          withCredentials: true
+        });
         console.log(response);
+    
         if (response.data.isAuthenticated) {
           setUser(response.data.user);
-          setLoading(false);
-          setIsAuthenticated(true);
           localStorage.setItem('user', JSON.stringify(response.data.user)); // Store user in local storage
+          setIsAuthenticated(true);
         } else {
-          setLoading(false);
           setIsAuthenticated(false);
         }
+        setLoading(false);
       } catch (error) {
         console.error("Error fetching user data", error);
         setIsAuthenticated(false);
       }
     };
+    
 
     const fetchVariable = async () => {
       try {
@@ -50,7 +53,7 @@ const Course = () => {
     };
 
     fetchUserData();
-    fetchVariable();
+    // fetchVariable();
 
     // Fetch courses data
     const fetchCourses = async () => {

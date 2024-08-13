@@ -45,8 +45,7 @@ const Login = () => {
     e.preventDefault();
     try {
       const url = `http://${myIP}:3000/auth/login`;
-      const response = await axios.post(url, data, { withCredentials: true });
-  
+      const response = await axios.post(url, data, { withCredentials: true })
       localStorage.setItem("user", JSON.stringify(response.data.user));
       navigate("/Course");
     } catch (error) {
