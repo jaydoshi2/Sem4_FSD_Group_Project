@@ -11,11 +11,6 @@ dotenv.config();
 const prisma = new PrismaClient();
 const PORT = process.env.PORT || 3000;
 
-
-app.use(cors({
-  origin: 'http://your-frontend-domain.com', // Replace with your frontend URL
-  credentials: true
-}));
 async function startServer() {
   try {
     await prisma.$connect();

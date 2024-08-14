@@ -1,24 +1,35 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { Link, useNavigate } from "react-router-dom";
-import "../styles/Login.css"; // Ensure this path is correct
+import { Link, useNavigate, useLocation } from "react-router-dom";
+import "../styles/Login.css";
 
 const Login = () => {
   const [data, setData] = useState({ email: "", password: "" });
   const [error, setError] = useState("");
   const navigate = useNavigate();
+  const location = useLocation();
   const myIP = import.meta.env.VITE_MY_IP;
 
   useEffect(() => {
     checkAuthStatus();
+    handleRedirect();
   }, []);
+
+  const handleRedirect = () => {
+    const params = new URLSearchParams(location.search);
+    const userId = params.get('userId');
+    if (userId) {
+      localStorage.setItem("user", JSON.stringify({ user_id: userId }));
+      navigate("/Course");
+    }
+  };
 
   const checkAuthStatus = async () => {
     try {
       const response = await axios.get(`http://${myIP}:3000/auth/check-auth`, { withCredentials: true });
       console.log(response.data.isAuthenticated);
       if (response.data.isAuthenticated) {
-        localStorage.setItem("user", JSON.stringify(response.data.user)); // Store user in local storage
+        localStorage.setItem("user", JSON.stringify(response.data.user));
         navigate("/Course");
       }
     } catch (error) {
@@ -34,13 +45,15 @@ const Login = () => {
     e.preventDefault();
     try {
       const url = `http://${myIP}:3000/auth/login`;
-      const response = await axios.post(url, data, { withCredentials: true });
-
+      const response = await axios.post(url, data, { withCredentials: true })
       localStorage.setItem("user", JSON.stringify(response.data.user));
       navigate("/Course");
     } catch (error) {
       if (error.response && error.response.status >= 400 && error.response.status <= 500) {
+        console.log(error.response.data.message);
         setError(error.response.data.message);
+      } else {
+        setError("An unexpected error occurred. Please try again.");
       }
     }
   };
@@ -77,6 +90,9 @@ const Login = () => {
             <button type="submit" className="green_btn">
               Sign In
             </button>
+            <Link to="/forgot-password" className="forgot_password_link">
+              Forgot Password?
+            </Link>
           </form>
         </div>
         <div className="right">

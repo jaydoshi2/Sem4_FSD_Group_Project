@@ -12,27 +12,25 @@ dotenv.config();
 
 const app = express();
 const MYIP = process.env.MY_IP
+// const allowedOrigins = [`http://${MYIP}:5173`];
 const corsOptions = {
-    origin: (origin, callback) => {
-        const allowedOrigins =  `http://${MYIP}:5173`;
-        if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
-            callback(null, true);
-        } else {
-            callback(new Error('Not allowed by CORS'));
-        }
-    },
+    origin: `http://${MYIP}:5173`,
     methods: "GET,POST,PUT,DELETE",
     credentials: true
-};
+  };
+  
 
+app.use(errorHandler);
 app.use(cors(corsOptions));
 app.use(session({
     secret: process.env.SESSION_SECRET,
     saveUninitialized: true,
-    resave: false, // Add this line to avoid saving an unmodified session
-    cookie: { secure: process.env.NODE_ENV === 'production' ? true : false }
-}));
-
+    resave: false,
+    cookie: { 
+      secure: process.env.NODE_ENV === 'production', // Only secure in production
+      sameSite: 'None' // Allow cross-origin cookies
+    }
+  }));
 // Middleware setup
 app.use(express.json());
 app.use(cookieParser());

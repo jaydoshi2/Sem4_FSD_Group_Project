@@ -1,3 +1,4 @@
+// middleware/authenticate.js
 const jwt = require('jsonwebtoken');
 const { PrismaClient } = require('@prisma/client');
 const AppError = require('../utils/AppError');
@@ -9,7 +10,7 @@ exports.authenticate = async (req, res, next) => {
   try {
     const accessToken = req.cookies.accessToken;
     const refreshToken = req.cookies.refreshToken;
-
+    console.log(accessToken, refreshToken)
     if (accessToken && refreshToken) {
       console.error('Cookie is present');
     }else{

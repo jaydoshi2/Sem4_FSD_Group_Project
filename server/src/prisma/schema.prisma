@@ -6,28 +6,30 @@ datasource db {
 generator client {
   provider = "prisma-client-js"
 }
+
 model User {
-  user_id                   String                @id @default(uuid())
-  google_id                 String?               @unique
-  username                  String                @unique
-  email                     String                @unique
-  first_name                String
-  last_name                 String
-  password                  String?
-  profilePic                String?
-  birthDate                 DateTime?
-  signedUpAt                DateTime              @default(now())
-  bio                       String?
-  refreshToken              String?
-  accuracy                  Float                 @default(0.0)
-  numberOfQuestionsSolved   Int                   @default(0)
-  correctQuestions          Int                   @default(0)
-  points                    Int                   @default(0)
-  course_progress           UserCourseProgress[]
-  chapter_progress          UserChapterProgress[]
-  video_progress            UserVideoProgress[]
-  videoInteractions         VideoInteraction[]
-  certificates              Certificates[]
+  user_id                 String                @id @default(uuid())
+  google_id               String?               @unique
+  username                String                @unique
+  email                   String                @unique
+  first_name              String
+  last_name               String
+  password                String?
+  profilePic              String?
+  birthDate               DateTime?
+  signedUpAt              DateTime              @default(now())
+  bio                     String?
+  resetToken              String? // Add this line
+  refreshToken            String?
+  accuracy                Float                 @default(0.0)
+  numberOfQuestionsSolved Int                   @default(0)
+  correctQuestions        Int                   @default(0)
+  points                  Int                   @default(0)
+  course_progress         UserCourseProgress[]
+  chapter_progress        UserChapterProgress[]
+  video_progress          UserVideoProgress[]
+  videoInteractions       VideoInteraction[]
+  certificates            Certificates[]
 
   @@index([email])
   @@index([username])
@@ -35,11 +37,11 @@ model User {
 
 model Course {
   course_id                Int                   @id @default(autoincrement())
-  title                    String           
-  course_type              String                
-  description              String                
+  title                    String
+  course_type              String
+  description              String
   thumbnail_pic_link       String
-  certificate_preview_link String                
+  certificate_preview_link String
   Rate                     Float                 @default(0)
   points_providing         Int                   @default(0)
   Enrollment_Counts        Int                   @default(0)
@@ -108,7 +110,7 @@ model VideoInteraction {
   userId  String
   videoId Int
   liked   Boolean
-  dislike Boolean 
+  dislike Boolean
   user    User    @relation(fields: [userId], references: [user_id])
   video   Video   @relation(fields: [videoId], references: [video_id])
 
