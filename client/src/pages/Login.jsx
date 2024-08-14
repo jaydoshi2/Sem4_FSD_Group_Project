@@ -90,6 +90,9 @@ const Login = () => {
             <button type="submit" className="green_btn">
               Sign In
             </button>
+            <Link to="/forgot-password" className="forgot_password_link">
+              Forgot Password?
+            </Link>
           </form>
         </div>
         <div className="right">

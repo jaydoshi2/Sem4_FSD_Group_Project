@@ -1,158 +1,100 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+const { PrismaClient } = require('@prisma/client');
 
-const ForgotPassword = () => {
-  const [email, setEmail] = useState('');
-  const [otp, setOtp] = useState('');
-  const [step, setStep] = useState('email');
-  const [timer, setTimer] = useState(120);
-  const navigate = useNavigate();
+const prisma = new PrismaClient();
 
-  useEffect(() => {
-    let interval = null;
-    if (step === 'otp' && timer > 0) {
-      interval = setInterval(() => {
-        setTimer((prevTimer) => prevTimer - 1);
-      }, 1000);
-    } else if (timer === 0) {
-      setStep('email');
-      setTimer(120);
-    }
-    return () => clearInterval(interval);
-  }, [step, timer]);
-
-  const handleEmailSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const response = await fetch('http://localhost:3000/forgot-password/', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email }),
-        credentials: 'include',
-      });
-      
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      
-      const data = await response.json();
-      if (data.success) {
-        setStep('otp');
-        setTimer(120);
-      } else {
-        alert(data.error || 'An error occurred');
-      }
-    } catch (error) {
-      console.error('Error:', error);
-      alert('An error occurred. Please try again.');
-    }
-  };
-
-  const handleOtpSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const response = await fetch('http://localhost:8000/verify-otp/', {
-        method: 'POST',
-        headers: { 
-          'Content-Type': 'application/json',
-          'X-CSRFToken': getCookie('csrftoken')
-        },
-        body: JSON.stringify({ email, otp }),
-        credentials: 'include',
-      });
-      console.log(email)
-      console.log(otp)
-      
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      
-      const data = await response.json();
-      if (data.success) {
-        // navigate('/reset-password');
-      } else {
-        alert('Invalid OTP');
-      }
-    } catch (error) {
-      console.error('Error:', error);
-    }
-  };
-
-  function getCookie(name) {
-    let cookieValue = null;
-    if (document.cookie && document.cookie !== '') {
-      const cookies = document.cookie.split(';');
-      for (let i = 0; i < cookies.length; i++) {
-        const cookie = cookies[i].trim();
-        if (cookie.substring(0, name.length + 1) === (name + '=')) {
-          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-          break;
+async function updateProgressForUser(username) {
+  // Fetch the user by username
+  const user = await prisma.user.findUnique({
+    where: { username },
+    include: {
+      course_progress: {
+        include: {
+          course: {
+            include: {
+              chapters: {
+                include: {
+                  videos: true
+                }
+              }
+            }
+          }
         }
       }
     }
-    return cookieValue;
+  });
+
+  if (!user) {
+    console.log('User not found');
+    return;
   }
 
-  return (
-    <div className="container">
-      <video autoPlay muted loop id="myVideo" style={{ opacity: "0.6" }}>
-        <source src="/vid/bac_video.mp4" type="video/mp4" />
-      </video>
-      <div className="d-flex justify-content-center" style={{paddingTop: "95px"}}>
-        <div className="card" style={{ height: "200px"}}>
-          <div className="card-header" >
-            <h3>{step === 'email' ? 'Forgot Password' : 'Enter OTP'}</h3>
-          </div>
-          <div className="card-body">
-            {step === 'email' ? (
-              <form onSubmit={handleEmailSubmit}>
-                <div className="input-group form-group">
-                  <div className="input-group-prepend">
-                    <span className="input-group-text"><i className="fas fa-user"></i></span>
-                  </div>
-                  <input
-                    type="email"
-                    className="form-control"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="Enter your email"
-                    required
-                  />
-                </div>
-                <div className="form-group" >
-                  <input type="submit" value="Send OTP" className="btn float-right login_btn" style={{width : "130px"}}/>
-                </div>
-              </form>
-            ) : (
-              <form onSubmit={handleOtpSubmit}>
-                <div className="input-group form-group">
-                  <div className="input-group-prepend">
-                    <span className="input-group-text"><i className="fas fa-key"></i></span>
-                  </div>
-                  <input
-                    type="text"
-                    className="form-control"
-                    value={otp}
-                    onChange={(e) => setOtp(e.target.value)}
-                    placeholder="Enter OTP"
-                    required
-                  />
-                </div>
-                <div className="form-group">
-                  <input type="submit" value="Verify " className="btn float-right login_btn" />
-                </div>
-                <div className="form-group">
-                  <p className="text-white">Time remaining: {Math.floor(timer / 60)}:{timer % 60 < 10 ? '0' : ''}{timer % 60}</p>
-                </div>
-              </form>
-            )}
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-};
+  for (const courseProgress of user.course_progress) {
+    const course = courseProgress.course;
 
-export default ForgotPassword;
+    // Fetch completed videos for the user
+    const completedVideos = await prisma.userVideoProgress.findMany({
+      where: { userId: user.user_id, completed: true },
+      include: { video: { include: { chapter: true } } }
+    });
+
+    // Calculate course progress
+    const courseProgressPercentage = calculateCourseProgress(course, completedVideos.map(cv => ({
+      chapterId: cv.video.chapterId,
+      videoId: cv.videoId
+    })));
+    
+    console.log(`Course progress for ${course.title}: ${courseProgressPercentage}%`);
+
+    // Update course progress
+    try {
+      await prisma.userCourseProgress.update({
+        where: {
+          id: courseProgress.id
+        },
+        data: {
+          completed_course: courseProgressPercentage,
+          completed: courseProgressPercentage === 100
+
+        }
+      });
+    } catch (error) {
+      console.error('Error updating course progress:', error);
+      console.log('Course progress:', courseProgress);
+      console.log('Calculated percentage:', courseProgressPercentage);
+    }
+  }
+
+  console.log(`Progress updated successfully for user: ${username}`);
+}
+
+function calculateCourseProgress(course, completedVideos) {
+  const totalChapters = course.chapters.length;
+  let totalProgress = 0;
+
+  course.chapters.forEach((chapter) => {
+    const eachChapterWeight = 1 / totalChapters;
+    const totalVideosInEachChapter = chapter.videos.length;
+    let completedVideosInEachChapter = 0;
+
+    chapter.videos.forEach((video) => {
+      if (completedVideos.some(cv => cv.chapterId === chapter.chapter_id && cv.videoId === video.video_id)) {
+        completedVideosInEachChapter++;
+      }
+    });
+
+    const chapterProgress = (completedVideosInEachChapter / totalVideosInEachChapter) * eachChapterWeight;
+    totalProgress += chapterProgress;
+  });
+
+  return Number((totalProgress * 100).toFixed(2)); // Convert to percentage and ensure it's a number with 2 decimal places
+}
+
+// Replace 'username_here' with the actual username
+updateProgressForUser('user15')
+  .catch(e => {
+    console.error('Main error:', e);
+    process.exit(1);
+  })
+  .finally(async () => {
+    await prisma.$disconnect();
+  });

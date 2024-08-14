@@ -60,6 +60,47 @@ class AuthService {
   async findUserById(userId) {
     return prisma.user.findUnique({ where: { id: userId } });
   }
+  async findUserByEmail(email) {
+    return prisma.user.findUnique({ where: { email } });
+  }
+
+  async saveResetToken(userId, resetToken) {
+    return prisma.user.update({
+      where: { user_id: userId },
+      data: { resetToken }
+    });
+  }
+
+  
+  async findUserByResetToken(resetToken) {
+    return prisma.user.findFirst({
+      where: {
+        resetToken: resetToken
+      }
+    });
+  }
+
+  async updateUserPasswordByResetToken(resetToken, newPassword) {
+    // Find user by reset token
+    const user = await this.findUserByResetToken(resetToken);
+
+    if (!user) {
+      throw new Error('Invalid or expired token');
+    }
+
+    // Hash new password
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+    // Update user's password and clear reset token
+    return prisma.user.update({
+      where: { user_id: user.user_id },  // Use user_id for the update operation
+      data: {
+        password: hashedPassword,
+        resetToken: null  // Clear reset token after use
+      }
+    });
+  }
+
 }
 
 module.exports = new AuthService();

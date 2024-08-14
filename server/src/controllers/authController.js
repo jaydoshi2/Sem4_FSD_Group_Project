@@ -7,6 +7,8 @@ const { createPresignedPost } = require('@aws-sdk/s3-presigned-post')
 const { S3Client, PutObjectCommand } = require('@aws-sdk/client-s3');
 const getSignedUrl = require('@aws-sdk/s3-request-presigner');
 
+const crypto = require('crypto');
+const sendEmail = require('../utils/sendEmail');
 
 const s3Client = new S3Client({
   credentials: {
@@ -163,5 +165,54 @@ exports.presignedurl = async (req, res) => {
   } catch (error) {
     console.error("Error generating presigned URL:", error);
     res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+
+exports.forgotPassword = async (req, res, next) => {
+  try {
+    const { email } = req.body;
+    const user = await authService.findUserByEmail(email);
+
+    if (!user) {
+      return next(new AppError('User with that email does not exist', 404));
+    }
+
+    const resetToken = crypto.randomBytes(32).toString('hex');
+    const resetPasswordUrl = `http://${process.env.MY_IP}:5173/reset-password/${resetToken}`;
+
+    await authService.saveResetToken(user.user_id, resetToken);
+
+    await sendEmail({
+      to: email,
+      subject: 'Password Reset Request',
+      text: `You requested a password reset. Click the link to reset your password: ${resetPasswordUrl}`
+    });
+
+    res.json({ message: 'Password reset link sent to your email' });
+  } catch (error) {
+    console.log(error)
+    next(new AppError('Error sending reset link', 500));
+  }
+};
+
+exports.resetPassword = async (req, res, next) => {
+  try {
+    const { resetToken } = req.params;
+    // console.log(resetToken)
+    const { password } = req.body;
+
+    const user = await authService.findUserByResetToken(resetToken);
+    console.log("USER ",user)
+    if (!user) {
+      return next(new AppError('Invalid or expired token', 400));
+    }
+
+    await authService.updateUserPassword(user.user_id, password);
+
+    res.json({ message: 'Password reset successfully' });
+  } catch (error) {
+    console.log(error)
+    next(new AppError('Error resetting password', 500));
   }
 };
