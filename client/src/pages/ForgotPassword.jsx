@@ -1,100 +1,43 @@
-const { PrismaClient } = require('@prisma/client');
+import React, { useState } from "react";
+import axios from "axios";
+// import "../styles/ForgotPassword.css";
 
-const prisma = new PrismaClient();
+const ForgotPassword = () => {
+  const [email, setEmail] = useState("");
+  const [message, setMessage] = useState("");
+  const myIP = import.meta.env.VITE_MY_IP;
 
-async function updateProgressForUser(username) {
-  // Fetch the user by username
-  const user = await prisma.user.findUnique({
-    where: { username },
-    include: {
-      course_progress: {
-        include: {
-          course: {
-            include: {
-              chapters: {
-                include: {
-                  videos: true
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  });
-
-  if (!user) {
-    console.log('User not found');
-    return;
-  }
-
-  for (const courseProgress of user.course_progress) {
-    const course = courseProgress.course;
-
-    // Fetch completed videos for the user
-    const completedVideos = await prisma.userVideoProgress.findMany({
-      where: { userId: user.user_id, completed: true },
-      include: { video: { include: { chapter: true } } }
-    });
-
-    // Calculate course progress
-    const courseProgressPercentage = calculateCourseProgress(course, completedVideos.map(cv => ({
-      chapterId: cv.video.chapterId,
-      videoId: cv.videoId
-    })));
-    
-    console.log(`Course progress for ${course.title}: ${courseProgressPercentage}%`);
-
-    // Update course progress
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     try {
-      await prisma.userCourseProgress.update({
-        where: {
-          id: courseProgress.id
-        },
-        data: {
-          completed_course: courseProgressPercentage,
-          completed: courseProgressPercentage === 100
-
-        }
-      });
+      const url = `http://${myIP}:3000/auth/forgot-password`;
+      const response = await axios.post(url, { email });
+      setMessage(response.data.message);
     } catch (error) {
-      console.error('Error updating course progress:', error);
-      console.log('Course progress:', courseProgress);
-      console.log('Calculated percentage:', courseProgressPercentage);
+      setMessage("An error occurred. Please try again.");
     }
-  }
+  };
 
-  console.log(`Progress updated successfully for user: ${username}`);
-}
+  return (
+    <div className="forgot_password_container">
+      <form className="form_container" onSubmit={handleSubmit}>
+        <h1>Forgot Password</h1>
+        <input
+          type="email"
+          placeholder="Enter your email"
+          name="email"
+          onChange={(e) => setEmail(e.target.value)}
+          value={email}
+          required
+          className="input"
+        />
+        <button type="submit" className="green_btn">
+          Send Reset Link
+        </button>
+        {message && <div className="message">{message}</div>}
+      </form>
+    </div>
+  );
+};
 
-function calculateCourseProgress(course, completedVideos) {
-  const totalChapters = course.chapters.length;
-  let totalProgress = 0;
-
-  course.chapters.forEach((chapter) => {
-    const eachChapterWeight = 1 / totalChapters;
-    const totalVideosInEachChapter = chapter.videos.length;
-    let completedVideosInEachChapter = 0;
-
-    chapter.videos.forEach((video) => {
-      if (completedVideos.some(cv => cv.chapterId === chapter.chapter_id && cv.videoId === video.video_id)) {
-        completedVideosInEachChapter++;
-      }
-    });
-
-    const chapterProgress = (completedVideosInEachChapter / totalVideosInEachChapter) * eachChapterWeight;
-    totalProgress += chapterProgress;
-  });
-
-  return Number((totalProgress * 100).toFixed(2)); // Convert to percentage and ensure it's a number with 2 decimal places
-}
-
-// Replace 'username_here' with the actual username
-updateProgressForUser('user15')
-  .catch(e => {
-    console.error('Main error:', e);
-    process.exit(1);
-  })
-  .finally(async () => {
-    await prisma.$disconnect();
-  });
+export default ForgotPassword;

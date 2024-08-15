@@ -83,7 +83,7 @@ function calculateCourseProgress(course, completedVideos) {
 }
 
 // Replace 'username_here' with the actual username
-updateProgressForUser('user15')
+updateProgressForUser('user15222')
     .catch(e => {
         console.error(e);
         process.exit(1);
