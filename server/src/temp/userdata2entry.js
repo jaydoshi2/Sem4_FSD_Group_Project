@@ -193,7 +193,7 @@ async function main() {
         where: {
             AND: [
                 { userId: 'user15222-id' },
-                { videoId: 36 }
+                { videoId: 43 }
             ]
         },
         data: {

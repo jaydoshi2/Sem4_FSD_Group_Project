@@ -4,12 +4,16 @@ const prisma = new PrismaClient();
 exports.getCourses = async (req, res) => {
   try {
     const courses = await prisma.course.findMany({
+      take: 5,
+      orderBy: {
+        Rate: 'asc'
+      },
       select: {
         title: true,
         thumbnail_pic_link: true,
         course_type: true,
       },
-      
+
     });
     console.log(courses);
     res.status(200).json(courses);

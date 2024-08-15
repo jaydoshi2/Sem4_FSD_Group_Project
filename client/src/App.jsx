@@ -4,8 +4,10 @@ import Login from './pages/Login'
 import Signup from './pages/SignUp';
 import Course from './pages/Course';
 import ResetPassword from './components/ResetPassword';
-// import AuthWrapper from './components/AuthWrapper';
+// import AuthWrapper from './components/AuthWrapper'
+
 import ForgotPassword from './pages/ForgotPassword';
+import CourseDetails from './pages/CourseDetails';
 const App = () => {
   return (
     <Routes>
@@ -15,6 +17,7 @@ const App = () => {
       <Route path='/login' element={<Login />} />
       <Route path='/signup' element={<Signup />} />
       <Route path="/course" element={<Course />} />
+      <Route path="/course/:courseId" element={<CourseDetails />} />
     </Routes>
   );
 };

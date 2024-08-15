@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import '../styles/Course.css';
 import axios from 'axios';
+import '../styles/Course.css';
 
 const Course = () => {
   const [user, setUser] = useState(null);
@@ -18,11 +18,9 @@ const Course = () => {
         const response = await axios.get(`http://${myIP}:3000/auth/check-auth`, {
           withCredentials: true
         });
-        console.log(response);
-    
         if (response.data.isAuthenticated) {
           setUser(response.data.user);
-          localStorage.setItem('user', JSON.stringify(response.data.user)); // Store user in local storage
+          localStorage.setItem('user', JSON.stringify(response.data.user));
           setIsAuthenticated(true);
         } else {
           setIsAuthenticated(false);
@@ -33,82 +31,21 @@ const Course = () => {
         setIsAuthenticated(false);
       }
     };
-    
 
-    const fetchVariable = async () => {
+    const fetchCourses = async () => {
       try {
-        const response = await axios.post(
-          'http://localhost:8000/new_server_module/handle-api-keys/',
-          { api_key: "apiKey" },
-          {
-            headers: {
-              'Content-Type': 'application/json',
-            },
-          }
-        );
-        console.log(response.data);
+        setLoading(true);
+        const response = await axios.get(`http://${myIP}:3000/course`);
+        if (response && user) {
+          setLoading(false);
+          setCourses(response.data);
+        }
       } catch (error) {
-        console.log(error);
+        console.error("Error fetching courses data", error);
       }
     };
 
     fetchUserData();
-    // fetchVariable();
-
-    // Fetch courses data
-    const fetchCourses = async () => {
-      // Assuming you have an endpoint to get courses
-      // const response = await axios.get('http://localhost:3000/courses');
-      const courses = [
-        {
-          course_name: "Introduction to Computer Science",
-          course_image: "http://books.google.com/books/content?id=D9VEIQAACAAJ&printsec=frontcover&img=1&zoom=5&source=gbs_api",
-          course_type: "Computer Science"
-        },
-        {
-          course_name: "Data Structures and Algorithms",
-          course_image: "http://books.google.com/books/content?id=dsVGAAAAMAAJ&printsec=frontcover&img=1&zoom=5&source=gbs_api",
-          course_type: "Data Structure"
-        },
-        {
-          course_name: "Business Management Basics",
-          course_image: "http://books.google.com/books/content?id=BMENAAAAYAAJ&printsec=frontcover&img=1&zoom=5&source=gbs_api",
-          course_type: "Business"
-        },
-        {
-          course_name: "Advanced Data Science",
-          course_image: "http://books.google.com/books/content?id=ASENAAAAYAAJ&printsec=frontcover&img=1&zoom=5&source=gbs_api",
-          course_type: "Data Science"
-        },
-        {
-          course_name: "Advanced Data Science",
-          course_image: "http://books.google.com/books/content?id=ASENAAAAYAAJ&printsec=frontcover&img=1&zoom=5&source=gbs_api",
-          course_type: "Data Science"
-        },
-        {
-          course_name: "Advanced Data Science",
-          course_image: "http://books.google.com/books/content?id=ASENAAAAYAAJ&printsec=frontcover&img=1&zoom=5&source=gbs_api",
-          course_type: "Data Science"
-        },
-        {
-          course_name: "Advanced Data Science",
-          course_image: "http://books.google.com/books/content?id=ASENAAAAYAAJ&printsec=frontcover&img=1&zoom=5&source=gbs_api",
-          course_type: "Data Science"
-        },
-        {
-          course_name: "Advanced Data Science",
-          course_image: "http://books.google.com/books/content?id=ASENAAAAYAAJ&printsec=frontcover&img=1&zoom=5&source=gbs_api",
-          course_type: "Data Science"
-        },
-        {
-          course_name: "Marketing 101",
-          course_image: "http://books.google.com/books/content?id=MAENAAAAYAAJ&printsec=frontcover&img=1&zoom=5&source=gbs_api",
-          course_type: "Business"
-        }
-      ];
-      setCourses(courses);
-    };
-
     fetchCourses();
   }, [navigate]);
 
@@ -126,6 +63,11 @@ const Course = () => {
     });
   };
 
+  const handleCardClick = (courseId) => {
+    console.log(courseId)
+    navigate(`/course/${courseId}`);
+  };
+
   const logout = () => {
     axios.post(`http://${myIP}:3000/auth/logout`, {}, { withCredentials: true })
       .then(() => {
@@ -135,38 +77,46 @@ const Course = () => {
       .catch((error) => console.error("Logout failed", error));
   };
 
-  if (loading) return <div> User is Loading...</div>;
+  if (loading) return <div>Loading...</div>;
 
   return (
     <div>
       {isAuthenticated ? (
         <>
           <h1>Welcome, {user.first_name}!</h1>
-          <img src={user.profilePic} alt="Profile" />
+          <img className='user-info_img' src={user.profilePic} alt="Profile" />
           <button className="logout-btn" onClick={logout}>Logout</button>
         </>
       ) : (
         <Link to="/Login" className="login-btn">Login/Signup</Link>
       )}
 
-      <br /><br /><br />
-      <button className="prev-btn" onClick={handlePrevious}>Previous</button>
-      <div className="slider-container">
-        <div className="card-container" ref={carouselRef}>
-          {courses.map((course, index) => (
-            <div className="course-card" key={index}>
-              <div className="card-image">
-                <img src={course.course_image} alt={course.course_name} />
+      <div className="carousel-container">
+        <button className="prev-btn" onClick={handlePrevious}>‹</button>
+        <div className="slider-container" ref={carouselRef}>
+          <div className="card-container">
+            {courses.map((course, index) => (
+              <div
+                className="course-card"
+                key={index}
+                onClick={() => handleCardClick(course.course_id)}
+              >
+                <div className="card-image">
+                  <img src={course.thumbnail_pic_link} alt={course.title} />
+                </div>
+                <div className="card-content">
+                  <h2>{course.title}</h2>
+                  <p>{course.course_type}</p>
+                </div>
               </div>
-              <div>{course.course_name}</div>
-              <div>{course.course_type}</div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
+        <button className="next-btn" onClick={handleNext}>›</button>
       </div>
-      <button className="next-btn" onClick={handleNext}>Next</button>
     </div>
   );
 };
 
 export default Course;
+ 
