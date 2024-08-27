@@ -1,61 +1,120 @@
-import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import React, { useState, useEffect, useRef } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
-import '../styles/CourseDetails.css';
+import '../styles/Course.css';
 
-const CourseDetails = () => {
-  const { courseId } = useParams(); // Get the courseId from the URL parameters
-  const [course, setCourse] = useState(null);
+const Course = () => {
+  const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [courses, setCourses] = useState([]);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const carouselRef = useRef(null);
+  const navigate = useNavigate();
   const myIP = import.meta.env.VITE_MY_IP;
 
   useEffect(() => {
-    const fetchCourseDetails = async () => {
+    const fetchUserData = async () => {
       try {
-        const response = await axios.get(`http://${myIP}:3000/course/${courseId}`);
-        setCourse(response.data);
+        const response = await axios.get(`http://${myIP}:3000/auth/check-auth`, {
+          withCredentials: true
+        });
+        if (response.data.isAuthenticated) {
+          setUser(response.data.user);
+          localStorage.setItem('user', JSON.stringify(response.data.user));
+          setIsAuthenticated(true);
+        } else {
+          setIsAuthenticated(false);
+        }
         setLoading(false);
       } catch (error) {
-        console.error("Error fetching course details", error);
-        setLoading(false);
+        console.error("Error fetching user data", error);
+        setIsAuthenticated(false);
       }
     };
 
-    fetchCourseDetails();
-  }, [courseId]);
+    const fetchCourses = async () => {
+      try {
+        setLoading(true);
+        const response = await axios.get(`http://${myIP}:3000/course`);
+        if (response && user) {
+          setLoading(false);
+          setCourses(response.data);
+        }
+      } catch (error) {
+        console.error("Error fetching courses data", error);
+      }
+    };
+
+    fetchUserData();
+    fetchCourses();
+  }, [navigate]);
+
+  const handlePrevious = () => {
+    carouselRef.current.scrollBy({
+      left: -carouselRef.current.offsetWidth,
+      behavior: 'smooth'
+    });
+  };
+
+  const handleNext = () => {
+    carouselRef.current.scrollBy({
+      left: carouselRef.current.offsetWidth,
+      behavior: 'smooth'
+    });
+  };
+
+  const handleCardClick = (courseId) => {
+    navigate(`/course/${courseId}`);
+  };
+
+  const logout = () => {
+    axios.post(`http://${myIP}:3000/auth/logout`, {}, { withCredentials: true })
+      .then(() => {
+        localStorage.removeItem('user');
+        navigate('/Login');
+      })
+      .catch((error) => console.error("Logout failed", error));
+  };
 
   if (loading) return <div>Loading...</div>;
 
-  if (!course) return <div>No course found.</div>;
-
   return (
-    <div className="course-details-container">
-      <h1>{course.title}</h1>
-      <img className="course-thumbnail" src={course.thumbnail_pic_link} alt={course.title} />
-      <div className="course-details">
-        <h2>Description</h2>
-        <p>{course.description}</p>
+    <div>
+      {isAuthenticated ? (
+        <>
+          <h1>Welcome, {user.first_name}!</h1>
+          <img className='user-info_img' src={user.profilePic} alt="Profile" />
+          <button className="logout-btn" onClick={logout}>Logout</button>
+        </>
+      ) : (
+        <Link to="/Login" className="login-btn">Login/Signup</Link>
+      )}
 
-        <h2>Course Type</h2>
-        <p>{course.course_type}</p>
-
-        <h2>Price</h2>
-        <p>${course.price}</p>
-
-        <h2>Points Provided</h2>
-        <p>{course.points_provide}</p>
-
-        <h2>Certificate</h2>
-        {course.certificate_preview_link ? (
-          <a href={course.certificate_preview_link} target="_blank" rel="noopener noreferrer">
-            View Certificate
-          </a>
-        ) : (
-          <p>No certificate available</p>
-        )}
+      <div className="carousel-container">
+        <button className="prev-btn" onClick={handlePrevious}>‹</button>
+        <div className="slider-container" ref={carouselRef}>
+          <div className="card-container">
+            {courses.map((course, index) => (
+              <div
+                className="course-card"
+                key={index}
+                onClick={() => handleCardClick(course.course_id)}
+              >
+                <div className="card-image">
+                  <img src={course.thumbnail_pic_link} alt={course.title} />
+                </div>
+                <div className="card-content">
+                  <h2>{course.title}</h2>
+                  <p>{course.course_type}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+        <button className="next-btn" onClick={handleNext}>›</button>
       </div>
     </div>
   );
 };
 
-export default CourseDetails;
+export default Course;

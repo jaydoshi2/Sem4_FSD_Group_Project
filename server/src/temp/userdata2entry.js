@@ -148,7 +148,7 @@ async function main() {
     //         {
     //             userId: 'user15222-id',
     //             videoId: 36,
-    //             completed: false,
+    //             completed: fal se,
     //         },
     //         {
     //             userId: 'user15222-id',
@@ -193,7 +193,7 @@ async function main() {
         where: {
             AND: [
                 { userId: 'user15222-id' },
-                { videoId: 43 }
+                { videoId: 3 }
             ]
         },
         data: {
