@@ -3,6 +3,7 @@ const cookieParser = require('cookie-parser');
 const cors = require('cors');
 const dotenv = require('dotenv');
 const authRoutes = require('./routes/authRoutes');
+const userRoutes = require('./routes/userRoutes');
 const courseRouter = require("./routes/courseRoutes");
 const passport = require('passport');
 const session = require('express-session');
@@ -41,6 +42,7 @@ app.use(express.static('public'));
 // Routes setup
 app.use('/auth', authRoutes);
 app.use("/course", courseRouter);
+app.use("/user",userRoutes)
 
 // Error handling middleware
 app.use(errorHandler); // Uncomment if you have an error handler middleware

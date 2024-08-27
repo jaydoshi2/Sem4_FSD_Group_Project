@@ -1,140 +1,94 @@
-/* src/Styles/Course.css */
-
-/* Define CSS variables for light and dark themes */
-:root {
-  --background-color: #ffffff;
-  --text-color: #000000;
-  --primary-color: #007bff;
-  --secondary-color: #6c757d;
-  --card-background: #ffffff;
-  --card-border-color: #dee2e6;
+.course-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
 }
 
-[data-theme='dark'] {
-  --background-color: #121212;
-  --text-color: #e0e0e0;
-  --primary-color: #bb86fc;
-  --secondary-color: #03dac6;
-  --card-background: #1f1f1f;
-  --card-border-color: #333333;
+.user-info {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
 }
 
-/* Apply CSS variables */
-body {
-  background-color: var(--background-color);
-  color: var(--text-color);
-  overflow-x: hidden;
+.user-info_img {
+  border-radius: 50%;
+  width: 15vh;
+  height: 15vh;
+  margin-left: 10px;
 }
 
-/* Slider Container */
-.slider-container {
-  padding: 50px;
-  position: relative;
-  width: 100vw;
-  height: 100vh; /* Full viewport height */
-  overflow: hidden;
+.carousel-container {
   display: flex;
   align-items: center;
   justify-content: center;
-}
-
-/* Slider Track */
-.slider-track {
-  display: flex;
-  transition: transform 0.5s ease;
+  margin-top: 20px;
   width: 100%;
 }
 
-/* Slide Item */
-.slide {
-  min-width: 100%; /* Each slide takes full width */
-  box-sizing: border-box;
-  padding: 0 20px; /* Spacing between slides */
-}
-
-/* Card */
-.card {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  background-color: var(--card-background);
-  border-radius: 8px; /* Rounded corners */
-  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+.slider-container {
   overflow: hidden;
-  height: 100%;
-  max-height: 100%; /* Prevent card from expanding too much */
+  width: 80%;
 }
 
-/* Card Image */
-.card-img-top {
+.card-container {
+  display: flex;
+  transition: transform 0.5s ease-in-out;
+}
+
+.course-card {
+  min-width: 200px;
+  max-width: 200px;
+  margin: 0 10px;
+  background-color: #f5f5f5;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.card-image img {
   width: 100%;
-  height: 200px;
+  height: 150px;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
   object-fit: cover;
 }
 
-/* Card Body */
-.card-body {
-  padding: 15px; /* Padding inside the card body */
+.card-content {
+  padding: 15px;
 }
 
-/* Card Title */
-.card-title {
-  font-size: 1.25rem; /* Font size for the card title */
-  font-weight: bold;
-  margin: 0;
-  color: var(--primary-color);
+.card-content h2 {
+  font-size: 16px;
+  margin-bottom: 8px;
+  color: #333;
 }
 
-/* Card Text */
-.card-text {
-  color: var(--secondary-color); /* Slightly muted color for text */
+.card-content p {
+  font-size: 14px;
+  color: #777;
 }
 
-/* Navigation Buttons */
-.nav-button {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+.prev-btn,
+.next-btn {
+  background-color: #007bff;
+  color: white;
   border: none;
-  color: #fff;
   border-radius: 50%;
-  padding: 10px;
+  width: 40px;
+  height: 40px;
   cursor: pointer;
-  z-index: 1;
-  transition: background-color 0.3s ease;
+  font-size: 20px;
 }
 
-/* Previous Button */
-.nav-button.prev {
-  left: 20px;
-}
-
-/* Next Button */
-.nav-button.next {
-  right: 20px;
-}
-
-.logout-btn{
-  margin-left: 200px;
-}
-
-/* Hover Effect for Buttons */
-.nav-button:hover {
-  background-color: rgba(0, 0, 0, 0.7);
-}
-
-/* Responsive Adjustments */
-@media (max-width: 768px) {
-  .card-img-top {
-    height: 150px; /* Adjust image height for smaller screens */
-  }
-
-  .card-body {
-    padding: 10px; /* Adjust padding for smaller screens */
-  }
-
-  .card-title {
-    font-size: 1rem; /* Adjust font size for smaller screens */
-  }
+.logout-btn, .login-btn {
+  margin-top: 20px;
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
 }

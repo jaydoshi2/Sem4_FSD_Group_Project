@@ -13,13 +13,11 @@ const Course = () => {
   const myIP = import.meta.env.VITE_MY_IP;
 
   useEffect(() => {
-    var global_response;
     const fetchUserData = async () => {
       try {
         const response = await axios.get(`http://${myIP}:3000/auth/check-auth`, {
           withCredentials: true
         });
-        global_response = response.data
         if (response.data.isAuthenticated) {
           setUser(response.data.user);
           localStorage.setItem('user', JSON.stringify(response.data.user));
@@ -27,7 +25,7 @@ const Course = () => {
         } else {
           setIsAuthenticated(false);
         }
-        // setLoading(false);
+        setLoading(false);
       } catch (error) {
         console.error("Error fetching user data", error);
         setIsAuthenticated(false);
@@ -37,14 +35,11 @@ const Course = () => {
     const fetchCourses = async () => {
       try {
         setLoading(true);
-        console.log(global_response)
         const response = await axios.get(`http://${myIP}:3000/course`);
-        console.log(response.data)
-        if (response) {
+        if (response && user) {
           setLoading(false);
           setCourses(response.data);
         }
-        console.log(courses);
       } catch (error) {
         console.error("Error fetching courses data", error);
       }
@@ -69,7 +64,6 @@ const Course = () => {
   };
 
   const handleCardClick = (courseId) => {
-    console.log(courseId)
     navigate(`/course/${courseId}`);
   };
 
@@ -124,4 +118,3 @@ const Course = () => {
 };
 
 export default Course;
- 

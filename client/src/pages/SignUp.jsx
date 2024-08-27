@@ -29,47 +29,49 @@ const Signup = () => {
     e.preventDefault();
     setUploading(true); // Set uploading to true when form is submitted
     try {
-      // Upload the image if an image file is selected
-      if (imageFile) {
-        const mimeType = imageFile.type;
-        const response = await axios.get(`${BACKEND_URL}/auth/presignedurl`, {
-          params: { mimeType }
-        });
+        let updatedData = { ...data }; // Copy the data object
 
-        const presignedUrl = response.data.url;
-        const formData = new FormData();
-        formData.append("bucket", response.data.fields["bucket"]);
-        formData.append("Content-Type", mimeType);
-        formData.append("X-Amz-Algorithm", response.data.fields["X-Amz-Algorithm"]);
-        formData.append("X-Amz-Credential", response.data.fields["X-Amz-Credential"]);
-        formData.append("X-Amz-Date", response.data.fields["X-Amz-Date"]);
-        formData.append("Policy", response.data.fields["Policy"]);
-        formData.append("X-Amz-Signature", response.data.fields["X-Amz-Signature"]);
-        formData.append("key", response.data.fields["key"]);
-        formData.append("file", imageFile);
+        // Upload the image if an image file is selected
+        if (imageFile) {
+            const mimeType = imageFile.type;
+            const response = await axios.get(`${BACKEND_URL}/auth/presignedurl`, {
+                params: { mimeType }
+            });
 
-        await axios.post(presignedUrl, formData, {
-          headers: {
-            "Content-Type": "multipart/form-data"
-          }
-        });
+            const presignedUrl = response.data.url;
+            const formData = new FormData();
+            formData.append("bucket", response.data.fields["bucket"]);
+            formData.append("Content-Type", mimeType);
+            formData.append("X-Amz-Algorithm", response.data.fields["X-Amz-Algorithm"]);
+            formData.append("X-Amz-Credential", response.data.fields["X-Amz-Credential"]);
+            formData.append("X-Amz-Date", response.data.fields["X-Amz-Date"]);
+            formData.append("Policy", response.data.fields["Policy"]);
+            formData.append("X-Amz-Signature", response.data.fields["X-Amz-Signature"]);
+            formData.append("key", response.data.fields["key"]);
+            formData.append("file", imageFile);
 
-        const imageUrl = `${CLOUDFRONT_URL}/${response.data.fields["key"]}`;
-        setData({ ...data, profilePic: imageUrl });
-        console.log("Profile pic ",data.profilePic)
-      }
+            await axios.post(presignedUrl, formData, {
+                headers: {
+                    "Content-Type": "multipart/form-data"
+                }
+            });
 
-      // Submit the form data
-      const url = `${BACKEND_URL}/auth/signup`;
-      await axios.post(url, data);
-      navigate("/login");
+            const imageUrl = `${CLOUDFRONT_URL}/${response.data.fields["key"]}`;
+            updatedData = { ...updatedData, profilePic: imageUrl }; // Update profilePic in the copied data object
+        }
+
+        // Submit the form data with the updated data object
+        const url = `${BACKEND_URL}/auth/signup`;
+        await axios.post(url, updatedData);
+        navigate("/login");
     } catch (error) {
-      if (error.response && error.response.status >= 400 && error.response.status <= 500) {
-        setError(error.response.data.message);
-      }
+        if (error.response && error.response.status >= 400 && error.response.status <= 500) {
+            setError(error.response.data.message);
+        }
     }
     setUploading(false); // Set uploading to false when the process is complete
-  };
+};
+
 
 
   const handleImageUpload = async (e) => {
