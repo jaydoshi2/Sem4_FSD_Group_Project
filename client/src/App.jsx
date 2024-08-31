@@ -9,20 +9,25 @@ import CourseDetails from './pages/CourseDetails';
 import UserCoursesPage from './pages/UserCourse';
 import ChatbotComponent from './components/ChatBot';
 import ContactSection from './pages/ContactSection';
+import Chatbot from './components/ChatBot';
+
 const App = () => {
   return (
-    <Routes>
-      <Route path="/contact-us" element={<ContactSection />} />
-      <Route path = "/chatbot" element = {<ChatbotComponent/>}/>
-       <Route path="/reset-password/:resetToken" element={<ResetPassword />} />
-      <Route path='/forgot-password' element={<ForgotPassword/>}/>
-      <Route path="/" element={<Course />} />
-      <Route path='/login' element={<Login />} />
-      <Route path='/signup' element={<Signup />} />
-      <Route path="/course" element={<Course />} />
-      <Route path="/courseDetails/:courseId" element={<CourseDetails />} />
-      <Route path ="/my-courses" element={<UserCoursesPage/>}/>
-    </Routes>
+    <div className="App">
+      <Chatbot />
+      <Routes>
+        <Route path="/contact-us" element={<ContactSection />} />
+        <Route path="/chatbot" element={<ChatbotComponent />} />
+        <Route path="/reset-password/:resetToken" element={<ResetPassword />} />
+        <Route path='/forgot-password' element={<ForgotPassword />} />
+        <Route path="/" element={<Course />} />
+        <Route path='/login' element={<Login />} />
+        <Route path='/signup' element={<Signup />} />
+        <Route path="/course" element={<Course />} />
+        <Route path="/courseDetails/:courseId" element={<CourseDetails />} />
+        <Route path="/my-courses" element={<UserCoursesPage />} />
+      </Routes>
+    </div>
   );
 };
 
