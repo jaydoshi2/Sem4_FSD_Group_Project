@@ -11,6 +11,11 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
+import os
+
+# Set NLTK data path
+NLTK_DATA_PATH = 'E:\\Sem4_FSD_Group_Project\\server2\\chatbot_app\\nltk_data'
+os.environ['NLTK_DATA'] = NLTK_DATA_PATH
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent

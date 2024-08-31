@@ -27,4 +27,5 @@ from django.urls import include, path
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('new_server_module/', include('new_server_module.urls')),
+     path('api/', include('chatbot_app.urls')),
 ]
