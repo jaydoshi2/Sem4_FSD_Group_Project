@@ -27,7 +27,7 @@ router.get('/google', passport.authenticate('google', {
 
 router.get('/google/callback', passport.authenticate('google', {
   failureRedirect: '/login',
-  // successRedirect:`http://${process.env.MY_IP}:5173/Course`,
+  successRedirect:`http://${process.env.MY_IP}:5173/Course`,
   session: false
 }), authController.googleCallback);
 

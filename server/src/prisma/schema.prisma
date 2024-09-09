@@ -30,7 +30,6 @@ model User {
   video_progress          UserVideoProgress[]
   videoInteractions       VideoInteraction[]
   certificates            Certificates[]
-
   @@index([email])
   @@index([username])
 }

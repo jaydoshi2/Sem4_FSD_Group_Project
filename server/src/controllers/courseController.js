@@ -15,7 +15,7 @@ exports.getCourses = async (req, res) => {
       },
 
     });
-    console.log(courses);
+    // console.log(courses);
     res.status(200).json(courses);
   } catch (error) {
     console.error(error);

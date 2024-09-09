@@ -60,6 +60,7 @@ const Login = () => {
 
   const loginWithGoogle = () => {
     window.open(`http://${myIP}:3000/auth/google`, "_self");
+    
   };
 
   return (

@@ -25,7 +25,7 @@ const Course = () => {
           localStorage.setItem('user', JSON.stringify(response.data.user));
           setIsAuthenticated(true);
         } else {
-          setIsAuthenticated(false);
+          setIsAuthenticated(false)
         }
         // setLoading(false);
       } catch (error) {
@@ -37,14 +37,14 @@ const Course = () => {
     const fetchCourses = async () => {
       try {
         setLoading(true);
-        console.log(global_response)
+        // console.log(global_response) 
         const response = await axios.get(`http://${myIP}:3000/course`);
         console.log(response.data)
         if (response) {
           setLoading(false);
           setCourses(response.data);
         }
-        console.log(courses);
+        // console.log(courses);
       } catch (error) {
         console.error("Error fetching courses data", error);
       }
