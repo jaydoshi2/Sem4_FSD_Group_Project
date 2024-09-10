@@ -78,13 +78,8 @@ exports.googleCallback = async (req, res, next) => {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'None'
-    });
-    res.cookie('refreshToken', refreshToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'None'
-    });
-    res.redirect(`http://${process.env.MY_IP}:5173/Course`); // Redirect to Course page  
+    });   
+    // res.redirect(`http://${process.env.MY_IP}:5173/Course`); // Redirect to Course page  
   } catch (error) {
     next(new AppError('Error processing Google login', 500));
   }

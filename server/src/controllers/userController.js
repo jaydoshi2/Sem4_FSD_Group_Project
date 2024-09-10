@@ -6,7 +6,7 @@ const prisma = new PrismaClient();
 exports.getUserCourses = async (req, res) => {
     try {
         const { userId } = req.body; // Assuming userId is sent as a string in the request body
-        console.log(userId);
+        console.log("USER ID ", userId);
 
         const userCourses = await prisma.userCourseProgress.findMany({
             where: {
