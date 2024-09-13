@@ -10,6 +10,7 @@ import UserCoursesPage from './pages/UserCourse';
 import ChatbotComponent from './components/ChatBot';
 import ContactSection from './pages/ContactSection';
 import Chatbot from './components/ChatBot';
+import Home from './pages/Home';
 
 const App = () => {
   return (
@@ -23,6 +24,7 @@ const App = () => {
         <Route path="/" element={<Course />} />
         <Route path='/login' element={<Login />} />
         <Route path='/signup' element={<Signup />} />
+        <Route path= '/home'element={<Home/>}/>
         <Route path="/course" element={<Course />} />
         <Route path="/courseDetails/:courseId" element={<CourseDetails />} />
         <Route path="/my-courses" element={<UserCoursesPage />} />
