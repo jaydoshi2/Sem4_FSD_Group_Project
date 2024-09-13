@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Link, useNavigate, useLocation } from "react-router-dom";
+import { useGoogleLogin } from '@react-oauth/google';
 import "../styles/Login.css";
 
 const Login = () => {
@@ -57,11 +58,25 @@ const Login = () => {
       }
     }
   };
-
-  const loginWithGoogle = () => {
-    window.open(`http://${myIP}:3000/auth/google`, "_self");
-    
-  };
+  const googleLogin = useGoogleLogin({
+    flow: 'implicit',
+    onSuccess: async (tokenResponse) => {
+      try {
+        const res = await axios.post(`http://${myIP}:3000/api/auth/google`, {
+          token: tokenResponse.access_token,
+        });
+        localStorage.setItem('user', JSON.stringify(res.data.user));
+        navigate('/Course');
+      } catch (err) {
+        console.error(err);
+        setError("Google Sign-In failed. Please try again.");
+      }
+    },
+    onError: (error) => {
+      console.log('Login Failed:', error);
+      setError("Google Sign-In failed. Please try again.");
+    }
+  });
 
   return (
     <div className="login_container">
@@ -103,7 +118,7 @@ const Login = () => {
               Sign Up
             </button>
           </Link>
-          <button className="login_with_google_btn" onClick={loginWithGoogle}>
+          <button className="login_with_google_btn" onClick={() => googleLogin()}>
             Sign In With Google
           </button>
         </div>
