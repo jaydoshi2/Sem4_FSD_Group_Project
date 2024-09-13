@@ -1,0 +1,43 @@
+.subnavbar-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    white-space: nowrap;
+    width: 100%;
+    background-color: rgb(39, 124, 169);
+    color: aliceblue;
+}
+
+.scroll-button {
+    background-color: #4a5568;
+    color: white;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.scroll-button.left {
+    margin-right: 10px;
+    position: relative;
+}
+
+.scroll-button.right {
+    position: absolute;
+    top: 10px; /* Adjust top offset if necessary */
+    right: 10px; /* Adjust right offset if necessary */
+    margin-left: auto;
+}
+
+.scroll-button:hover {
+    background-color: #2d3748;
+}
+
+.hide-scrollbar {
+    scrollbar-width: none; /* Firefox */
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera */
+}
