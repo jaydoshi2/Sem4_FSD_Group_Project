@@ -21,9 +21,6 @@ model User {
   bio                     String?
   resetToken              String? // Add this line
   refreshToken            String?
-  accuracy                Float                 @default(0.0)
-  numberOfQuestionsSolved Int                   @default(0)
-  correctQuestions        Int                   @default(0)
   points                  Int                   @default(0)
   course_progress         UserCourseProgress[]
   chapter_progress        UserChapterProgress[]
@@ -41,7 +38,7 @@ model Course {
   description              String
   thumbnail_pic_link       String
   certificate_preview_link String
-  number_of_ratings        Int
+  number_of_people_rated        Int
   course_level             String
   Rate                     Float                 @default(0)
   points_providing         Int                   @default(0)

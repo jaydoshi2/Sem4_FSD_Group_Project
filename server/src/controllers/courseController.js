@@ -46,8 +46,8 @@ exports.getCourseDetails = async (req, res) => {
         price: true,
         points_providing: true,
         Rate: true,
-        course_level: true,
-        number_of_ratings: true,
+        // course_level: true,
+        // number_of_ratings: true,
       }
     });
 

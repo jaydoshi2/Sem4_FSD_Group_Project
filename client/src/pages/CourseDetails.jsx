@@ -230,7 +230,7 @@ function CourseDetail() {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const courseId = queryParams.get('course_id');
-
+  console.log(courseId)
   const [course, setCourse] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
