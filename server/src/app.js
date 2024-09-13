@@ -4,6 +4,9 @@ const cors = require('cors');
 const dotenv = require('dotenv');
 const authRoutes = require('./routes/authRoutes');
 const userRoutes = require('./routes/userRoutes');
+const fromRouter = require("./routes/fromRoutes");
+const videoRouter = require("./routes/videoRoutes");
+const leaderRouter = require("./routes/LeaderBoardRoutes");
 const courseRouter = require("./routes/courseRoutes");
 const profileRouter = require('./routes/profileRoutes');
 const passport = require('passport');
@@ -93,6 +96,9 @@ app.post('/api/auth/google', async (req, res) => {
 app.use('/auth', authRoutes);
 app.use("/course", courseRouter);
 app.use("/user", userRoutes);
+app.use('/from', fromRouter);
+app.use('/vid', videoRouter);
+app.use('/leaderboard', leaderRouter);
 app.use('/profile', profileRouter);
 
 // Error handling middleware

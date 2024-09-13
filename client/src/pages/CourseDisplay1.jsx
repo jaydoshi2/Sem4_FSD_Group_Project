@@ -109,7 +109,7 @@ const CourseDisplay = () => {
 
   const handleReadMoreClick = (course) => {
     // Navigate to the desired URL with the course ID
-    navigate(`/course?course_id=${course.course_id}&coursename=${course.title}`);
+    navigate(`/video?course_id=${courseId}&chapter_id=${chapter_id}&video_id=${video_id}`);
   };
 
   return (

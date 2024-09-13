@@ -11,6 +11,8 @@ import Profile from './pages/Profile';
 import UserCoursesPage from './pages/UserCourse';
 import ChatbotComponent from './components/ChatBot';
 import ContactSection from './pages/ContactSection';
+import VideoPage from './pages/VideoPage';  
+import LeaderBoard from './pages/LeaderBoard';
 import Chatbot from './components/ChatBot';
 import Home from './pages/Home';
 import Skills from './pages/Skills';
@@ -32,6 +34,8 @@ const App = () => {
         <Route path="/my-courses" element={<UserCoursesPage />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/skill" element={<Skills />} />
+        <Route path="/video" element={<VideoPage />} />
+        <Route path="/lead" element={<LeaderBoard/>} />
       </Routes>
     </div>
   );
