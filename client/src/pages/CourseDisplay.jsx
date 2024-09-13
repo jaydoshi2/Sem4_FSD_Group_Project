@@ -41,6 +41,8 @@ const getRandomCategories = (categories) => {
 };
 
 const CourseDisplay = () => {
+  const myIP = import.meta.env.VITE_MY_IP;
+
   const [loading, setLoading] = useState(true); // State to track loading status
   const [course_data, setCourse_data] = useState([]);
   const [coursesByCategory, setCoursesByCategory] = useState({});
@@ -50,7 +52,7 @@ const CourseDisplay = () => {
   const navigate = useNavigate(); // Initialize useNavigate
 
   const fetchCourseData = () => {
-    axios.get("http://localhost:3000/course/getall")
+    axios.get(`http://${myIP}:3000/course`)
       .then((response) => {
         const fetchedData = response.data;
 
@@ -107,9 +109,24 @@ const CourseDisplay = () => {
     }));
   };
 
-  const handleReadMoreClick = (course) => {
+  const handleReadMoreClick = async (course) => {
     // Navigate to the desired URL with the course ID
-    navigate(`/course-details?course_id=${course.course_id}&coursename=${encodeURIComponent(course.title)}`);
+    const courseId = course.course_id
+    try {
+      const response = await axios.get(`http://${myIP}:3000/from/first-chapter-video/${courseId}`);
+      const data = response.data;
+
+      if (response.status === 200) {
+        // const { chapter_id, video_id } = data;
+        const chapter_id = response.data.chapter_id
+        const video_id = response.data.video_id
+        navigate(`/course?course_id=${courseId}&chapter_id=${chapter_id}&video_id=${video_id}`);
+      } else {
+        console.error('Error fetching chapter and video:', data.message);
+      }
+    } catch (error) {
+      console.error('Error:', error.message);
+    }
   };
 
   return (

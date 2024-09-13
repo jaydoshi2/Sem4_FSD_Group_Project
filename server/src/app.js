@@ -5,6 +5,7 @@ const dotenv = require('dotenv');
 const authRoutes = require('./routes/authRoutes');
 const userRoutes = require('./routes/userRoutes');
 const courseRouter = require("./routes/courseRoutes");
+const profileRouter = require('./routes/profileRoutes');
 const passport = require('passport');
 const session = require('express-session');
 const errorHandler = require('./middleware/error_handler');
@@ -92,6 +93,7 @@ app.post('/api/auth/google', async (req, res) => {
 app.use('/auth', authRoutes);
 app.use("/course", courseRouter);
 app.use("/user", userRoutes);
+app.use('/profile', profileRouter);
 
 // Error handling middleware
 app.use(errorHandler);
