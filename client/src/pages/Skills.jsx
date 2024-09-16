@@ -6,7 +6,7 @@ import SkeletonLoader from '../components/SkeletonLoader'; // Import the skeleto
 import SubNavbar from '../components/SubNavbar';
 
 const CARDS_PER_PAGE = 12; // Variable to control the number of cards per page
-
+const myIP = import.meta.env.VITE_MY_IP;
 const shuffleArray = (array) => {
   for (let i = array.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
@@ -49,9 +49,23 @@ const Skills = () => {
     fetchCourseData();
   }, [courseType]); // Refetch when courseType changes
 
-  const handleReadMoreClick = (course) => {
-    // Navigate to the desired URL with the course ID
-    navigate(`/course?course_id=${course.course_id}&coursename=${course.title}`);
+  const handleReadMoreClick = async (course) => {
+    const courseId = course.course_id;
+    try {
+      const response = await axios.get(`http://${myIP}:3000/from/first-chapter-video/${courseId}`);
+      const data = response.data;
+
+      if (response.status === 200) {
+        const chapter_id = data.chapter_id;
+        const video_id = data.video_id;
+        navigate(`/video?course_id=${courseId}&chapter_id=${chapter_id}&video_id=${video_id}`);
+        // navigate(`/courseDetails?course_id=${courseId}`);
+      } else {
+        console.error('Error fetching chapter and video:', data.message);
+      }
+    } catch (error) {
+      console.error('Error:', error.message);
+    }
   };
 
   // Calculate the courses to display on the current page
@@ -132,7 +146,7 @@ const Skills = () => {
                 onClick={() => setCurrentPage(currentPage + 1)}
                 disabled={currentPage === totalPages}
               >
-                <i class="fa-solid fa-angles-right"></i>
+                <i className="fa-solid fa-angles-right"></i>
               </button>
             </div>
 
