@@ -1,0 +1,209 @@
+/* Leaderboard.css */
+
+/* General Styles */
+body,
+html {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f0f4ff;
+    overflow: hidden;
+}
+
+.main-container {
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    background-color: #f0f4ff;
+    padding-top: 50px;
+    box-sizing: border-box;
+}
+
+/* Leaderboard Container */
+.leaderboard-container {
+    width: 90vw;
+    max-width: 1200px;
+    height: 60vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: #ffffff;
+    border-radius: 20px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    padding: 20px;
+    margin-bottom: 20px;
+    margin-top: 60px;
+}
+
+/* Title */
+.leaderboard-title {
+    color: #2c3e50;
+    font-size: 36px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+/* Table Container */
+.table-container {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow-x: auto;
+    /* Enable horizontal scroll */
+}
+
+/* Table Styles */
+.leaderboard-table {
+    width: 100%;
+    max-width: 1000px;
+    border-collapse: collapse;
+    background-color: #ffffff;
+    border-radius: 10px;
+    overflow: hidden;
+    table-layout: auto;
+}
+
+.leaderboard-table thead {
+    background-color: #3d52a1;
+    color: #ffffff;
+}
+
+.leaderboard-table th,
+.leaderboard-table td {
+    padding: 10px;
+    text-align: left;
+    font-size: 16px;
+}
+
+.leaderboard-table th {
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.leaderboard-row {
+    border-bottom: 1px solid #e0e0e0;
+    transition: background-color 0.3s ease;
+}
+
+.leaderboard-row:hover {
+    background-color: #eaf2ff;
+    cursor: pointer;
+    transform: scale(1.02);
+}
+
+/* Profile Picture */
+.profile-pic {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Bottom Fixed Div */
+.leaderboard-personal-detail {
+    width: 100vw;
+    height: 20vh;
+    background-color: #3d52a1;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    box-sizing: border-box;
+    padding: 20px;
+}
+
+.leaderboard-personal-detail img {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #ffffff;
+}
+
+.leaderboard-personal-detail div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.leaderboard-personal-detail div span {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.leaderboard-personal-detail div span:first-child {
+    font-size: 24px;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .leaderboard-title {
+        font-size: 28px;
+    }
+
+    .leaderboard-table th,
+    .leaderboard-table td {
+        font-size: 14px;
+        padding: 8px;
+    }
+
+    .leaderboard-personal-detail {
+        flex-direction: column;
+        justify-content: center;
+        height: auto;
+        padding: 10px;
+    }
+
+    .leaderboard-personal-detail img {
+        width: 60px;
+        height: 60px;
+    }
+
+    .leaderboard-personal-detail div span:first-child {
+        font-size: 20px;
+    }
+
+    .leaderboard-personal-detail div span {
+        font-size: 16px;
+    }
+}
+
+@media (max-width: 480px) {
+    .leaderboard-title {
+        font-size: 24px;
+    }
+
+    .leaderboard-table th,
+    .leaderboard-table td {
+        font-size: 12px;
+        padding: 6px;
+    }
+
+    .leaderboard-personal-detail {
+        padding: 5px;
+    }
+
+    .leaderboard-personal-detail img {
+        width: 50px;
+        height: 50px;
+    }
+
+    .leaderboard-personal-detail div span:first-child {
+        font-size: 18px;
+    }
+
+    .leaderboard-personal-detail div span {
+        font-size: 14px;
+    }
+}

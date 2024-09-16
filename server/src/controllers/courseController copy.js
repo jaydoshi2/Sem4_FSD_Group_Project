@@ -7,8 +7,8 @@ exports.getAllCourses = async (req, res) => {
     res.status(200).json(courses);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: "Internal server error" });
-  }
+    res.status(500).json({ error: "Internal server error" });
+  }
 };
 exports.getCourses = async (req, res) => {
   try {
@@ -46,8 +46,8 @@ exports.getCourseDetails = async (req, res) => {
         price: true,
         points_providing: true,
         Rate: true,
-        // course_level: true,
-        // number_of_ratings: true,
+        course_level: true,
+        number_of_ratings: true,
       }
     });
 

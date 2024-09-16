@@ -2,9 +2,9 @@
   "name": "server",
   "version": "1.0.0",
   "description": "This is backend of an Edtech project",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "nodemon src/server.js"
   },
   "repository": {
     "type": "git",
