@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import "../styles/Signup.css";
-import defaultProfilePic from "../images/profile.png";
+import defaultProfilePic from "../assets/images/profile.png";
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL; // Replace with your actual backend URL
 const CLOUDFRONT_URL = import.meta.env.VITE_CLOUDFRONT_URL; // Replace with your actual CloudFront URL

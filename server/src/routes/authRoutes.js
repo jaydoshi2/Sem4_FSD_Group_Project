@@ -23,13 +23,13 @@ router.post('/login', authController.login);
 router.get('/google', passport.authenticate('google', {
   scope: ['profile', 'email'],
   session: false
-}));
+}),authController.googleCallback);
 
-router.get('/google/callback', passport.authenticate('google', {
-  failureRedirect: '/login',
-  successRedirect:`http://${process.env.MY_IP}:5173/Course`,
-  session: false
-}), authController.googleCallback);
+// router.get('/google/callback', passport.authenticate('google', {
+//   failureRedirect: '/login',
+//   successRedirect:`http://${process.env.MY_IP}:5173/Course`,
+//   session: false
+// }), authController.googleCallback);
 
 router.post('/logout', authenticate, authController.logout);
 

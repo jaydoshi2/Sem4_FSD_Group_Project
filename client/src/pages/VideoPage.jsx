@@ -184,12 +184,12 @@ const VideoPage = () => {
                             <span className="progress-text">{progress}%</span>
                         </div>
 
-                        {/* <iframe
+                        <iframe
                             src={vlink}
                             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                             allowFullScreen
                             className="video-frame"
-                        ></iframe> */}
+                        ></iframe>
 
                         <div className="like-dislike-container">
                             <button className="like-button" onClick={handleLike}>
