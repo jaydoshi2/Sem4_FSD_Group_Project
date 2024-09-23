@@ -2,9 +2,9 @@
   "name": "server",
   "version": "1.0.0",
   "description": "This is backend of an Edtech project",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "nodemon src/server.js"
   },
   "repository": {
     "type": "git",
@@ -16,23 +16,30 @@
     "@aws-sdk/client-s3": "^3.621.0",
     "@aws-sdk/s3-presigned-post": "^3.621.0",
     "@aws-sdk/s3-request-presigner": "^3.621.0",
+    "@google-cloud/speech": "^6.7.0",
     "@google/generative-ai": "^0.15.0",
     "@prisma/client": "^5.17.0",
     "assemblyai": "^4.6.1",
+    "axios": "^1.7.5",
     "bcrypt": "^5.1.1",
+    "child_process": "^1.0.2",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
+    "crypto": "^1.0.1",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "express-session": "^1.18.0",
     "express-validator": "^7.1.0",
     "fs": "^0.0.1-security",
     "jsonwebtoken": "^9.0.2",
+    "node-fetch": "^3.3.2",
+    "nodemailer": "^6.9.14",
     "nodemon": "^3.1.4",
     "passport": "^0.7.0",
     "passport-google-oauth2": "^0.2.0",
     "passport-google-oauth20": "^2.0.0",
     "prisma": "^5.17.0",
+    "server": "file:",
     "youtube-transcript-api": "^1.1.2"
   }
 }

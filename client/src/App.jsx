@@ -3,16 +3,41 @@ import { Routes, Route } from "react-router-dom"
 import Login from './pages/Login'
 import Signup from './pages/SignUp';
 import Course from './pages/Course';
-// import AuthWrapper from './components/AuthWrapper';
-
+import ResetPassword from './components/ResetPassword';
+import ForgotPassword from './pages/ForgotPassword';
+import CourseDetails from './pages/CourseDetails';
+import CourseDisplay from './pages/CourseDisplay';
+import Profile from './pages/Profile';
+import UserCoursesPage from './pages/UserCourse';
+import ChatbotComponent from './components/ChatBot';
+import ContactSection from './pages/ContactSection';
+import VideoPage from './pages/VideoPage';  
+import LeaderBoard from './pages/LeaderBoard';
+import Chatbot from './components/ChatBot';
+import Home from './pages/Home';
+import Skills from './pages/Skills';
 const App = () => {
   return (
-    <Routes>
-      <Route path="/" element={<Course />} />
-      <Route path='/login' element={<Login />} />
-      <Route path='/signup' element={<Signup />} />
-      <Route path="/course" element={<Course />} />
-    </Routes>
+    <div className="App">
+      <Chatbot />
+      <Routes>
+        <Route path="/contact-us" element={<ContactSection />} />
+        <Route path="/chatbot" element={<ChatbotComponent />} />
+        <Route path="/reset-password/:resetToken" element={<ResetPassword />} />
+        <Route path='/forgot-password' element={<ForgotPassword />} />
+        <Route path="/" element={<Course />} />
+        <Route path='/login' element={<Login />} />
+        <Route path='/signup' element={<Signup />} />
+        <Route path='/home' element={<Home />} />
+        <Route path="/course" element={<CourseDisplay />} />
+        <Route path="/courseDetails" element={<CourseDetails />} />
+        <Route path="/my-courses" element={<UserCoursesPage />} />
+        <Route path="/profile" element={<Profile />} />
+        <Route path="/skill" element={<Skills />} />
+        <Route path="/video" element={<VideoPage />} />
+        <Route path="/lead" element={<LeaderBoard/>} />
+      </Routes>
+    </div>
   );
 };
 

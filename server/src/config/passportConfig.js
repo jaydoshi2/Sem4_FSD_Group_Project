@@ -4,6 +4,7 @@ const bcrypt = require('bcrypt');
 const { PrismaClient } = require('@prisma/client');
 const session = require('express-session');
 const clientID = process.env.GOOGLE_CLIENT_ID
+console.log(clientID)
 const clientSecret = process.env.GOOGLE_CLIENT_SECRET
 const prisma = new PrismaClient();
 

@@ -1,0 +1,189 @@
+{
+    "intents": [
+      {
+        "tag": "greeting",
+        "patterns": [
+          "Hi",
+          "Hey",
+          "How are you",
+          "Is anyone there?",
+          "Hello",
+          "Good day"
+        ],
+        "responses": [
+          "Hey :-)",
+          "Hello, thanks for visiting",
+          "Hi there, what can I do for you?",
+          "Hi there, how can I help?"
+        ]
+      },
+      {
+        "tag": "goodbye",
+        "patterns": ["Bye", "See you later", "Goodbye"],
+        "responses": [
+          "See you later, thanks for visiting",
+          "Have a nice day",
+          "Bye! Come back again soon."
+        ]
+      },
+      {
+        "tag": "thanks",
+        "patterns": ["Thanks", "Thank you", "That's helpful", "Thank's a lot!"],
+        "responses": ["Happy to help!", "Any time!", "My pleasure"]
+      },
+      {
+        "tag": "items",
+        "patterns": [
+          "Which items do you have?",
+          "What kinds of items are there?",
+          "What do you sell?"
+        ],
+        "responses": [
+          "We sell coffee and tea",
+          "We have coffee and tea"
+        ]
+      },
+      {
+        "tag": "payments",
+        "patterns": [
+          "Do you take credit cards?",
+          "Do you accept Mastercard?",
+          "Can I pay with Paypal?",
+          "Are you cash only?"
+        ],
+        "responses": [
+          "We accept VISA, Mastercard and Paypal",
+          "We accept most major credit cards, and Paypal"
+        ]
+      },
+      {
+        "tag": "delivery",
+        "patterns": [
+          "How long does delivery take?",
+          "How long does shipping take?",
+          "When do I get my delivery?"
+        ],
+        "responses": [
+          "Delivery takes 2-4 days",
+          "Shipping takes 2-4 days"
+        ]
+      },
+      {
+        "tag": "funny",
+        "patterns": [
+          "Tell me a joke!",
+          "Tell me something funny!",
+          "Do you know a joke?"
+        ],
+        "responses": [
+          "Why did the hipster burn his mouth? He drank the coffee before it was cool.",
+          "What did the buffalo say when his son left for college? Bison."
+        ]
+      },
+      {
+        "tag": "course_availability",
+        "patterns": [
+          "What courses are available?",
+          "Can you tell me about the courses you offer?",
+          "Do you have any programming courses?",
+          "What are the most popular courses?",
+          "Sho  "
+        ],
+        "responses": [
+          "We offer a wide range of courses including programming, data science, business, and more!",
+          "Our most popular courses are in web development, machine learning, and data analysis.",
+          "You can explore new courses under the 'New Courses' section on our homepage."
+        ]
+      },
+      {
+        "tag": "enrollment_process",
+        "patterns": [
+          "How do I enroll in a course?",
+          "What is the process for enrolling?",
+          "Can you guide me on how to sign up for a course?",
+          "How can I start a course?"
+        ],
+        "responses": [
+          "To enroll in a course, simply click on the 'Enroll Now' button on the course page.",
+          "You can start by creating an account, then selecting the course you're interested in and clicking 'Enroll'.",
+          "Just log in, find the course you want to take, and click 'Enroll'."
+        ]
+      },
+      {
+        "tag": "pricing_information",
+        "patterns": [
+          "What are the course fees?",
+          "How much does a course cost?",
+          "Is there a fee for enrolling?",
+          "Do you offer free courses?",
+          "Are all courses paid?"
+        ],
+        "responses": [
+          "We offer both free and paid courses. You can find pricing information on each course page.",
+          "Some of our courses are free, while others require a fee. Check the course details for specific pricing.",
+          "Course fees vary. Please visit the course page for exact pricing information."
+        ]
+      },
+      {
+        "tag": "certification",
+        "patterns": [
+          "Do you provide certificates?",
+          "Can I get a certificate after completing a course?",
+          "Are certificates available?",
+          "What type of certification do you offer?",
+          "Is there a certificate of completion?"
+        ],
+        "responses": [
+          "Yes, we offer certificates upon successful completion of our courses.",
+          "After completing a course, you can receive a certificate to showcase your achievement.",
+          "Certificates are available for most of our courses. Check the course details for specific information."
+        ]
+      },
+      {
+        "tag": "course_duration",
+        "patterns": [
+          "How long is each course?",
+          "What is the duration of the courses?",
+          "Can you tell me the length of the courses?",
+          "How much time do I need to complete a course?",
+          "Are the courses self-paced?"
+        ],
+        "responses": [
+          "Course durations vary. You can find this information on each course page.",
+          "Some courses are self-paced, while others have a fixed schedule. Check the course details for more information.",
+          "Course lengths range from a few hours to several weeks, depending on the topic and depth."
+        ]
+      },
+      {
+        "tag": "course_language",
+        "patterns": [
+          "In which language are the courses offered?",
+          "Are the courses available in multiple languages?",
+          "What languages do you support for courses?",
+          "Can I take courses in Spanish?",
+          "Do you offer courses in languages other than English?"
+        ],
+        "responses": [
+          "Our courses are primarily offered in English, but we do have some courses available in other languages.",
+          "Yes, some courses are available in multiple languages. Please check the course details for specific language options.",
+          "We are expanding our language offerings, so keep an eye out for courses in your preferred language."
+        ]
+      },
+      {
+        "tag": "technical_support",
+        "patterns": [
+          "I need help with the website.",
+          "How can I get technical support?",
+          "I am facing issues accessing a course.",
+          "What should I do if a course won't load?",
+          "Who can I contact for technical issues?"
+        ],
+        "responses": [
+          "You can reach our technical support team through the 'Contact Us' page.",
+          "For technical issues, please email support@oursite.com, and we'll assist you as soon as possible.",
+          "Try refreshing the page or clearing your browser cache. If the issue persists, contact our support team."
+        ]
+      }
+    ]
+  }
+  

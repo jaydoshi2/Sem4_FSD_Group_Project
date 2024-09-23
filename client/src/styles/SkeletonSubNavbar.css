@@ -1,0 +1,27 @@
+.skeleton-subnavbar {
+    display: flex;
+    overflow-x: hidden;
+    width: 100%;
+}
+
+.skeleton-item {
+    height: 30px; /* Adjust based on the expected height of the items */
+    width: 150px; /* Adjust width to match the size of your real items */
+    background-color: #e0e0e0; /* Skeleton color */
+    border-radius: 4px;
+    margin: 0 8px; /* Spacing between skeleton items */
+    flex-shrink: 0;
+    animation: skeleton-loading 1.5s infinite ease-in-out;
+}
+
+@keyframes skeleton-loading {
+    0% {
+        background-color: #e0e0e0;
+    }
+    50% {
+        background-color: #f0f0f0;
+    }
+    100% {
+        background-color: #e0e0e0;
+    }
+}
