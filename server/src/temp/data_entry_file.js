@@ -1,208 +1,241 @@
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
-
-// async function truncateTables() {
-//     await prisma.$executeRaw`TRUNCATE TABLE "Video" CASCADE;`;
-//     await prisma.$executeRaw`TRUNCATE TABLE "Chapter" CASCADE;`;
-//     await prisma.$executeRaw`TRUNCATE TABLE "Course" CASCADE;`;
-//     console.log("Data Truncated")
-// }
-
-async function setupCourses() {
-    await truncateTables();
-    await prisma.course.create({
+async function main() {
+    // Course 4: JavaScript Fundamentals
+    const jsCourse = await prisma.course.create({
         data: {
-            title: 'JAVA TUTORIAL',
-            description: 'Learn the fundamentals of Java, one of the most popular programming languages. This course covers object-oriented programming, data structures, algorithms, and real-world applications. Ideal for beginners and those looking to enhance their coding skills for software development.',
-            thumbnail_pic_link: 'https://imgs.search.brave.com/rcrgCBGOSiHVwN-uUYY04_mYc9ClCXvEf_AfR9ly_Dk/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9tZWRp/YS5pc3RvY2twaG90/by5jb20vaWQvMTQz/MTg3NjMwNy9waG90/by9idXNpbmVzc21h/bi1jbGlja3MtamF2/YS1wcm9ncmFtbWlu/Zy1sYW5ndWFnZS1h/cHBsaWNhdGlvbi1j/b25jZXB0LW9uLXZp/cnR1YWwtc2NyZWVu/LndlYnA_Yj0xJnM9/MTcwNjY3YSZ3PTAm/az0yMCZjPUJldktL/V0hyMTE0RzZTakpK/Rjg0dy1WRHZ6N3Zp/c1ZEODZPdXdrVV9z/dDQ9',
-            points_providing: 100,
-            course_type: 'Programming',
-            certificate_preview_link: 'https://lh3.googleusercontent.com/d/1OqQ9o89TjRLJY1PVPirm5cIo1CAVgG0S=w1000?authuser=0',
-            price: 3000,
+            title: "JavaScript Fundamentals",
+            course_type: "Programming",
+            description:
+                "Get started with JavaScript, the language that powers the web. This course covers the basics, including variables, functions, and DOM manipulation. Perfect for aspiring web developers and anyone looking to enhance their programming skills.",
+            thumbnail_pic_link:
+                "https://d3njjcbhbojbot.cloudfront.net/api/utilities/v1/imageproxy/https://d15cw65ipctsrr.cloudfront.net/63/264f5bf7334330995636a7a1c9c3e0/learn-js.jpg?auto=format%2Ccompress&amp;dpr=1&amp;w=330&amp;h=330&amp;fit=fill&amp;q=25",
+            certificate_preview_link:
+                "https://lh3.googleusercontent.com/d/1I8WTT7XmMv0fhgg-vMZwoDRUHzJliOsl=w1000?authuser=0",
+            number_of_people_rated: 890,
+            course_level: "Intermediate",
+            Rate: 4.2,
+            points_providing: 75,
+            Enrollment_Counts: 6800,
+            price: 1800,
             chapters: {
                 create: [
                     {
-                        title: 'SET UP AND BASICS',
+                        title: "Introduction to JavaScript",
                         videos: {
                             create: [
-                                { title: 'Java Tutorial for Beginners - Full Course', videoLink: 'https://youtu.be/ntLJmHOJ0ME?si=zfcttQ5Q3F4Al435' },
-                                { title: 'Java Programming Basics', videoLink: 'https://youtu.be/zIdg7hkqNE0?si=1zJij1QDYk1SVrVK' },
-                                { title: 'Java Object-Oriented Programming', videoLink: 'https://youtu.be/X0zdAG7gfgs?si=F3KP3-VwjUNBh_Lz' },
-                                { title: 'Java Tutorial for Beginners - Full Course', videoLink: 'https://youtu.be/HRfmLqqvzUs?si=huvO5lBIwHcYAtJM' },
-                            ]
-                        }
+                                { title: "JavaScript Basics", videoLink: "https://youtu.be/W6NZfCO5SIk?si=RWb1mHJspZxbDQ_1" },
+                                { title: "JavaScript Variables and Constants", videoLink: "https://youtu.be/1wztuq_mUfI?si=hAKSnBTSr9wBL0HR" },
+                            ],
+                        },
                     },
                     {
-                        title: 'Logic operations',
+                        title: "DOM Manipulation",
                         videos: {
                             create: [
-                                { title: 'Java Logic Operations Tutorial', videoLink: 'https://youtu.be/YPK6NYMJt_A?si=B1cwc_sVRQtSjcjO' },
-                                { title: 'Understanding Java Logic Operations', videoLink: 'https://youtu.be/hdOtQSuPBRY?si=hQ9LeEAk3-qsFa80' },
-                            ]
-                        }
+                                { title: "Introduction to the DOM", videoLink: "https://youtu.be/OtUlL5Lv1sA?si=F8sHvUgG7N9quXtS" },
+                                { title: "JavaScript Events", videoLink: "https://youtu.be/NKz7_2I6uhk?si=8kaJ3bsn9XrGJnzC" },
+                            ],
+                        },
                     },
-                    {
-                        title: 'LOOPS',
-                        videos: {
-                            create: [
-                                { title: 'Java Loops Tutorial', videoLink: 'https://youtu.be/GE5C_So1y00?si=OM-s93QoMFtg-uxR' },
-                                { title: 'For and While Loops in Java', videoLink: 'https://youtu.be/XFyNiI6ozO0?si=onOHE0ex1NmYwflo' },
-                                { title: 'Java Looping Concepts', videoLink: 'https://youtu.be/zY87HRloM18?si=pTaHT8ECnlDXjvAp' },
-                            ]
-                        }
-                    },
-                ]
-            }
-        }
+                ],
+            },
+        },
     });
 
-    await prisma.course.create({
+    // Course 5: Data Structures & Algorithms
+    const dsaCourse = await prisma.course.create({
         data: {
-            title: 'HTML CSS TUTORIAL',
-            description: 'Master the building blocks of web development with this course on HTML and CSS. You\'ll learn how to structure web pages with HTML and style them using CSS. Topics include responsive design, web accessibility, and modern web design practices, providing a strong foundation for creating visually appealing and functional websites.',
-            thumbnail_pic_link: 'https://imgs.search.brave.com/0GKnwqToKH8DhIhvJYLGFS_pJSt4a7i6kkKp_icP9KY/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9yZXMu/Y2xvdWRpbmFyeS5j/b20vcHJhY3RpY2Fs/ZGV2L2ltYWdlL2Zl/dGNoL3MtLVF0eFpB/UDNELS0vY19saW1p/dCxmX2F1dG8sZmxf/cHJvZ3Jlc3NpdmUs/cV9hdXRvLHdfODAw/L2h0dHBzOi8vMS5i/cC5ibG9nc3BvdC5j/b20vLUtQdFV2V3Vv/VFdnL1h5WXVnS2dE/dWtJL0FBQUFBQUFB/aC1jLzRGR3B3VTNO/ZTFnZXBhQk12UVpi/SWxiWG5SQzBNT1BI/QUNMY0JHQXNZSFEv/dzMyMC1oMzIwL0hU/TUwlMjUyQyUyQkNT/UyUyNTJDJTJCYW5k/JTJCSmF2YVNjcmlw/dCUyQmZvciUyQldl/YiUyQkRldmVsb3Bl/cnMlMkIlMjU1QkNv/dXJzZXJhJTI1NUQl/MkItJTJCYmVzdCUy/QmNvdXJzZXJhJTJC/Y291cnNlLndlYnA',
-            points_providing: 50,
-            course_type: 'Programming',
-            certificate_preview_link: 'https://lh3.googleusercontent.com/d/1WsQkGXdH8vxp2z1uqTRn04-LZxaJ7291=w1000?authuser=0',
-            price: 1500,
-            chapters: {
-                create: [
-                    {
-                        title: 'HTML BASICS',
-                        videos: {
-                            create: [
-                                { title: 'HTML Crash Course For Beginners', videoLink: 'https://youtu.be/mbeT8mpmtHA?si=lZHJzvPa2MRXk9SI' },
-                                { title: 'HTML Tutorial for Beginners', videoLink: 'https://youtu.be/YwbIeMlxZAU?si=E1nyWxexUJXPVKSU' },
-                            ]
-                        }
-                    },
-                    {
-                        title: 'CSS BASICS',
-                        videos: {
-                            create: [
-                                { title: 'CSS Tutorial for Beginners', videoLink: 'https://youtu.be/D3iEE29ZXRM?si=TxXqIHlQfXBsKhES' },
-                                { title: 'Learn CSS in 20 Minutes', videoLink: 'https://youtu.be/kGW8Al_cga4?si=xEncttcT-4XQthI-' },
-                                { title: 'CSS Crash Course', videoLink: 'https://youtu.be/FMu2cKWD90g?si=fPWNXY1MDMmxdb3k' },
-                            ]
-                        }
-                    },
-                ]
-            }
-        }
-    });
-
-    await prisma.course.create({
-        data: {
-            title: 'Python Course',
-            description: 'Dive into Python, a versatile and beginner-friendly programming language. This course covers essential topics such as variables, control structures, functions, and libraries. Whether you\'re interested in web development, data science, or automation, this course provides the skills needed to start coding in Python.',
-            thumbnail_pic_link: 'https://imgs.search.brave.com/UYYANil0rAnZ5zGbqkQt7XeWYmjfgbCkY_1-XMGPqoE/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9tZWRp/YS5nZWVrc2Zvcmdl/ZWtzLm9yZy9pbWct/cHJhY3RpY2UvcHJv/ZC9jb3Vyc2VzLzI1/Ni9XZWIvQ29udGVu/dC9Db3Vyc2VfUHlo/dG9uX3Byb2dyYW1f/d2VicF8xNzE2Mzcx/NjA4LndlYnA',
+            title: "Data Structures & Algorithms",
+            course_type: "Programming",
+            description:
+                "Learn the key concepts of data structures and algorithms. This course is essential for those looking to excel in coding interviews and understand the foundational principles that underpin efficient coding.",
+            thumbnail_pic_link:
+                "https://d3njjcbhbojbot.cloudfront.net/api/utilities/v1/imageproxy/https://d15cw65ipctsrr.cloudfront.net/b0/73c42fb4f443b0a802d5bed01add87/1325192.jpg?auto=format%2Ccompress&amp;dpr=1&amp;w=330&amp;h=330&amp;fit=fill&amp;q=25",
+            certificate_preview_link:
+                "https://lh3.googleusercontent.com/d/1oLjeJD05QezJbxfC-X8PjEMo0m2_SdeB=w1000?authuser=0",
+            number_of_people_rated: 6000,
+            course_level: "Advanced",
+            Rate: 4.8,
             points_providing: 150,
-            course_type: 'Advance Programming',
-            certificate_preview_link: 'https://lh3.googleusercontent.com/d/14roQIB8ulxj6W2S_KQCpf9yc6Rl0lAEp=w1000?authuser=0',
-            price: 2000,
+            Enrollment_Counts: 9000,
+            price: 5000,
             chapters: {
                 create: [
                     {
-                        title: 'INTRODUCTION TO PYTHON',
+                        title: "Arrays and Linked Lists",
                         videos: {
                             create: [
-                                { title: 'Python Programming Tutorial for Beginners - Full Course', videoLink: 'https://youtu.be/rfscVS0vtbw?si=9tKJ9uQ54I2zOs1m' },
-                                { title: 'Learn Python - Python Tutorial for Beginners', videoLink: 'https://youtu.be/YYXdXT2l-Gg?si=zuXnC4M3F5lJK02d' },
-                            ]
-                        }
+                                { title: "Introduction to Arrays", videoLink: "https://youtu.be/zuegQmMdy8M?si=ieG7HK5DY93pVJpO" },
+                                { title: "Singly Linked List", videoLink: "https://youtu.be/F9xtp11Vh24?si=H9EfWcFiLP-AK_L6" },
+                            ],
+                        },
                     },
                     {
-                        title: 'DATA TYPES AND VARIABLES',
+                        title: "Sorting Algorithms",
                         videos: {
                             create: [
-                                { title: 'Python Data Types Tutorial - Python Basics', videoLink: 'https://youtu.be/khKv-8q7YmY?si=wH8aB-cs-KKJ0U7q' },
-                                { title: 'Understanding Python Variables - Python Programming', videoLink: 'https://youtu.be/x-1dtcTVNjo?si=4Tp7r8uETv8cRXYB' },
-                            ]
-                        }
+                                { title: "Merge Sort", videoLink: "https://youtu.be/JSceec-wEyw?si=WUmKl5TWmoKDZcSk" },
+                                { title: "Quick Sort", videoLink: "https://youtu.be/SLauY6PpjW4?si=5U5tFOGJgKouTIp9" },
+                            ],
+                        },
                     },
-                    {
-                        title: 'CONTROL STRUCTURES',
-                        videos: {
-                            create: [
-                                { title: 'Python Control Structures - If Else Statements', videoLink: 'https://youtu.be/0z5Ykp0LFjs?si=3x1tKl8Y0bMyX9kd' },
-                                { title: 'Loops in Python - For and While Loops', videoLink: 'https://youtu.be/8L_pB2q7d0g?si=Nz37lUEyfG9kbiZP' },
-                            ]
-                        }
-                    },
-                    {
-                        title: 'FUNCTIONS AND MODULES',
-                        videos: {
-                            create: [
-                                { title: 'Functions in Python - Learn Python Functions', videoLink: 'https://youtu.be/9Os0o3wzS_I?si=1n2t0dDDxL5STZ9p' },
-                                { title: 'Python Modules - Importing and Using Modules', videoLink: 'https://youtu.be/YWbOH0om4MA?si=knrHZHCP16Gmq8rl' },
-                            ]
-                        }
-                    },
-                ]
-            }
-        }
+                ],
+            },
+        },
     });
 
-    await prisma.course.create({
+    // Course 6: Machine Learning with Python
+    const mlCourse = await prisma.course.create({
         data: {
-            title: 'React Course',
-            description: 'Build interactive user interfaces with React, a powerful JavaScript library for building dynamic web applications. This course covers React components, hooks, state management, and more. Ideal for developers looking to enhance their frontend skills with modern web development practices.',
-            thumbnail_pic_link: 'https://imgs.search.brave.com/RksYdT2k0vsXOgXmy6s5k6rp7R9Ahrx7G1QYSpG6XeM/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9tZWRp/YXJ0aWNsZS5pby9i/YWNrL2ltYWdlL2lt/YWdlL3ZpZGVvL2hv/dGtpbmctbG9vay1i/b3R0bGVkLXBvd2Vy/c2hpcGJjLWZ1bGwtaG9s/di1hbGktY3B4P3By/b3plYz1NMDM5NDgyOQ',
+            title: "Machine Learning with Python",
+            course_type: "Programming",
+            description:
+                "Unlock the power of machine learning with Python. This course covers supervised and unsupervised learning, model evaluation, and real-world applications. Ideal for aspiring data scientists and AI enthusiasts.",
+            thumbnail_pic_link:
+                "https://d3njjcbhbojbot.cloudfront.net/api/utilities/v1/imageproxy/https://d15cw65ipctsrr.cloudfront.net/30/642985a29449dba4ed46240a482e3a/new-ml-on-gcp-logo.jpeg?auto=format%2Ccompress&amp;dpr=1&amp;w=330&amp;h=330&amp;q=25&amp;fit=fill",
+            certificate_preview_link:
+                "https://lh3.googleusercontent.com/d/1VbId3OVh7Quu6fV0cTBHYJni72y8ln0k=w1000?authuser=0",
+            number_of_people_rated: 8000,
+            course_level: "Advanced",
+            Rate: 4.9,
             points_providing: 200,
-            course_type: 'Frontend Development',
-            certificate_preview_link: 'https://lh3.googleusercontent.com/d/1g4T82gwjQeY3lHqsoOBQj_hR3PrwJHEa=w1000?authuser=0',
+            Enrollment_Counts: 12000,
+            price: 6000,
+            chapters: {
+                create: [
+                    {
+                        title: "Introduction to Machine Learning",
+                        videos: {
+                            create: [
+                                { title: "What is Machine Learning?", videoLink: "https://youtu.be/ukzFI9rgwfU?si=c96TZ8AvbCKN4WPl" },
+                                { title: "Supervised Learning", videoLink: "https://youtu.be/6M5VXKLf4D4?si=Q_yvcayH_nPsdI-L" },
+                            ],
+                        },
+                    },
+                    {
+                        title: "Deep Learning",
+                        videos: {
+                            create: [
+                                { title: "Neural Networks", videoLink: "https://youtu.be/aircAruvnKk?si=Ulkmic4_tRjQCSsm" },
+                                { title: "Convolutional Neural Networks", videoLink: "https://youtu.be/YRhxdVk_sIs?si=mvOWqFZkS8oGBsFr" },
+                            ],
+                        },
+                    },
+                ],
+            },
+        },
+    });
+
+    // Course 7: Web Development Bootcamp
+    const webDevCourse = await prisma.course.create({
+        data: {
+            title: "Web Development Bootcamp",
+            course_type: "Programming",
+            description:
+                "Become a full-stack web developer by learning HTML, CSS, JavaScript, and back-end technologies. This comprehensive bootcamp takes you from beginner to pro, covering both front-end and back-end development.",
+            thumbnail_pic_link:
+                "https://d3njjcbhbojbot.cloudfront.net/api/utilities/v1/imageproxy/https://d15cw65ipctsrr.cloudfront.net/18/2aa16c328a457cb910aa933bf2cd87/Professional-Certificate-Cloud-App.jpg?auto=format%2Ccompress&amp;dpr=1&amp;w=330&amp;h=330&amp;fit=fill&amp;q=25",
+            certificate_preview_link:
+                "https://lh3.googleusercontent.com/d/1akTeOarEjb8cTND8e2uCsXkP0TP6GnAj=w1000?authuser=0",
+            number_of_people_rated: 9500,
+            course_level: "Beginner to Advanced",
+            Rate: 4.7,
+            points_providing: 180,
+            Enrollment_Counts: 14000,
+            price: 7000,
+            chapters: {
+                create: [
+                    {
+                        title: "HTML & CSS",
+                        videos: {
+                            create: [
+                                { title: "HTML Basics", videoLink: "https://youtu.be/pQN-pnXPaVg?si=ahY0VNHbgNOjrLer" },
+                                { title: "CSS Flexbox", videoLink: "https://youtu.be/JJSoEo8JSnc?si=6rwFZFcX3j1IwhpX" },
+                            ],
+                        },
+                    },
+                    {
+                        title: "JavaScript & DOM",
+                        videos: {
+                            create: [
+                                { title: "JavaScript Fundamentals", videoLink: "https://youtu.be/hdI2bqOjy3c?si=ybzRJ9Ce6kEP_-Fn" },
+                                { title: "DOM Manipulation", videoLink: "https://youtu.be/0ik6X4DJKCc?si=8XNx4OC5ATkA7cU1" },
+                            ],
+                        },
+                    },
+                    {
+                        title: "Back-end Development",
+                        videos: {
+                            create: [
+                                { title: "Node.js Basics", videoLink: "https://youtu.be/TlB_eWDSMt4?si=HvZ4Or5pGrHcGQJ5" },
+                                { title: "Express.js & APIs", videoLink: "https://youtu.be/L72fhGm1tfE?si=Uz91ckBdtNC9DCmr" },
+                            ],
+                        },
+                    },
+                ],
+            },
+        },
+    });
+
+    // Course 8: Artificial Intelligence for Everyone
+    const aiCourse = await prisma.course.create({
+        data: {
+            title: "Artificial Intelligence",
+            course_type: "AI & ML",
+            description:
+                "Explore the fascinating world of Artificial Intelligence. This course is designed for non-technical individuals interested in understanding AI concepts, applications, and the ethical considerations surrounding AI technology.",
+            thumbnail_pic_link:
+                "https://d3njjcbhbojbot.cloudfront.net/api/utilities/v1/imageproxy/https://s3.amazonaws.com/coursera-course-photos/a7/edd3b41ddd45298d7bbcb04b19fba6/200766_Logo-Image_1200x1200pxl-copy-3.png?auto=format%2Ccompress&amp;dpr=1&amp;w=330&amp;h=330&amp;fit=fill&amp;q=25",
+            certificate_preview_link:
+                "https://lh3.googleusercontent.com/d/1uY6bJHL5nyJK-fB5B5Umt3MmAjGcJ7bB=w1000?authuser=0",
+            number_of_people_rated: 11000,
+            course_level: "Beginner",
+            Rate: 4.5,
+            points_providing: 100,
+            Enrollment_Counts: 18000,
             price: 2500,
             chapters: {
                 create: [
                     {
-                        title: 'INTRODUCTION TO REACT',
+                        title: "Introduction to AI",
                         videos: {
                             create: [
-                                { title: 'React JS Crash Course', videoLink: 'https://youtu.be/dGcsHMXbSOA?si=wt7ANo5uOlnSgshs' },
-                                { title: 'React Tutorial for Beginners', videoLink: 'https://youtu.be/J8EXrFQG9kE?si=mVHRKr3sIBkqUxlr' },
-                            ]
-                        }
+                                { title: "What is AI?", videoLink: "https://youtu.be/kWmX3pd1f10?si=rYg98yYzxW8bfZr1" },
+                                { title: "History of AI", videoLink: "https://youtu.be/xyhl18Qtl7U?si=FJ_CNE0DBto5f92W" },
+                            ],
+                        },
                     },
                     {
-                        title: 'COMPONENTS AND PROPS',
+                        title: "AI in Real-World Applications",
                         videos: {
                             create: [
-                                { title: 'React Components and Props', videoLink: 'https://youtu.be/m6bPAy6q7VE?si=B8rw1H8DCRlYx2Hz' },
-                                { title: 'Understanding Props in React', videoLink: 'https://youtu.be/YZ6RGV3n7AE?si=J3G2F5eA5M3QWyxr' },
-                            ]
-                        }
+                                { title: "AI in Healthcare", videoLink: "https://youtu.be/if5snlsjB9k?si=NgivPqIWbhu-5-UV" },
+                                { title: "AI in Finance", videoLink: "https://youtu.be/dmFic6AQb9Y?si=HYKEAEw8L8qJ7W6d" },
+                            ],
+                        },
                     },
                     {
-                        title: 'STATE MANAGEMENT',
+                        title: "Ethical Considerations",
                         videos: {
                             create: [
-                                { title: 'React State Management with Hooks', videoLink: 'https://youtu.be/cZLP1H1is-M?si=46ktShw78m9FKhK7' },
-                                { title: 'Managing State in React Apps', videoLink: 'https://youtu.be/xvS_t73l2P0?si=8ccEjRiCK8kG6XHp' },
-                            ]
-                        }
+                                { title: "Ethics in AI", videoLink: "https://youtu.be/f6kdp27TYZs?si=89JX5j9Un_pNcM_i" },
+                                { title: "Future of AI", videoLink: "https://youtu.be/TNsfayV4I4Y?si=dJlOEwvOoe7E4DMI" },
+                            ],
+                        },
                     },
-                    {
-                        title: 'ROUTING IN REACT',
-                        videos: {
-                            create: [
-                                { title: 'React Router Tutorial', videoLink: 'https://youtu.be/0J2sOqOjw_Y?si=XN8WmScz4G3cbTrH' },
-                                { title: 'React Routing and Navigation', videoLink: 'https://youtu.be/nCE7MW8Zqms?si=8M9J-VS1uD77Jj9o' },
-                            ]
-                        }
-                    },
-                ]
-            }
-        }
+                ],
+            },
+        },
     });
-
-    console.log('Courses have been seeded successfully!');
 }
 
-setupCourses()
-    .catch(e => {
-        console.error(e);
-        process.exit(1);
-    })
-    .finally(async () => {
+main()
+    .then(async () => {
         await prisma.$disconnect();
+    })
+    .catch(async (e) => {
+        console.error(e);
+        await prisma.$disconnect();
+        process.exit(1);
     });
