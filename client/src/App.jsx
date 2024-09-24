@@ -16,16 +16,20 @@ import LeaderBoard from './pages/LeaderBoard';
 import Chatbot from './components/ChatBot';
 import Home from './pages/Home';
 import Skills from './pages/Skills';
+import NavBar from './components/Navbar';
+import Footer from './components/Footer';
+import About from './pages/About';
 const App = () => {
   return (
     <div className="App">
       <Chatbot />
+      <NavBar/>
       <Routes>
         <Route path="/contact-us" element={<ContactSection />} />
         <Route path="/chatbot" element={<ChatbotComponent />} />
         <Route path="/reset-password/:resetToken" element={<ResetPassword />} />
         <Route path='/forgot-password' element={<ForgotPassword />} />
-        <Route path="/" element={<Course />} />
+        <Route path="/" element={<Home />} />
         <Route path='/login' element={<Login />} />
         <Route path='/signup' element={<Signup />} />
         <Route path='/home' element={<Home />} />
@@ -35,8 +39,11 @@ const App = () => {
         <Route path="/profile" element={<Profile />} />
         <Route path="/skill" element={<Skills />} />
         <Route path="/video" element={<VideoPage />} />
+        <Route path='/about' element ={<About />} />
+
         <Route path="/leaderBoard" element={<LeaderBoard/>} />
       </Routes>
+      <Footer/>
     </div>
   );
 };

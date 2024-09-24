@@ -92,7 +92,7 @@ router.post('/generate-mcqs', async (req, res) => {
         }
 
         console.log("Full Transcript:", fullTranscript);
-        await fs.writeFileSync("./src/public/data.txt", fullTranscript);
+        await fs.writeFileSync("./public/data.txt", fullTranscript);
 
 
         console.log("TRANSCRIPT CREATED");
@@ -124,18 +124,18 @@ router.post('/generate-mcqs', async (req, res) => {
                answer: [To store values and data]
             
             Output should only contain the MCQs in the exact format described, with no additional commentary. The questions, options, and answers should come from the content of the provided transcript.`
-            const p2 = fs.readFileSync("./src/public/data.txt", "utf-8").trim();
+            const p2 = fs.readFileSync("./public/data.txt", "utf-8").trim();
             const prompt = p1 + " " + p2;
             console.log(p2)
             const model = genAI.getGenerativeModel({ model: "gemini-pro" });
             const result = await model.generateContent(prompt);
             const response = await result.response;
             const generatedText = response.text();
-            await fs.writeFileSync("./src/public/temp.txt", generatedText);
+            await fs.writeFileSync("./public/temp.txt", generatedText);
             console.log("MCQS Generated!........");
 
             // Wait for temp.txt to be created before sending response
-            await fs.promises.access("./src/public/temp.txt", fs.constants.F_OK)
+            await fs.promises.access("./public/temp.txt", fs.constants.F_OK)
                 .then(() => {
                     console.log("temp.txt exists");
                     res.send({ success: true, message: "MCQs generated successfully." });
@@ -157,7 +157,7 @@ router.post('/generate-mcqs', async (req, res) => {
     async function readTempFile() {
 
 
-        fs.readFile('./src/public/temp.txt', 'utf8', (err, data) => {
+        fs.readFile('./public/temp.txt', 'utf8', (err, data) => {
             if (err) {
                 console.log(err)
                 console.error(err);

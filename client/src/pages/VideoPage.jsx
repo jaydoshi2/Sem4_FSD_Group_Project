@@ -18,7 +18,6 @@ const VideoPage = () => {
     const [userDisliked, setUserDisliked] = useState(false);
     const [progress, setProgress] = useState(0);
     const [sidebarVisible, setSidebarVisible] = useState(false);
-    const [id] = useState(JSON.parse(localStorage.getItem('user')));
     const [courseProgress, setCourseProgress] = useState([]);
     const [courseId, setCourseId] = useState(null);
     const [videoId, setVideoId] = useState(null);
@@ -30,16 +29,20 @@ const VideoPage = () => {
         const queryParams = new URLSearchParams(window.location.search);
         const courseId = queryParams.get('course_id');
         const videoId = queryParams.get('video_id');
-        if (courseId !== null && videoId !== null) {
-            setCourseId(Number(courseId)); // Ensuring courseId is a number
-            setVideoId(Number(videoId));   // Ensuring videoId is a number
-            fetchData(courseId, videoId);
+        const userData = JSON.parse(localStorage.getItem('user'));
+        
+        if (userData && userData.user_id) {
+            setUserId(userData.user_id);  // Set userId here
+            if (courseId && videoId) {
+                fetchData(courseId, videoId, userData.user_id);  // Pass user_id directly to fetchData
+            }
         }
-        // check condition here 100%
     }, [location.search, location.state]);
+    
     useEffect(() => {
         // Check progress here
         console.log("comming")
+
         if (progress === 100) {
             setCourseCompleted(true);
         }
@@ -49,10 +52,10 @@ const VideoPage = () => {
         navigate(`/certificate/${courseId}`); // Adjust the path as necessary
     };
 
-
-    const fetchData = async (courseId, videoId) => {
+    const fetchData = async (courseId, videoId, userId) => {
         try {
             setLoader(true);
+
             if (videoId) {
                 const videoResponse = await axios.get(`http://${myIP}:3000/vid/video-details/${videoId}`);
                 const videoData = videoResponse.data;
@@ -67,8 +70,9 @@ const VideoPage = () => {
                 setUserDisliked(videoData.userDisliked);
             }
 
-            if (courseId) {
-                const progressResponse = await axios.post(`http://${myIP}:3000/vid/course-progress/${courseId}`, { userId: userId }, {});
+            if (courseId && userId) {  // Ensure userId is not undefined
+                console.log("User ID in fetchData:", userId);
+                const progressResponse = await axios.post(`http://${myIP}:3000/vid/course-progress/${courseId}`, { userId });
                 setProgress(progressResponse.data.completed_course);
                 setCourseProgress(progressResponse.data.chapters);
             }
