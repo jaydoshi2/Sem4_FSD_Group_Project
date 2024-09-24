@@ -5,7 +5,7 @@ const videoService = require('../services/videoService');
 // Get course progress by course ID
 // Get video details by video ID
 exports.getVideoDetails = async (req, res) => {
-    const  videoId  = parseInt(req.params.videoId, 10);
+    const videoId = parseInt(req.params.videoId, 10);
 
     try {
         const video = await videoService.fetchVideoDetails(videoId);
@@ -17,7 +17,8 @@ exports.getVideoDetails = async (req, res) => {
 };
 
 exports.getCourseProgress = async (req, res) => {
-    const userId = 'user15222-id'; // Assumes authentication middleware sets req.user.id
+    const { userId } = req.body;
+    console.log("user id in  : ", userId)
     const courseId = parseInt(req.params.courseId, 10);
 
     if (isNaN(courseId)) {
@@ -35,8 +36,7 @@ exports.getCourseProgress = async (req, res) => {
 
 // Like a video
 exports.likeVideo = async (req, res) => {
-    const { videoId } = req.body;
-    const userId ='user15222-id';
+    const { videoId, userId } = req.body;
 
     try {
         const updatedVideo = await videoService.likeVideo(userId, videoId);
@@ -49,8 +49,7 @@ exports.likeVideo = async (req, res) => {
 
 // Dislike a video
 exports.dislikeVideo = async (req, res) => {
-    const { videoId } = req.body;
-    const userId = 'user15222-id';
+    const { videoId, userId } = req.body;
 
     try {
         const updatedVideo = await videoService.dislikeVideo(userId, videoId);
@@ -63,7 +62,6 @@ exports.dislikeVideo = async (req, res) => {
 
 
 exports.markChapterAndCourseCompleted = async (req, res) => {
-    console.log("maker")
     const { userId, videoId, chapterId, courseId } = req.body;
 
     try {

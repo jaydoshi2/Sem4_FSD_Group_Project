@@ -2,11 +2,11 @@
 
 const express = require('express');
 const videoController = require('../controllers/videoController');
-const path = require('path');
+
 const router = express.Router();
 
 // Get course progress by course ID
-router.get('/course-progress/:courseId', videoController.getCourseProgress);
+router.post('/course-progress/:courseId', videoController.getCourseProgress);
 // Get video details by video ID
 router.get('/video-details/:videoId', videoController.getVideoDetails);
 
@@ -44,13 +44,6 @@ router.use(express.json())
 router.use(express.static('public'));
 
 const genAI = new GoogleGenerativeAI("AIzaSyDx7S0LaJhR4DemRCIJUVDxaGBWbcx50gg");
-const publicPath = path.join(__dirname, '..', 'public');
-
-// Serve static files from the 'public' directory
-router.use(express.static(publicPath));
-
-console.log('Public directory path:', publicPath);
-
 
 router.get('/generate-mcqs', (req, res) => {
     res.json({ questions, options, answers })
@@ -61,7 +54,6 @@ router.post('/generate-mcqs', async (req, res) => {
 
     try {
         const video_id = req.body.videoId
-        console.log(video_id)
         console.log("GENERATING TRANSCRIPT ");
         const params = {
             engine: "youtube_transcripts",
@@ -100,15 +92,15 @@ router.post('/generate-mcqs', async (req, res) => {
         }
 
         console.log("Full Transcript:", fullTranscript);
-        await fs.writeFileSync(publicPath + "/data.txt", fullTranscript);
+        await fs.writeFileSync("./src/public/data.txt", fullTranscript);
 
 
         console.log("TRANSCRIPT CREATED");
         console.log("GENEREATING MCQS ");
 
         setTimeout(async () => {    // Generate MCQs and save to temp.txt
-            const prompt = `
-            Generate 5 multiple-choice questions (MCQs) based only on the provided transcript. Follow this format exactly: 
+            // const p1 = "GIVE ME 5 MCQS FROM GIVEN PARAGRAPH and i want in this format: for example : 1 : {What is the purpose of variables in JavaScript?} a : (To store values and data) b : (To control the flow of execution) c : (To perform calculations) d : (To perform calculations) answer : [To perform calculations] inside the square bracket there should be correct answer of the question from the optiosn and do not use other than {}[]() and i want same format as i mentioned above and the answers should be randomised not should be in the certain pattern that user can Identify and solve the mcqs easily all options should be covered in answers, create tricky answers not the tricky questoins/options both should be from the transcript only, it should'nt be out of it"; // Your prompt
+            const p1 = `Generate 5 multiple-choice questions (MCQs) based only on the provided transcript. Follow this format exactly: 
             
             1: {What is the main concept discussed in the transcript?} 
                a: (Explanation A) 
@@ -118,10 +110,10 @@ router.post('/generate-mcqs', async (req, res) => {
                answer: [Correct Explanation from options]
             
             Instructions:
-            1. **Question Source**: All questions and options must strictly come from the provided transcript. No external knowledge should be added.
-            2. **Random Answer Order**: Randomize the placement of correct answers across all MCQs (a, b, c, d). Ensure all answer positions (a, b, c, d) are covered across the 5 questions to avoid any patterns.
-            3. **Tricky Yet Relevant**: Make both the questions and options nuanced and tricky, focusing on less obvious details in the transcript to challenge the user’s understanding.
-            4. **Correct Format**: Use the exact format, with {} for questions, () for options, and [] for correct answers. The correct answer must be inside square brackets, following the format below.
+            1. *Question Source*: All questions and options must strictly come from the provided transcript. No external knowledge should be added.
+            2. *Random Answer Order*: Randomize the placement of correct answers across all MCQs (a, b, c, d). Ensure all answer positions (a, b, c, d) are covered across the 5 questions to avoid any patterns.
+            3. *Tricky Yet Relevant*: Make both the questions and options nuanced and tricky, focusing on less obvious details in the transcript to challenge the user’s understanding.
+            4. *Correct Format*: Use the exact format, with {} for questions, () for options, and [] for correct answers. The correct answer must be inside square brackets, following the format below.
             
             Example format:
             1: {What is the purpose of variables in JavaScript?} 
@@ -131,21 +123,19 @@ router.post('/generate-mcqs', async (req, res) => {
                d: (To define the logic of the program) 
                answer: [To store values and data]
             
-            Output should only contain the MCQs in the exact format described, with no additional commentary. The questions, options, and answers should come from the content of the provided transcript.
-            
-            `;
-            const p2 = fs.readFileSync(publicPath + "/data.txt", "utf-8").trim();
-            const completePrompt = prompt + " " + p2;
+            Output should only contain the MCQs in the exact format described, with no additional commentary. The questions, options, and answers should come from the content of the provided transcript.`
+            const p2 = fs.readFileSync("./src/public/data.txt", "utf-8").trim();
+            const prompt = p1 + " " + p2;
             console.log(p2)
             const model = genAI.getGenerativeModel({ model: "gemini-pro" });
-            const result = await model.generateContent(completePrompt);
+            const result = await model.generateContent(prompt);
             const response = await result.response;
             const generatedText = response.text();
-            await fs.writeFileSync(publicPath + "/temp.txt", generatedText);
+            await fs.writeFileSync("./src/public/temp.txt", generatedText);
             console.log("MCQS Generated!........");
 
             // Wait for temp.txt to be created before sending response
-            await fs.promises.access(publicPath + "/temp.txt", fs.constants.F_OK)
+            await fs.promises.access("./src/public/temp.txt", fs.constants.F_OK)
                 .then(() => {
                     console.log("temp.txt exists");
                     res.send({ success: true, message: "MCQs generated successfully." });
@@ -167,7 +157,7 @@ router.post('/generate-mcqs', async (req, res) => {
     async function readTempFile() {
 
 
-        fs.readFile(publicPath + '/temp.txt', 'utf8', (err, data) => {
+        fs.readFile('./src/public/temp.txt', 'utf8', (err, data) => {
             if (err) {
                 console.log(err)
                 console.error(err);
@@ -211,7 +201,7 @@ router.post('/generate-mcqs', async (req, res) => {
             console.log("Options:", options);
             console.log("Answers:", answers);
 
-            // fs.writeFileSync(publicPath+"/temp.txt", '');
+            // fs.writeFileSync("../public/temp.txt", '');
 
         });
 

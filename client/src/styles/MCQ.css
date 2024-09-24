@@ -45,6 +45,20 @@
     color: #fff;
 }
 
+#loader1 {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 9999;
+}
+
+.spinner-border {
+    width: 3rem;
+    height: 3rem;
+    border-width: 0.3rem;
+}
+
 .option-button.incorrect {
     background-color: #f44336;
     /* Red */
@@ -206,6 +220,7 @@
     margin-top: 10px;
     font-size: 16px;
 }
+
 /* MCQ.css */
 
 .mcq-container {

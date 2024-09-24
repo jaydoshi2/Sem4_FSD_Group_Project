@@ -120,7 +120,6 @@ exports.dislikeVideo = async (userId, videoId) => {
 };
 
 exports.fetchVideoDetails = async (videoId, userId) => {
-    console.log("video id is :",videoId)
     const video = await prisma.video.findUnique({
         where: { video_id: videoId },
         select: {
@@ -149,10 +148,9 @@ exports.fetchVideoDetails = async (videoId, userId) => {
     };
 };
 
-exports.markVideoAsCompleted = async (userId, videoId) => {
+exports.markVideoAsCompleted = async (userId, videoId, courseId) => {
     try {
         // Find the existing user video progress
-        console.log("aayo")
         const videoIdInt = parseInt(videoId, 10);
         const userVideoProgress = await prisma.userVideoProgress.findFirst({
             where: {
@@ -243,6 +241,7 @@ exports.markVideoChapterAndCourseCompleted = async (userId, videoId, chapterId, 
                 });
             }
         }
+        updateProgressForUser(userId, courseIdInt)
 
         return true;
     } catch (error) {
@@ -250,3 +249,112 @@ exports.markVideoChapterAndCourseCompleted = async (userId, videoId, chapterId, 
         return false;
     }
 };
+
+async function updateProgressForUser(username, courseId) {
+    // Fetch the user and their progress for the specified course
+    const user = await prisma.user.findUnique({
+        where: { user_id: username },
+        include: {
+            course_progress: {
+                where: {
+                    courseId: courseId // Filter by the specific courseId
+                },
+                include: {
+                    course: {
+                        include: {
+                            chapters: {
+                                include: {
+                                    videos: true
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    });
+
+    if (!user) {
+        console.log('User not found');
+        return { success: false, message: 'User not found' };
+    }
+
+    const courseProgress = user.course_progress[0]; // Since we are fetching only one course, get the first element
+    if (!courseProgress) {
+        console.log('No progress found for the specified course');
+        return { success: false, message: 'No progress found for the specified course' };
+    }
+
+    const course = courseProgress.course;
+
+    // Fetch completed videos for the user in the specific course
+    const completedVideos = await prisma.userVideoProgress.findMany({
+        where: {
+            userId: user.user_id,
+            completed: true,
+            video: {
+                chapter: {
+                    courseId: courseId // Ensure only videos from the specific course are considered
+                }
+            }
+        },
+        include: {
+            video: {
+                include: {
+                    chapter: true
+                }
+            }
+        }
+    });
+
+    // Calculate course progress
+    const courseProgressPercentage = calculateCourseProgress(course, completedVideos.map(cv => ({
+        chapterId: cv.video.chapterId,
+        videoId: cv.videoId
+    })));
+
+    console.log(`Course progress for ${course.course_title}: ${courseProgressPercentage}%`);
+
+    // Update course progress for the user
+    const updatedCourseProgress = await prisma.userCourseProgress.update({
+        where: {
+            id: courseProgress.id
+        },
+        data: {
+            completed_course: courseProgressPercentage,
+            completed: courseProgressPercentage === 100
+        }
+    });
+
+    console.log(`Progress updated successfully for course: ${course.course_title} and user: ${username}`);
+
+    // Return the completion status
+    if (courseProgressPercentage === 100) {
+        return { success: true, message: 'Course completed', redirect: true }; // Indicate completion
+    } else {
+        return { success: true, message: 'Progress updated', redirect: false }; // Indicate progress
+    }
+}
+
+// Helper function to calculate course progress
+function calculateCourseProgress(course, completedVideos) {
+    const totalChapters = course.chapters.length;
+    let totalProgress = 0;
+
+    course.chapters.forEach((chapter) => {
+        const eachChapterWeight = 1 / totalChapters;
+        const totalVideosInEachChapter = chapter.videos.length;
+        let completedVideosInEachChapter = 0;
+
+        chapter.videos.forEach((video) => {
+            if (completedVideos.some(cv => cv.chapterId === chapter.chapter_id && cv.videoId === video.video_id)) {
+                completedVideosInEachChapter++;
+            }
+        });
+
+        const chapterProgress = (completedVideosInEachChapter / totalVideosInEachChapter) * eachChapterWeight;
+        totalProgress += chapterProgress;
+    });
+
+    return parseFloat((totalProgress * 100).toFixed(2)); // Convert to percentage and ensure it's a float with 2 decimal places
+}
