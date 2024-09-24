@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
 import '../styles/Course.css';
+import BookLoader from '../components/BookLoader';
 
 const Course = () => {
   const [user, setUser] = useState(null);
@@ -86,7 +87,7 @@ const Course = () => {
       .catch((error) => console.error("Logout failed", error));
   };
 
-  if (loading) return <div>Loading...</div>;
+  if (loading) return <BookLoader/>;
 
   return (
     <div className="course-page">

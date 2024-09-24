@@ -21,7 +21,7 @@ const Login = () => {
     const userId = params.get('userId');
     if (userId) {
       localStorage.setItem("user", JSON.stringify({ user_id: userId }));
-      navigate("/Home");
+      navigate("/Course");
     }
   };
 
@@ -31,7 +31,7 @@ const Login = () => {
       console.log(response.data.isAuthenticated);
       if (response.data.isAuthenticated) {
         localStorage.setItem("user", JSON.stringify(response.data.user));
-        navigate("/Home");
+        navigate("/Course");
       }
     } catch (error) {
       console.error("Auth check failed", error);
@@ -48,7 +48,7 @@ const Login = () => {
       const url = `http://${myIP}:3000/auth/login`;
       const response = await axios.post(url, data, { withCredentials: true })
       localStorage.setItem("user", JSON.stringify(response.data.user));
-      navigate("/Home");
+      navigate("/Course");
     } catch (error) {
       if (error.response && error.response.status >= 400 && error.response.status <= 500) {
         console.log(error.response.data.message);
@@ -66,7 +66,7 @@ const Login = () => {
           token: tokenResponse.access_token,
         });
         localStorage.setItem('user', JSON.stringify(res.data.user));
-        navigate('/Home');
+        navigate('/Course');
       } catch (err) {
         console.error(err);
         setError("Google Sign-In failed. Please try again.");

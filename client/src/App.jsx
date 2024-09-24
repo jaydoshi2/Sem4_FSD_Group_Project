@@ -35,7 +35,7 @@ const App = () => {
         <Route path="/profile" element={<Profile />} />
         <Route path="/skill" element={<Skills />} />
         <Route path="/video" element={<VideoPage />} />
-        <Route path="/lead" element={<LeaderBoard/>} />
+        <Route path="/leaderBoard" element={<LeaderBoard/>} />
       </Routes>
     </div>
   );

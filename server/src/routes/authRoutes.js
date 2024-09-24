@@ -38,19 +38,7 @@ router.get('/check-auth', authenticate, authController.checkAuth);
 router.get('/presignedurl', authController.presignedurl);
 
 router.post('/forgot-password',authController.forgotPassword)
-router.post('/reset-password/:resetToken', async (req, res) => {
-  const { resetToken } = req.params;
-  const { password } = req.body;
-
-  try {
-    // Your logic to verify the token and reset the password
-    await authService.updateUserPasswordByResetToken(resetToken, password);
-    res.status(200).json({ message: 'Password reset successfully' });
-  } catch (error) {
-    console.log(error)
-    res.status(400).json({ error: 'Error resetting password' });
-  }
-});
+router.post('/reset-password/:resetToken',authController.resetPassword);
 
 
 module.exports = router;
