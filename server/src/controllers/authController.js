@@ -163,6 +163,8 @@ exports.presignedurl = async (req, res) => {
   }
 };
 
+// Password reset token expiration
+const TOKEN_EXPIRATION_TIME = 90 * 1000; // 90 seconds
 
 exports.forgotPassword = async (req, res, next) => {
   try {
@@ -176,17 +178,19 @@ exports.forgotPassword = async (req, res, next) => {
     const resetToken = crypto.randomBytes(32).toString('hex');
     const resetPasswordUrl = `http://${process.env.MY_IP}:5173/reset-password/${resetToken}`;
 
-    await authService.saveResetToken(user.user_id, resetToken);
+    const expirationTime = Date.now() + TOKEN_EXPIRATION_TIME;
+
+    await authService.saveResetToken(user.user_id, resetToken, expirationTime);
 
     await sendEmail({
       to: email,
       subject: 'Password Reset Request',
-      text: `You requested a password reset. Click the link to reset your password: ${resetPasswordUrl}`
+      text: `You requested a password reset. Click the link to reset your password: ${resetPasswordUrl}. The link will expire in 90 seconds.`,
     });
 
-    res.json({ message: 'Password reset link sent to your email' });
+    res.json({ message: 'Password reset link sent to your email', expirationTime });
   } catch (error) {
-    console.log(error)
+    console.log(error);
     next(new AppError('Error sending reset link', 500));
   }
 };
@@ -194,20 +198,23 @@ exports.forgotPassword = async (req, res, next) => {
 exports.resetPassword = async (req, res, next) => {
   try {
     const { resetToken } = req.params;
-    // console.log(resetToken)
     const { password } = req.body;
 
     const user = await authService.findUserByResetToken(resetToken);
-    console.log("USER ",user)
+
     if (!user) {
       return next(new AppError('Invalid or expired token', 400));
+    }
+
+    if (Date.now() > user.resetTokenExpiration) {
+      return next(new AppError('Token has expired. Please request a new reset link.', 400));
     }
 
     await authService.updateUserPassword(user.user_id, password);
 
     res.json({ message: 'Password reset successfully' });
   } catch (error) {
-    console.log(error)
+    console.log(error);
     next(new AppError('Error resetting password', 500));
   }
 };

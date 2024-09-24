@@ -23,7 +23,8 @@ const MYIP = process.env.MY_IP;
 
 const allowedOrigins = [
   `http://${MYIP}:5173`, 
-  'http://localhost:5173'
+  'http://localhost:5173',
+  'https://tpmljttm-5173.inc1.devtunnels.ms',
 ];
 
 app.use(errorHandler);
