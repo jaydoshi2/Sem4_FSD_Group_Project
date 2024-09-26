@@ -51,21 +51,21 @@ const Skills = () => {
 
   const handleReadMoreClick = async (course) => {
     const courseId = course.course_id;
-    try {
-      const response = await axios.get(`http://${myIP}:3000/from/first-chapter-video/${courseId}`);
-      const data = response.data;
+    navigate(`/courseDetails?course_id=${courseId}`);
+    // try {
+    //   const response = await axios.get(`http://${myIP}:3000/from/first-chapter-video/${courseId}`);
+    //   const data = response.data;
 
-      if (response.status === 200) {
-        const chapter_id = data.chapter_id;
-        const video_id = data.video_id;
-        navigate(`/video?course_id=${courseId}&chapter_id=${chapter_id}&video_id=${video_id}`);
-        // navigate(`/courseDetails?course_id=${courseId}`);
-      } else {
-        console.error('Error fetching chapter and video:', data.message);
-      }
-    } catch (error) {
-      console.error('Error:', error.message);
-    }
+    //   if (response.status === 200) {
+    //     const chapter_id = data.chapter_id;
+    //     const video_id = data.video_id;
+    //     navigate(`/video?course_id=${courseId}&chapter_id=${chapter_id}&video_id=${video_id}`);
+    //   } else {
+    //     console.error('Error fetching chapter and video:', data.message);
+    //   }
+    // } catch (error) {
+    //   console.error('Error:', error.message);
+    // }
   };
 
   // Calculate the courses to display on the current page
@@ -78,6 +78,8 @@ const Skills = () => {
 
   return (
     <>
+      <div className='mt-5'>
+
       <SubNavbar />
       <div className="w-full p-4">
         {loading ? (
@@ -154,6 +156,7 @@ const Skills = () => {
         ) : (
           <p>No courses found for the selected category.</p>
         )}
+      </div>
       </div>
     </>
   );

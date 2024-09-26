@@ -1,18 +1,19 @@
+// /src/components/SkeletonSubNavbar.js
 import React from 'react';
-import '../styles/SkeletonSubNavbar.css';
+import styles from '../styles/SkeletonSubNavbar.module.css'; // Import the CSS Module
 
 const SkeletonSubNavbar = () => {
     return (
-        <div className="skeleton-subnavbar">
-            <div className="skeleton-item"></div>
-            <div className="skeleton-item"></div>
-            <div className="skeleton-item"></div>
-            <div className="skeleton-item"></div>
-            <div className="skeleton-item"></div>
-            <div className="skeleton-item"></div>
-            <div className="skeleton-item"></div>
-            <div className="skeleton-item"></div>
-            <div className="skeleton-item"></div>
+        <div className={styles.skeletonSubNavbar}>
+            <div className={styles.skeletonItem}></div>
+            <div className={styles.skeletonItem}></div>
+            <div className={styles.skeletonItem}></div>
+            <div className={styles.skeletonItem}></div>
+            <div className={styles.skeletonItem}></div>
+            <div className={styles.skeletonItem}></div>
+            <div className={styles.skeletonItem}></div>
+            <div className={styles.skeletonItem}></div>
+            <div className={styles.skeletonItem}></div>
         </div>
     );
 };

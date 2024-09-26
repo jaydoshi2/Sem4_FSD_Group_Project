@@ -1,5 +1,5 @@
 import React from "react";
-import WP1 from '../assets/images/profile.png';
+import WP1 from '../assets/images/sampleprofile.png';
 import '../styles/TeamSection.css'
 // import NavBar from "../components/Navbar";
 // import Footer from "../components/Footer";

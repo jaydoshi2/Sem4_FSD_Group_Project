@@ -63,7 +63,7 @@ const MCQ = ({ props, onClose }) => {
         onClose();
         const url = window.location.search;
         // navigate('/course' + url); // Redirect to VideoPage
-        navigate('/course' + url, { state: { shouldRender: true } });
+        navigate('/video' + url, { state: { shouldRender: true } });
 
     };
 

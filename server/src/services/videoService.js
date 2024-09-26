@@ -41,10 +41,12 @@ exports.fetchCourseProgress = async (userId, courseId) => {
 
 
 
+// Like a video
 exports.likeVideo = async (userId, videoId) => {
     try {
         const videoIdInt = parseInt(videoId, 10);
 
+        // Find interaction by composite key
         const interaction = await prisma.videoInteraction.findUnique({
             where: { userId_videoId: { userId, videoId: videoIdInt } },
         });
@@ -52,19 +54,22 @@ exports.likeVideo = async (userId, videoId) => {
         if (interaction) {
             if (interaction.liked) return interaction;
 
+            // Update video like/dislike counts
             await prisma.video.update({
                 where: { video_id: videoIdInt },
                 data: {
-                    dislikesCount: { decrement: 1 },
+                    dislikesCount: interaction.dislike ? { decrement: 1 } : undefined, // Only decrement dislikes if it was previously disliked
                     likesCount: { increment: 1 },
                 },
             });
 
+            // Update interaction
             return await prisma.videoInteraction.update({
                 where: { userId_videoId: { userId, videoId: videoIdInt } },
                 data: { liked: true, dislike: false },
             });
         } else {
+            // Create new interaction
             await prisma.video.update({
                 where: { video_id: videoIdInt },
                 data: { likesCount: { increment: 1 } },
@@ -80,10 +85,12 @@ exports.likeVideo = async (userId, videoId) => {
     }
 };
 
+// Dislike a video
 exports.dislikeVideo = async (userId, videoId) => {
     try {
         const videoIdInt = parseInt(videoId, 10);
 
+        // Find interaction by composite key
         const interaction = await prisma.videoInteraction.findUnique({
             where: { userId_videoId: { userId, videoId: videoIdInt } },
         });
@@ -91,19 +98,22 @@ exports.dislikeVideo = async (userId, videoId) => {
         if (interaction) {
             if (interaction.dislike) return interaction;
 
+            // Update video like/dislike counts
             await prisma.video.update({
                 where: { video_id: videoIdInt },
                 data: {
                     dislikesCount: { increment: 1 },
-                    likesCount: { decrement: 1 },
+                    likesCount: interaction.liked ? { decrement: 1 } : undefined, // Decrement likes only if it was previously liked
                 },
             });
 
+            // Update interaction to dislike the video
             return await prisma.videoInteraction.update({
                 where: { userId_videoId: { userId, videoId: videoIdInt } },
                 data: { liked: false, dislike: true },
             });
         } else {
+            // Create new interaction as disliked
             await prisma.video.update({
                 where: { video_id: videoIdInt },
                 data: { dislikesCount: { increment: 1 } },

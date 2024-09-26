@@ -5,14 +5,16 @@ import "aos/dist/aos.css";
 import "glightbox/dist/css/glightbox.min.css";
 import "swiper/css";
 import "swiper/css/bundle";
-import "../styles/Home.css";
+// import "../styles/Home.css";
 import AOS from "aos";
 import GLightbox from "glightbox";
 import Swiper from "swiper";
 import imagesLoaded from "imagesloaded";
 import Isotope from "isotope-layout";
 import HeroImage from "../assets/images/profile.png";
+import four from "../assets/images/hero-img.png";
 import webLogo from "../assets/images/profile.png"
+import te from "../assets/images/sampleprofile.png"
 import { HashLink as Link } from "react-router-hash-link";
 import About from './About.jsx'
 import TeamSection from "./TeamSection.jsx";
@@ -386,7 +388,7 @@ const Home = () => {
                 data-aos-delay="200"
               >
                 <img
-                  src={HeroImage}
+                  src={four}
                   className="img-fluid animated"
                   alt="Hero"
                 />

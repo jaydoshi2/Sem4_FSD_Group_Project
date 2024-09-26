@@ -30,7 +30,8 @@ const VideoPage = () => {
         const courseId = queryParams.get('course_id');
         const videoId = queryParams.get('video_id');
         const userData = JSON.parse(localStorage.getItem('user'));
-        
+        setCourseId(Number(courseId)); // Ensuring courseId is a number
+        setVideoId(Number(videoId));   
         if (userData && userData.user_id) {
             setUserId(userData.user_id);  // Set userId here
             if (courseId && videoId) {
@@ -85,6 +86,7 @@ const VideoPage = () => {
     };
 
     const handleLike = async () => {
+        console.log("userrid : ",userId)
         const endpoint = userLiked ? '/vid/unlike-video' : '/vid/like-video';
         try {
             setLikes(prevLikes => userLiked ? prevLikes - 1 : prevLikes + 1);
@@ -94,7 +96,7 @@ const VideoPage = () => {
                 setDislikes(prevDislikes => prevDislikes - 1);
                 setUserDisliked(false);
             }
-
+            console.log("video id :",videoId)
             await axios.post(`http://${myIP}:3000${endpoint}`, { videoId, userId }, {
             });
         } catch (error) {
@@ -109,6 +111,7 @@ const VideoPage = () => {
     };
 
     const handleDislike = async () => {
+        console.log("userrid : ", userId)
         const endpoint = userDisliked ? '/vid/undislike-video' : '/vid/dislike-video';
         try {
             setDislikes(prevDislikes => userDisliked ? prevDislikes - 1 : prevDislikes + 1);
@@ -118,6 +121,7 @@ const VideoPage = () => {
                 setLikes(prevLikes => prevLikes - 1);
                 setUserLiked(false);
             }
+            console.log("video id :", videoId)
 
             await axios.post(`http://${myIP}:3000${endpoint}`, { videoId, userId }, {
             });
@@ -141,7 +145,7 @@ const VideoPage = () => {
     };
 
     const goto = (chapter_id, video_id) => {
-        navigate(`/course?course_id=${courseId}&chapter_id=${chapter_id}&video_id=${video_id}`);
+        navigate(`/video?course_id=${courseId}&chapter_id=${chapter_id}&video_id=${video_id}`);
     };
 
     const handleOpenMCQModal = () => {

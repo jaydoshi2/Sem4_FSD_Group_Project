@@ -4,7 +4,19 @@ import '../styles/Home.css'
 import {Link} from 'react-router-dom'
 import webLogo from '../assets/images/profile.png'
 import myimg from '../assets/images/profile.png'
+import axios from 'axios'
 const NavBar = () => {
+    const logout = () => {
+        axios.post(`http://${myIP}:3000/auth/logout`, {}, { withCredentials: true })
+            .then(() => {
+                localStorage.removeItem('user');
+                setUser(null);
+                setIsAuthenticated(false);
+                navigate('/');
+            })
+            .catch((error) => console.error("Logout failed", error));
+    };
+
   const mobileNavToggleBtn = useRef(null);
 
     return (
@@ -29,10 +41,13 @@ const NavBar = () => {
                                 <Link to="/about">About</Link>
                             </li>
                             <li>
-                                <Link to="/courses">Courses</Link>
+                                <Link to="/course">Courses</Link>
                             </li>
                             <li>
                                 <Link to="/contact">Contact</Link>
+                            </li>
+                            <li>
+                                <Link to="/profile">Profile</Link>
                             </li>
                         </ul>
                         <i
@@ -41,8 +56,8 @@ const NavBar = () => {
                         ></i>
                     </nav>
                 </div>
-                <Link className="btn-getstarted" to="#about">
-                  Login
+                <Link className="btn-getstarted" to="/" onClick={logout}>
+                  Logout
                 </Link>
             </div>
       </header>

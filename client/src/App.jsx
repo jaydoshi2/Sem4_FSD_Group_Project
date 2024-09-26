@@ -11,7 +11,7 @@ import Profile from './pages/Profile';
 import UserCoursesPage from './pages/UserCourse';
 import ChatbotComponent from './components/ChatBot';
 import ContactSection from './pages/ContactSection';
-import VideoPage from './pages/VideoPage';  
+import VideoPage from './pages/VideoPage';
 import LeaderBoard from './pages/LeaderBoard';
 import Chatbot from './components/ChatBot';
 import Home from './pages/Home';
@@ -20,6 +20,7 @@ import NavBar from './components/Navbar';
 import Footer from './components/Footer';
 import About from './pages/About';
 const App = () => {
+  
   return (
     <div className="App">
       <Chatbot />
@@ -30,7 +31,9 @@ const App = () => {
         <Route path="/reset-password/:resetToken" element={<ResetPassword />} />
         <Route path='/forgot-password' element={<ForgotPassword />} />
         <Route path="/" element={<Home />} />
+        <Route path="/Home1" element={<Course />} />
         <Route path='/login' element={<Login />} />
+        <Route path='/contact' element={<ContactSection />} />
         <Route path='/signup' element={<Signup />} />
         <Route path='/home' element={<Home />} />
         <Route path="/course" element={<CourseDisplay />} />
@@ -39,11 +42,11 @@ const App = () => {
         <Route path="/profile" element={<Profile />} />
         <Route path="/skill" element={<Skills />} />
         <Route path="/video" element={<VideoPage />} />
-        <Route path='/about' element ={<About />} />
+        <Route path='/about' element={<About />} />
 
-        <Route path="/leaderBoard" element={<LeaderBoard/>} />
+        <Route path="/leaderBoard" element={<LeaderBoard />} />
       </Routes>
-      <Footer/>
+      <Footer />
     </div>
   );
 };

@@ -126,7 +126,7 @@ const Profile = () => {
   if (error) return <div className="error-message">{error}</div>;
 
   return (
-    <div className="container mx-auto p-6 bg-gradient-to-r from-blue-300 to-green-300 min-h-screen">
+    <div className="container mx-auto p-6 bg-gradient-to-r from-blue-300 to-green-300 min-h-screen mt-5">
       <h1 className="text-4xl font-bold text-center mb-6">Student Profile</h1>
 
       <div className="flex flex-col md:flex-row items-center justify-between md:space-x-8 space-y-6 md:space-y-0">

@@ -92,7 +92,7 @@ router.post('/generate-mcqs', async (req, res) => {
         }
 
         console.log("Full Transcript:", fullTranscript);
-        await fs.writeFileSync("./public/data.txt", fullTranscript);
+        await fs.writeFileSync("F:\\SEM4-PROJECT\\Sem4_FSD_Group_Project\\server\\src\\public\\data.txt", fullTranscript);
 
 
         console.log("TRANSCRIPT CREATED");
@@ -100,42 +100,19 @@ router.post('/generate-mcqs', async (req, res) => {
 
         setTimeout(async () => {    // Generate MCQs and save to temp.txt
             // const p1 = "GIVE ME 5 MCQS FROM GIVEN PARAGRAPH and i want in this format: for example : 1 : {What is the purpose of variables in JavaScript?} a : (To store values and data) b : (To control the flow of execution) c : (To perform calculations) d : (To perform calculations) answer : [To perform calculations] inside the square bracket there should be correct answer of the question from the optiosn and do not use other than {}[]() and i want same format as i mentioned above and the answers should be randomised not should be in the certain pattern that user can Identify and solve the mcqs easily all options should be covered in answers, create tricky answers not the tricky questoins/options both should be from the transcript only, it should'nt be out of it"; // Your prompt
-            const p1 = `Generate 5 multiple-choice questions (MCQs) based only on the provided transcript. Follow this format exactly: 
-            
-            1: {What is the main concept discussed in the transcript?} 
-               a: (Explanation A) 
-               b: (Explanation B) 
-               c: (Explanation C) 
-               d: (Explanation D) 
-               answer: [Correct Explanation from options]
-            
-            Instructions:
-            1. *Question Source*: All questions and options must strictly come from the provided transcript. No external knowledge should be added.
-            2. *Random Answer Order*: Randomize the placement of correct answers across all MCQs (a, b, c, d). Ensure all answer positions (a, b, c, d) are covered across the 5 questions to avoid any patterns.
-            3. *Tricky Yet Relevant*: Make both the questions and options nuanced and tricky, focusing on less obvious details in the transcript to challenge the user’s understanding.
-            4. *Correct Format*: Use the exact format, with {} for questions, () for options, and [] for correct answers. The correct answer must be inside square brackets, following the format below.
-            
-            Example format:
-            1: {What is the purpose of variables in JavaScript?} 
-               a: (To store values and data) 
-               b: (To control the flow of execution) 
-               c: (To perform calculations) 
-               d: (To define the logic of the program) 
-               answer: [To store values and data]
-            
-            Output should only contain the MCQs in the exact format described, with no additional commentary. The questions, options, and answers should come from the content of the provided transcript.`
-            const p2 = fs.readFileSync("./public/data.txt", "utf-8").trim();
+            const p1 = `GIVE ME 5 MCQS FROM GIVEN PARAGRAPH and i want in this format: for example : 1 : {What is the purpose of variables in JavaScript?} a : (To store values and data) b : (To control the flow of execution) c : (To perform calculations) d : (To perform calculations) answer : [To perform calculations] inside the square bracket there should be correct answer of the question from the optiosn and do not use other than {}[]() and i want same format as i mentioned above and the answers should be randomised not should be in the certain pattern that user can Identify and solve the mcqs easily all options should be covered in answers, create tricky answers not the tricky questoins/options both should be from the transcript only, it should'nt be out of it`;
+            const p2 = fs.readFileSync("F:\\SEM4-PROJECT\\Sem4_FSD_Group_Project\\server\\src\\public\\data.txt", "utf-8").trim();
             const prompt = p1 + " " + p2;
             console.log(p2)
             const model = genAI.getGenerativeModel({ model: "gemini-pro" });
             const result = await model.generateContent(prompt);
             const response = await result.response;
             const generatedText = response.text();
-            await fs.writeFileSync("./public/temp.txt", generatedText);
+            await fs.writeFileSync("F:\\SEM4-PROJECT\\Sem4_FSD_Group_Project\\server\\src\\public\\temp.txt", generatedText);
             console.log("MCQS Generated!........");
 
             // Wait for temp.txt to be created before sending response
-            await fs.promises.access("./public/temp.txt", fs.constants.F_OK)
+            await fs.promises.access("F:\\SEM4-PROJECT\\Sem4_FSD_Group_Project\\server\\src\\public\\temp.txt", fs.constants.F_OK)
                 .then(() => {
                     console.log("temp.txt exists");
                     res.send({ success: true, message: "MCQs generated successfully." });
@@ -157,7 +134,7 @@ router.post('/generate-mcqs', async (req, res) => {
     async function readTempFile() {
 
 
-        fs.readFile('./public/temp.txt', 'utf8', (err, data) => {
+        fs.readFile('F:\\SEM4-PROJECT\\Sem4_FSD_Group_Project\\server\\src\\public\\data.txt', 'utf8', (err, data) => {
             if (err) {
                 console.log(err)
                 console.error(err);
