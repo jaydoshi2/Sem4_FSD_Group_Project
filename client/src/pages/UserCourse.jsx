@@ -6,10 +6,8 @@ import BookLoader from '../components/BookLoader';
 // CourseCard Component
 const CourseCard = ({ course, completedPercentage }) => {
   if (!course) {
-    return <div>Error: Course data is missing.</div>; // Handle missing course data
+    return <div>Error: Course data is missing.</div>;
   }
-
-  console.log("Rendering CourseCard for", course.title); // Debugging log
 
   return (
     <div className="bg-white shadow-lg rounded-lg p-4 w-full md:w-1/2 lg:w-1/3">
@@ -41,16 +39,24 @@ const CourseCard = ({ course, completedPercentage }) => {
   );
 };
 
-// RecommendedCourseCard Component (stub, adjust as needed)
+// RecommendedCourseCard Component
 const RecommendedCourseCard = ({ course }) => {
   if (!course) {
     return <div>Error: Recommended course data is missing.</div>;
   }
 
   return (
-    <div className="bg-gray-200 p-4 rounded-lg w-full md:w-1/2 lg:w-1/3">
-      <h3 className="text-lg font-bold mb-2">{course.title}</h3>
-      {/* Add more fields as needed */}
+    <div className="bg-white shadow-lg rounded-lg p-4 w-72 flex-shrink-0">
+      <h3 className="text-lg font-bold mb-2">{course.course_name}</h3>
+      <img
+        src={course.thumbnail_pic_link}
+        alt={course.course_name}
+        className="w-full h-40 object-cover rounded-lg mb-2"
+      />
+      <p className="text-gray-500 mb-2">{course.course_type}</p>
+      <button className="bg-blue-500 text-white px-4 py-2 rounded-lg">
+        Learn More
+      </button>
     </div>
   );
 };
@@ -71,24 +77,22 @@ const UserCoursesPage = () => {
           userId: userId,
         });
 
-        console.log('Response data from API:', response.data); // Check if data is as expected
-
-        // Check if the response data is an array and contains course information
         if (Array.isArray(response.data) && response.data.length > 0) {
-          setCourses(response.data); // Set the state only if response contains valid data
+          setCourses(response.data);
         } else {
           console.warn('No courses data available');
         }
 
         // Fetch recommendations based on enrolled courses
-        const enrolledCourses = response.data.map((course) => course.course.title);
-        const recResponse = await axios.post(`http://127.0.0.1:8000/course_recommendations/getrecommendations/`, {
-          user_courses: enrolledCourses,
-        }, {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        });
+        const enrolledCourses = response.data.map((course) => ({
+          title: course.course.title,
+          description: course.course.description,
+        }));
+        const recResponse = await axios.post(
+          'http://127.0.0.1:8000/course_recommendations/getrecommendations/',
+          { user_courses: enrolledCourses },
+          { headers: { 'Content-Type': 'application/json' } }
+        );
 
         setRecommendations(recResponse.data.recommendations);
         setLoading(false);
@@ -102,10 +106,8 @@ const UserCoursesPage = () => {
   }, []);
 
   if (loading) {
-    return <div><BookLoader/></div>;
+    return <div><BookLoader /></div>;
   }
-
-  console.log('Rendering courses:', courses); // Debugging log to see the courses array
 
   return (
     <div className="container mx-auto p-4">
@@ -126,7 +128,8 @@ const UserCoursesPage = () => {
       </div>
 
       <h1 className="text-3xl font-bold mb-6">Recommended Courses</h1>
-      <div className="recommended-courses-list flex flex-wrap gap-4">
+      {/* Horizontal Scroll for Recommended Courses */}
+      <div className="recommended-courses-list flex overflow-x-auto space-x-4 pb-4">
         {recommendations.length > 0 ? (
           recommendations.map((course, index) => (
             <RecommendedCourseCard key={index} course={course} />

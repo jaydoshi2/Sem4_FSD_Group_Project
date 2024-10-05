@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import '../styles/MCQ.css';
 
 const MCQ = ({ props, onClose }) => {
@@ -29,13 +28,24 @@ const MCQ = ({ props, onClose }) => {
     const fetchQuestions = async () => {
         setLoading(true);
         try {
-            const response = await axios.post(`http://${myIP}:3000/vid/generate-mcqs`, {
-                videoId: ytvideoId,
+            const response = await fetch(`http://${myIP}:3000/vid/generate-mcqs`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ videoId: ytvideoId }),
+                credentials:'include'
             });
 
-            if (response.data.success) {
-                const response2 = await axios.get(`http://${myIP}:3000/vid/generate-mcqs`);
-                const data2 = response2.data;
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+
+            const data = await response.json();
+
+            if (data.success) {
+                const response2 = await fetch(`http://${myIP}:3000/vid/generate-mcqs`, { method: 'GET' ,credentials:'include'});
+                const data2 = await response2.json();
 
                 const que = data2.questions || [];
                 const opt = data2.options || [];
@@ -52,7 +62,7 @@ const MCQ = ({ props, onClose }) => {
                 setError('Error generating MCQs. Please try again.');
             }
         } catch (error) {
-            console.error(error);
+            console.error("An error occurred. Please try again later.");
             setError('An error occurred. Please try again later.');
         } finally {
             setLoading(false);
@@ -61,10 +71,8 @@ const MCQ = ({ props, onClose }) => {
 
     const closeModal = () => {
         onClose();
-        const url = window.location.search;
-        // navigate('/course' + url); // Redirect to VideoPage
-        navigate('/video' + url, { state: { shouldRender: true } });
-
+        const url=window.location.search
+        navigate('/video'+url); // Redirect to VideoPage
     };
 
     const resetQuiz = () => {
@@ -84,7 +92,7 @@ const MCQ = ({ props, onClose }) => {
         setError('');
     };
 
-    const handleSubmit = async () => {
+    const handleSubmit = async() => {
         if (Object.keys(selectedOptions).length < questions.length) {
             setError('Please answer all questions before submitting.');
             return;
@@ -104,24 +112,26 @@ const MCQ = ({ props, onClose }) => {
             setTimeout(() => resetQuiz(), 3000);
         } else {
             setFeedback(`Your score is: ${newScore} / ${questions.length}`);
+            // add at this line
             try {
                 const queryParams = new URLSearchParams(window.location.search);
                 const userId = 'user1';
                 const videoId = queryParams.get('video_id');
                 const chapterId = queryParams.get('chapter_id');
                 const courseId = queryParams.get('course_id');
-
-                const response = await axios.post(`http://${myIP}:3000/vid/update-chapter-course-progress`, {
-                    userId,
-                    videoId,
-                    chapterId,
-                    courseId
+                const response = await fetch(`http://${myIP}:3000/vid/update-chapter-course-progress`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ userId, videoId,chapterId,courseId }),
                 });
 
-                if (response.data.success) {
+                const result = await response.json();
+                if (result.success) {
                     console.log('Video progress updated successfully');
                 } else {
-                    console.error('Failed to update video progress:', response.data.message);
+                    console.error('Failed to update video progress:', result.message);
                 }
             } catch (error) {
                 console.error('Error updating video progress:', error);

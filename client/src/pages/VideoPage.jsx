@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { FaThumbsUp, FaThumbsDown, FaBars, FaCheck } from 'react-icons/fa';
-import { useNavigate } from 'react-router-dom';
-import MCQ from './MCQ';
+import React, { useEffect, useState } from 'react';
+import { FaBars, FaCheck, FaThumbsDown, FaThumbsUp } from 'react-icons/fa';
+import { useLocation, useNavigate } from 'react-router-dom';
 import SkeletonLoader from '../components/Skeleton';
-import { useLocation } from 'react-router-dom';
+import MCQ from './MCQ';
 const VideoPage = () => {
     const location = useLocation();
     const navigate = useNavigate();
@@ -31,19 +30,19 @@ const VideoPage = () => {
         const videoId = queryParams.get('video_id');
         const userData = JSON.parse(localStorage.getItem('user'));
         setCourseId(Number(courseId)); // Ensuring courseId is a number
-        setVideoId(Number(videoId));   
-        if (userData && userData.user_id) {
-            setUserId(userData.user_id);  // Set userId here
+        setVideoId(Number(videoId));
+        console.log(userData.userId)
+        if (userData && userData.userId) {
+            setUserId(userData.userId);  // Set userId here
             if (courseId && videoId) {
-                fetchData(courseId, videoId, userData.user_id);  // Pass user_id directly to fetchData
+                fetchData(courseId, videoId, userData.userId);  // Pass user_id directly to fetchData
             }
         }
     }, [location.search, location.state]);
-    
+
     useEffect(() => {
         // Check progress here
         console.log("comming")
-
         if (progress === 100) {
             setCourseCompleted(true);
         }
@@ -86,7 +85,7 @@ const VideoPage = () => {
     };
 
     const handleLike = async () => {
-        console.log("userrid : ",userId)
+        console.log("userrid : ", userId)
         const endpoint = userLiked ? '/vid/unlike-video' : '/vid/like-video';
         try {
             setLikes(prevLikes => userLiked ? prevLikes - 1 : prevLikes + 1);
@@ -96,7 +95,7 @@ const VideoPage = () => {
                 setDislikes(prevDislikes => prevDislikes - 1);
                 setUserDisliked(false);
             }
-            console.log("video id :",videoId)
+            console.log("video id :", videoId)
             await axios.post(`http://${myIP}:3000${endpoint}`, { videoId, userId }, {
             });
         } catch (error) {
@@ -160,8 +159,8 @@ const VideoPage = () => {
 
     return (
         <div className="flex h-[calc(100vh-12vh)] bg-indigo-50 mt-[8vh] mx-2"> {/* Added mx-2 for minor left and right margins */}
-            <div className={`fixed top-[8vh] left-0 h-[calc(100vh-12vh)] transition-all duration-300 ease-in-out ${sidebarVisible ? 'w-[250px] opacity-100' : 'w-0 opacity-0'} bg-indigo-200 overflow-hidden`}>
-                <div className="pt-3 h-full overflow-y-auto">
+            <div className={`fixed top-[8vh] left-0 h-[calc(100vh-12vh)] transition-all duration-300 ease-in-out ${sidebarVisible ? 'w-[250px] opacity-100' : 'w-0 opacity-0'} bg-indigo-200`}>
+                <div className="pt-3 h-full">
                     <h2 className="font-bold mr-2">Course Progress</h2>
                     <div className="flex flex-col">
                         {courseProgress.map((chapterData, index) => (
@@ -175,7 +174,7 @@ const VideoPage = () => {
                                 {chapterData.videos.map((videoData, idx) => (
                                     <label
                                         key={videoData.video_id}
-                                        className="flex items-center cursor-pointer ml-7"
+                                        className="flex items-center cursor-pointer ml-7 bg-indigo-200"
                                     >
                                         {renderIcon(videoData.completed)}
                                         <span
@@ -192,7 +191,7 @@ const VideoPage = () => {
                 </div>
             </div>
 
-            <div className={`flex-grow pt-5 overflow-y-auto transition-all duration-300 ${sidebarVisible ? 'ml-[250px]' : 'ml-0'} ${showMCQModal ? 'blur-sm pointer-events-none' : ''}`}>
+            <div className={`flex-grow pt-5  transition-all duration-300 ${sidebarVisible ? 'ml-[250px]' : 'ml-0'} ${showMCQModal ? 'blur-sm pointer-events-none' : ''}`}>
                 <FaBars
                     onClick={toggleSidebar}
                     className="cursor-pointer text-2xl mb-5"
@@ -206,13 +205,13 @@ const VideoPage = () => {
                             <span className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-black font-bold">{progress}%</span>
                         </div>
 
-                        <div className="relative w-full h-0 pb-[56.25%]">
-                            <div className="w-full aspect-w-16 aspect-h-9 mb-5">
+                        <div className="w-full max-w-4xl mx-auto">
+                            <div className="relative w-full pb-[56.25%]">
                                 <iframe
                                     src={vlink}
                                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                                     allowFullScreen
-                                    className="w-full h-full border-none"
+                                    className="absolute top-0 left-0 w-full h-full rounded-lg shadow-lg"
                                 />
                             </div>
                         </div>
