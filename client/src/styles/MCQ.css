@@ -1,5 +1,7 @@
 /* src/Quiz.css */
-
+.modal{
+    margin-top: 60px;
+}
 .quiz-container {
     display: flex;
     flex-direction: column;
