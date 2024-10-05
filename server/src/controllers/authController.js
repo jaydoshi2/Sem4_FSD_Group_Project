@@ -210,7 +210,7 @@ exports.resetPassword = async (req, res, next) => {
       return next(new AppError('Token has expired. Please request a new reset link.', 400));
     }
 
-    await authService.updateUserPassword(user.user_id, password);
+    await authService.updateUserPasswordByResetToken(user.user_id, password);
 
     res.json({ message: 'Password reset successfully' });
   } catch (error) {

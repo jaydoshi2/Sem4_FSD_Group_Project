@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import axios from 'axios'; // Make sure you have axios installed
 import BookLoader from '../components/BookLoader';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
 function CourseDetail() {
   const location = useLocation();
@@ -11,6 +12,7 @@ function CourseDetail() {
   const [course, setCourse] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const navigate = useNavigate(); // Initialize useNavigate
 
   const myIP = import.meta.env.VITE_MY_IP;
   
@@ -30,7 +32,22 @@ function CourseDetail() {
 
     fetchCourseDetails();
   }, [courseId]);
+const nextpage=async()=>{
+  try {
+    const response = await axios.get(`http://${myIP}:3000/from/first-chapter-video/${courseId}`);
+    const data = response.data;
 
+    if (response.status === 200) {
+      const chapter_id = data.chapter_id;
+      const video_id = data.video_id;
+      navigate(`/video?course_id=${courseId}&chapter_id=${chapter_id}&video_id=${video_id}`);
+    } else {
+      console.error('Error fetching chapter and video:', data.message);
+    }
+  } catch (error) {
+    console.error('Error:', error.message);
+  }
+}
   if (loading) return <BookLoader/>;
   if (error) return <p>{error}</p>;
 
@@ -68,7 +85,7 @@ function CourseDetail() {
           {course.title}
         </h1>
         <div className="flex items-center space-x-4 mb-6">
-          <button className="bg-blue-600 text-white font-semibold px-6 py-2 rounded-lg">
+          <button className="bg-blue-600 text-white font-semibold px-6 py-2 rounded-lg" onClick={nextpage}>
             Enroll Starts Aug 25
           </button>
           <p className="text-sm text-gray-500">Sponsored by Lok Jagruti University</p>
