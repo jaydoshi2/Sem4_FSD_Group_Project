@@ -22,7 +22,7 @@ const CourseDistributionChart = () => {
         <Plot
             data={fig.data} // Use the Plotly data structure directly
             layout={{...fig.layout,
-                width: 1300, // Increase width
+                width: 800, // Increase width
                 height: 600,
             }} // Use the layout directly
             config={{ responsive: true }} // Make it responsive

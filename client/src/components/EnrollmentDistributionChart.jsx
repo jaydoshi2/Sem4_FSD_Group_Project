@@ -29,7 +29,7 @@ const EnrollmentDistributionChart = () => {
 
     const layout = {
         title: 'Enrollment Distribution by Course',
-        width: 1100,
+        width: 800,
         height: 550,
     };
 

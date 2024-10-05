@@ -22,7 +22,7 @@ const CourseEnrollmentChart = () => {
             data={figure.data}
             layout={{
                 ...figure.layout,
-                width: 1300, // Increase width
+                width: 1000, // Increase width
                 height: 550, // Increase height
             }}
             config={figure.config} // Add any additional configuration if needed
