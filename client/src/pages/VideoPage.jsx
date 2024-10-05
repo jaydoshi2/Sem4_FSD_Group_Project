@@ -23,34 +23,28 @@ const VideoPage = () => {
     const [videoId1, setVideoId1] = useState('');
     const [showMCQModal, setShowMCQModal] = useState(false);
     const [mcqLoading, setMcqLoading] = useState(false);
+    const [chapter, setChapter] = useState();
     const [courseCompleted, setCourseCompleted] = useState(false);
+
     useEffect(() => {
         const queryParams = new URLSearchParams(window.location.search);
         const courseId = queryParams.get('course_id');
         const videoId = queryParams.get('video_id');
+        const chapterId = queryParams.get('chapter_id');  // Ensure this is the correct name
         const userData = JSON.parse(localStorage.getItem('user'));
         setCourseId(Number(courseId)); // Ensuring courseId is a number
         setVideoId(Number(videoId));
-        console.log(userData.userId)
+        setChapter(chapterId); // Set the chapter state correctly
+
+        console.log('Chapter ID:', chapterId); // Debugging line
+
         if (userData && userData.userId) {
-            setUserId(userData.userId);  // Set userId here
+            setUserId(userData.userId);
             if (courseId && videoId) {
-                fetchData(courseId, videoId, userData.userId);  // Pass user_id directly to fetchData
+                fetchData(courseId, videoId, userData.userId);
             }
         }
-    }, [location.search, location.state]);
-
-    useEffect(() => {
-        // Check progress here
-        console.log("comming")
-        if (progress === 100) {
-            setCourseCompleted(true);
-        }
-    }, [progress]);
-
-    const handleViewCertificate = () => {
-        navigate(`/certificate/${courseId}`); // Adjust the path as necessary
-    };
+    }, [location.search]);
 
     const fetchData = async (courseId, videoId, userId) => {
         try {
@@ -70,11 +64,13 @@ const VideoPage = () => {
                 setUserDisliked(videoData.userDisliked);
             }
 
-            if (courseId && userId) {  // Ensure userId is not undefined
-                console.log("User ID in fetchData:", userId);
-                const progressResponse = await axios.post(`http://${myIP}:3000/vid/course-progress/${courseId}`, { userId });
+            if (courseId && userId) {
+                console.log("Payload being sent:", { userId, videoId, chapterId: chapter, courseId }); // Log the payload
+                const progressResponse = await axios.post(`http://${myIP}:3000/vid/update-chapter-course-progress/${courseId}`, { userId, videoId, chapterId: chapter, courseId });
+                console.log("Progress Response:", progressResponse.data); // Log the response
                 setProgress(progressResponse.data.completed_course);
                 setCourseProgress(progressResponse.data.chapters);
+                
             }
 
             setLoader(false);
@@ -83,6 +79,7 @@ const VideoPage = () => {
             setLoader(false);
         }
     };
+
 
     const handleLike = async () => {
         console.log("userrid : ", userId)

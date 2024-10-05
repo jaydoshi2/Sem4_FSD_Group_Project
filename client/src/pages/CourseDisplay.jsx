@@ -117,7 +117,7 @@ const CourseDisplay = () => {
           
             const handleReadMoreClick = async (course) => {
               const userData = JSON.parse(localStorage.getItem('user'));
-              const userId = userData.user_id;
+              const userId = userData.userId;
           
               // const userId=localStorage.getItem('user')
               const courseId = course.course_id;
@@ -152,7 +152,7 @@ const CourseDisplay = () => {
 
   return (
     <>
-      <div className='mt-5'>
+      <div className='pt-20'>
 
         <SubNavbar />
         <div className="w-full p-4">
@@ -173,7 +173,7 @@ const CourseDisplay = () => {
                     {courses.slice(0, displayCount).map((course, index) => (
                       <div
                         key={index}
-                        className="bg-white rounded-lg border-3 border-gray-250 shadow-lg text-center overflow-hidden transition-all duration-500"
+                        className="bgwhite rounded-lg border-3 border-gray-250 shadow-lg text-center overflow-hidden transition-all duration-500"
                       >
                         <div className="h-48 rounded-t-lg flex justify-center items-center overflow-hidden p-2">
                           <img

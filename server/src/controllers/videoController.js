@@ -62,10 +62,16 @@ exports.dislikeVideo = async (req, res) => {
 
 
 exports.markChapterAndCourseCompleted = async (req, res) => {
+    console.log('UPDATE IS GETTING CALLED ')
     const { userId, videoId, chapterId, courseId } = req.body;
 
+    if (!userId || !videoId || !chapterId || !courseId) {
+        console.log(userId,videoId,chapterId,courseId)
+        return res.status(400).json({ success: false, message: 'Missing required fields.' });
+    }
+    console.log("CHAPTERID ON SERVER SIDE ",chapterId)
+
     try {
-        // Mark the video as completed and update chapter/course completion if applicable
         const result = await videoService.markVideoChapterAndCourseCompleted(userId, videoId, chapterId, courseId);
 
         if (result) {
@@ -75,6 +81,6 @@ exports.markChapterAndCourseCompleted = async (req, res) => {
         }
     } catch (error) {
         console.error(error);
-        res.status(500).json({ success: false, message: 'Internal server error.' });
+        res.status(500).json({ success: false, message: 'Server error.' });
     }
 };

@@ -1,12 +1,32 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 import '../styles/UserCourse.css';
 import BookLoader from '../components/BookLoader';
 
 // CourseCard Component
 const CourseCard = ({ course, completedPercentage }) => {
+  const navigate = useNavigate();
+  const myIP = import.meta.env.VITE_MY_IP;
   if (!course) {
     return <div>Error: Course data is missing.</div>;
+  }
+  const resumeCourse = async (course) => {
+
+    const courseId = course.course_id
+    console.log(courseId)
+    const response = await axios.get(`http://${myIP}:3000/from/first-chapter-video/${courseId}`);
+    const data = response.data;
+    if (response.status === 200) {
+      const chapter_id = data.chapter_id;
+      const video_id = data.video_id;
+      navigate(`/video?course_id=${courseId}&chapter_id=${chapter_id}&video_id=${video_id}`);
+    } else {
+      console.error('Error fetching chapter and video:', data.message);
+    }
+  }
+  const viewCertificate = (course) => {
+
   }
 
   return (
@@ -26,11 +46,11 @@ const CourseCard = ({ course, completedPercentage }) => {
       </div>
       <div className="mt-4">
         {completedPercentage === 100 ? (
-          <button className="bg-green-500 text-white px-4 py-2 rounded-lg">
+          <button className="bg-green-500 text-white px-4 py-2 rounded-lg" onClick={viewCertificate(course)}>
             View Certificate
           </button>
         ) : (
-          <button className="bg-blue-500 text-white px-4 py-2 rounded-lg">
+          <button className="bg-blue-500 text-white px-4 py-2 rounded-lg" onClick={()=>{resumeCourse(course)}}>
             Resume
           </button>
         )}
@@ -66,10 +86,10 @@ const UserCoursesPage = () => {
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [recommendations, setRecommendations] = useState([]);
-
+  console.log(courses)
   useEffect(() => {
     const fetchUserCourses = async () => {
-      const userId = JSON.parse(localStorage.getItem('user')).user_id;
+      const userId = JSON.parse(localStorage.getItem('user')).userId;
       const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
       try {

@@ -26,7 +26,8 @@ exports.getUserCourses = async (req, res) => {
                     select: {
                         title: true,
                         thumbnail_pic_link: true,
-                        description:true // Course thumbnail image
+                        description:true, // Course thumbnail image
+                        course_id:true,
                     },
                 },
             },

@@ -15,6 +15,7 @@ exports.authenticate = async (req, res, next) => {
       console.error('Cookie is present');
     } else {
       console.error('Cookie is not present');
+      // localStorage.clear()
     }
 
     if (accessToken) {

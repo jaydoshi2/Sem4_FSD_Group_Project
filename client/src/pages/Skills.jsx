@@ -23,8 +23,8 @@ const Skills = () => {
   const courseType = searchParams.get("course_type"); // Get the course_type from query params
 
   const fetchCourseData = () => {
-    axios
-      .get("http://localhost:3000/course")
+    const myIP = import.meta.env.VITE_MY_IP;
+    axios.get(`http://${myIP}:3000/course`)
 
       .then((response) => {
         const fetchedData = response.data;

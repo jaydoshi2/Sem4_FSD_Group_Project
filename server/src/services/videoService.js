@@ -188,13 +188,14 @@ exports.markVideoAsCompleted = async (userId, videoId, courseId) => {
         throw error;
     }
 };
+
 exports.markVideoChapterAndCourseCompleted = async (userId, videoId, chapterId, courseId) => {
     try {
         // Step 1: Mark the current video as completed
         const videoIdInt = parseInt(videoId, 10);
         const chapterIdInt = parseInt(chapterId, 10);
         const courseIdInt = parseInt(courseId, 10);
-
+        console.log("data in the backend video service ", { userId, videoIdInt, chapterIdInt, courseIdInt })
         await prisma.userVideoProgress.updateMany({
             where: {
                 userId: userId,
@@ -266,7 +267,7 @@ async function updateProgressForUser(username, courseId) {
         include: {
             course_progress: {
                 where: {
-                    courseId: courseId // Filter by the specific courseId
+                    courseId: courseId // Make sure courseId matches correctly
                 },
                 include: {
                     course: {
@@ -283,18 +284,28 @@ async function updateProgressForUser(username, courseId) {
         }
     });
 
+    console.log('Fetched User:', user);
+
     if (!user) {
         console.log('User not found');
         return { success: false, message: 'User not found' };
     }
 
-    const courseProgress = user.course_progress[0]; // Since we are fetching only one course, get the first element
+    const courseProgress = user.course_progress[0]; // Get the first element
     if (!courseProgress) {
         console.log('No progress found for the specified course');
         return { success: false, message: 'No progress found for the specified course' };
     }
 
     const course = courseProgress.course;
+    console.log('Fetched Course:', course);
+
+    if (!course) {
+        console.log('No course found for the given ID:', courseIdInt);
+        return { success: false, message: 'No course found for the given ID' };
+    }
+
+    // Fetch completed videos and calculate progress...
 
     // Fetch completed videos for the user in the specific course
     const completedVideos = await prisma.userVideoProgress.findMany({
@@ -322,7 +333,7 @@ async function updateProgressForUser(username, courseId) {
         videoId: cv.videoId
     })));
 
-    console.log(`Course progress for ${course.course_title}: ${courseProgressPercentage}%`);
+    console.log(`Course progress for ${course.title}: ${courseProgressPercentage}%`);
 
     // Update course progress for the user
     const updatedCourseProgress = await prisma.userCourseProgress.update({
@@ -335,7 +346,7 @@ async function updateProgressForUser(username, courseId) {
         }
     });
 
-    console.log(`Progress updated successfully for course: ${course.course_title} and user: ${username}`);
+    console.log(`Progress updated successfully for course: ${course.title} and user: ${username}`);
 
     // Return the completion status
     if (courseProgressPercentage === 100) {

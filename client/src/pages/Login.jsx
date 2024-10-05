@@ -3,16 +3,19 @@ import axios from "axios";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useGoogleLogin } from '@react-oauth/google';
 import "../styles/Login.css";
+import BookLoader from "../components/BookLoader";
 const Login = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [user, setUser] = useState();
   const [data, setData] = useState({ email: "", password: "" });
   const [error, setError] = useState("");
   const navigate = useNavigate();
+  const [loading,setloading] = useState(false)
   const location = useLocation();
   const myIP = import.meta.env.VITE_MY_IP;
 
   useEffect(() => {
+    // setloading(true)
     checkAuthStatus();
     handleRedirect();
   }, []);
@@ -33,8 +36,10 @@ const Login = () => {
         localStorage.setItem("user", JSON.stringify(response.data.user));
         setUser(response.data.user);
         setIsAuthenticated(true);
-        navigate("");
+        
+        navigate("/");
       }
+      // setloading(false)
     } catch (error) {
       console.error("Auth check failed", error);
     }
@@ -46,6 +51,7 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setloading(true)
     try {
       const url = `http://${myIP}:3000/auth/login`;
       const response = await axios.post(url, data, { withCredentials: true });
@@ -53,6 +59,7 @@ const Login = () => {
       setUser(response.data.user);
       setIsAuthenticated(true);
       navigate("/");
+      setloading(false)
     } catch (error) {
       if (error.response && error.response.status >= 400 && error.response.status <= 500) {
         setError(error.response.data.message);
@@ -83,7 +90,7 @@ onError: (error) => {
   setError("Google Sign-In failed. Please try again.");
 }
   });
-
+if(loading) return <BookLoader/>
 return (
   <div className="login_container">
     <div className="login_form_container">

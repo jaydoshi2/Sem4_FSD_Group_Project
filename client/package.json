@@ -37,6 +37,7 @@
     "react-plotly.js": "^2.6.0",
     "react-router-dom": "^6.25.1",
     "react-router-hash-link": "^2.4.3",
+    "sass": "^1.79.4",
     "styled-components": "^6.1.13",
     "swiper": "^11.1.14",
     "validator": "^13.12.0"

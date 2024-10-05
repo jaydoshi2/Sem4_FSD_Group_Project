@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Route, Routes } from "react-router-dom";
+import React from 'react';
+import { Route, Routes, useLocation } from "react-router-dom";
 import { default as Chatbot, default as ChatbotComponent } from './components/ChatBot';
 import Footer from './components/Footer';
 import NavBar from './components/Navbar';
@@ -20,38 +20,91 @@ import UserCoursesPage from './pages/UserCourse';
 import VideoPage from './pages/VideoPage';
 import Certificate from './pages/Certificate';
 import AdminDashboard from './pages/AdminPage';
+import ProtectedRoute from './components/ProtectedRoute';
+import NotFound from './pages/NotFound'; // Import the NotFound component
+
 const App = () => {
+        const location = useLocation();
+
+        // Define paths where the NavBar should be hidden
+        const hideNavBarPaths = [
+                '/login',
+                '/signup',
+                '/forgot-password',
+                '/reset-password/:token',
+                '/*'
+        ];
+
+        // Check if the current path is in the list of paths where the NavBar should be hidden
+        const hideNavBar = hideNavBarPaths.some(path => location.pathname.startsWith(path));
+
+        return (
+                <div className="App">
+                        <Chatbot />
+                        {!hideNavBar && <NavBar />}
+                        <Routes>
+                                <Route path="/reset-password/:token" element={<ResetPassword />} />
+                                <Route path="/contact" element={<ContactSection />} />
+                                <Route path="/chatbot" element={<ChatbotComponent />} />
+                                <Route path='/forgot-password' element={<ForgotPassword />} />
+                                <Route path="/" element={<Home />} />
+                                <Route path="/Home1" element={<Course />} />
+                                <Route path="/login" element={<Login />} />
+                                <Route path='/signup' element={<Signup />} />
+                                <Route path='/home' element={<Home />} />
+                                <Route path="/course" element={<CourseDisplay />} />
+                                <Route path="/skill" element={<Skills />} />
+                                <Route path='/aboutpage' element={<AboutPage />} />
 
 
-  return (
-    <div className="App">
-      <Chatbot />
-      <NavBar />
-      <Routes>
-        <Route path=" /reset-password/:token" element={<ResetPassword />} />
-        <Route path="/contact-us" element={<ContactSection />} />
-        <Route path="/chatbot" element={<ChatbotComponent />} />
-        <Route path='/forgot-password' element={<ForgotPassword />} />
-        <Route path="/" element={<Home />} />
-        <Route path="/Home1" element={<Course />} />
-        <Route path="/login" element={<Login />} />
-        <Route path='/contact' element={<ContactSection />} />
-        <Route path='/signup' element={<Signup />} />
-        <Route path='/home' element={<Home />} />
-        <Route path="/course" element={<CourseDisplay />} />
-        <Route path="/courseDetails/" element={<CourseDetails />} />
-        <Route path="/my-courses" element={<UserCoursesPage />} />
-        <Route path="/profile" element={<Profile />} />
-        <Route path="/skill" element={<Skills />} />
-        <Route path="/video" element={<VideoPage />} />
-        <Route path='/aboutpage' element={<AboutPage />} />
-        <Route path="/leaderBoard" element={<LeaderBoard />} />
-        <Route path="/certificate/:courseId" element={<Certificate />} />
-        <Route path="/admin/*" element={<AdminDashboard />} />
-      </Routes>
-      <Footer />
-    </div>
-  );
+                                <Route path="/certificate/:courseId" element={
+                                        <ProtectedRoute>
+                                                <Certificate />
+                                        </ProtectedRoute>
+                                } />
+                                <Route path="/admin/*" element={<AdminDashboard />} />
+
+                                {/* Protected Routes */}
+                                <Route
+                                        path="/courseDetails/"
+                                        element={
+                                                <ProtectedRoute>
+                                                        <CourseDetails />
+                                                </ProtectedRoute>
+                                        }
+                                />
+                                <Route
+                                        path="/profile"
+                                        element={
+                                                <ProtectedRoute>
+                                                        <Profile />
+                                                </ProtectedRoute>
+                                        }
+                                />
+                                <Route
+                                        path="/leaderBoard"
+                                        element={
+                                                <ProtectedRoute>
+                                                        <LeaderBoard />
+                                                </ProtectedRoute>
+                                        }
+                                />
+                                <Route path="/video" element={
+                                        <ProtectedRoute>
+                                                <VideoPage />
+                                        </ProtectedRoute>
+                                } />
+                                {/* 404 Not Found Route */}
+                                <Route path="*" element={<NotFound />} />
+                                <Route path="/my-courses" element={
+                                        <ProtectedRoute>
+                                                <UserCoursesPage />
+                                        </ProtectedRoute>
+                                } />
+                        </Routes>
+                        {!hideNavBar && <Footer />}
+                </div>
+        );
 };
 
 export default App;

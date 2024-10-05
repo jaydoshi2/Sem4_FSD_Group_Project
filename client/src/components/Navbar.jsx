@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import webLogo from '../assets/images/myimg.png'; // Adjust path if necessary
 import { HiMenu, HiX } from 'react-icons/hi'; // Icons for mobile menu toggle
+import BookLoader from './BookLoader';
 
 const NavBar = () => {
     const navigate = useNavigate();
@@ -12,8 +13,8 @@ const NavBar = () => {
     const [loader, setloader] = useState(true)
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [user, setUser] = useState();
-
     useEffect(() => {
+    setloader(true)
         const fetchUserData = async () => {
             try {
                 const response = await axios.get(`http://${myIP}:3000/auth/check-auth`, {
@@ -31,6 +32,7 @@ const NavBar = () => {
         console.log("/////////* ", userData)
         localStorage.setItem('user', JSON.stringify(userData));
         setIsAuthenticated(true);
+        setloader(false)
     } else {
         console.log('Manual login not authenticated, checking Google login...');
 
@@ -42,10 +44,12 @@ const NavBar = () => {
             const parsedUser = JSON.parse(userDataFromStorage);
             setUser(parsedUser);
             setIsAuthenticated(true);
+            setloader(false)
         } else {
             // No user data in localStorage, redirect to login
             setIsAuthenticated(false);
-            navigate('/'); // Redirect to login page
+            localStorage.clear()
+            setloader(false)
         }
     }
 } catch (error) {
@@ -68,6 +72,8 @@ const logout = () => {
         })
         .catch((error) => console.error('Logout failed', error));
 };
+
+if(loader) return <BookLoader/>
 
 return (
     <header className="fixed top-0 left-0 w-full bg-blue-950 shadow-md z-50">
