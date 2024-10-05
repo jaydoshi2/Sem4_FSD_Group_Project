@@ -46,6 +46,8 @@ exports.getCourseDetails = async (req, res) => {
         price: true,
         points_providing: true,
         Rate: true,
+        number_of_people_rated:true,
+        course_level:true
         // course_level: true,
         // number_of_ratings: true,
       }
@@ -61,3 +63,27 @@ exports.getCourseDetails = async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 };
+exports.check=async(req,res)=>{
+    const { userId, courseId } = req.body;
+
+    try {
+      // Query UserCourseProgress based on userId and courseId
+      const progress = await prisma.userCourseProgress.findFirst({
+        where: {
+          userId: userId,
+          courseId: courseId,
+        },
+      });
+
+      if (progress) {
+        // If progress exists, redirect to /profile or desired page
+        return res.status(200).json({ redirect: '/video' });
+      } else {
+        // If no progress, redirect to /courseDetails
+        return res.status(200).json({ redirect: `/courseDetails?course_id=${courseId}` });
+      }
+    } catch (error) {
+      console.error('Error checking user progress:', error);
+      return res.status(500).json({ error: 'Internal Server Error' });
+    }
+  }

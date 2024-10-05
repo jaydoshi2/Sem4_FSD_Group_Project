@@ -8,14 +8,10 @@ exports.getUserData = async (req, res) => {
                 points: true,
                 profilePic: true,
                 username: true,
-                accuracy: true,
             },
             orderBy: [
                 {
                     points: 'desc',  // Sort by points in ascending order
-                },
-                {
-                    accuracy: 'desc', // Sort by accuracy in ascending order
                 },
             ],
         });

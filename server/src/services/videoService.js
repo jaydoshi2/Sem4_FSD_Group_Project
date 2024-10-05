@@ -1,4 +1,3 @@
-
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
@@ -41,10 +40,12 @@ exports.fetchCourseProgress = async (userId, courseId) => {
 
 
 
+// Like a video
 exports.likeVideo = async (userId, videoId) => {
     try {
         const videoIdInt = parseInt(videoId, 10);
 
+        // Find interaction by composite key
         const interaction = await prisma.videoInteraction.findUnique({
             where: { userId_videoId: { userId, videoId: videoIdInt } },
         });
@@ -52,19 +53,22 @@ exports.likeVideo = async (userId, videoId) => {
         if (interaction) {
             if (interaction.liked) return interaction;
 
+            // Update video like/dislike counts
             await prisma.video.update({
                 where: { video_id: videoIdInt },
                 data: {
-                    dislikesCount: { decrement: 1 },
+                    dislikesCount: interaction.dislike ? { decrement: 1 } : undefined, // Only decrement dislikes if it was previously disliked
                     likesCount: { increment: 1 },
                 },
             });
 
+            // Update interaction
             return await prisma.videoInteraction.update({
                 where: { userId_videoId: { userId, videoId: videoIdInt } },
                 data: { liked: true, dislike: false },
             });
         } else {
+            // Create new interaction
             await prisma.video.update({
                 where: { video_id: videoIdInt },
                 data: { likesCount: { increment: 1 } },
@@ -80,10 +84,12 @@ exports.likeVideo = async (userId, videoId) => {
     }
 };
 
+// Dislike a video
 exports.dislikeVideo = async (userId, videoId) => {
     try {
         const videoIdInt = parseInt(videoId, 10);
 
+        // Find interaction by composite key
         const interaction = await prisma.videoInteraction.findUnique({
             where: { userId_videoId: { userId, videoId: videoIdInt } },
         });
@@ -91,19 +97,22 @@ exports.dislikeVideo = async (userId, videoId) => {
         if (interaction) {
             if (interaction.dislike) return interaction;
 
+            // Update video like/dislike counts
             await prisma.video.update({
                 where: { video_id: videoIdInt },
                 data: {
                     dislikesCount: { increment: 1 },
-                    likesCount: { decrement: 1 },
+                    likesCount: interaction.liked ? { decrement: 1 } : undefined, // Decrement likes only if it was previously liked
                 },
             });
 
+            // Update interaction to dislike the video
             return await prisma.videoInteraction.update({
                 where: { userId_videoId: { userId, videoId: videoIdInt } },
                 data: { liked: false, dislike: true },
             });
         } else {
+            // Create new interaction as disliked
             await prisma.video.update({
                 where: { video_id: videoIdInt },
                 data: { dislikesCount: { increment: 1 } },
@@ -120,7 +129,6 @@ exports.dislikeVideo = async (userId, videoId) => {
 };
 
 exports.fetchVideoDetails = async (videoId, userId) => {
-    console.log("video id is :",videoId)
     const video = await prisma.video.findUnique({
         where: { video_id: videoId },
         select: {
@@ -149,10 +157,9 @@ exports.fetchVideoDetails = async (videoId, userId) => {
     };
 };
 
-exports.markVideoAsCompleted = async (userId, videoId) => {
+exports.markVideoAsCompleted = async (userId, videoId, courseId) => {
     try {
         // Find the existing user video progress
-        console.log("aayo")
         const videoIdInt = parseInt(videoId, 10);
         const userVideoProgress = await prisma.userVideoProgress.findFirst({
             where: {
@@ -181,13 +188,14 @@ exports.markVideoAsCompleted = async (userId, videoId) => {
         throw error;
     }
 };
+
 exports.markVideoChapterAndCourseCompleted = async (userId, videoId, chapterId, courseId) => {
     try {
         // Step 1: Mark the current video as completed
         const videoIdInt = parseInt(videoId, 10);
         const chapterIdInt = parseInt(chapterId, 10);
         const courseIdInt = parseInt(courseId, 10);
-
+        console.log("data in the backend video service ", { userId, videoIdInt, chapterIdInt, courseIdInt })
         await prisma.userVideoProgress.updateMany({
             where: {
                 userId: userId,
@@ -243,6 +251,7 @@ exports.markVideoChapterAndCourseCompleted = async (userId, videoId, chapterId, 
                 });
             }
         }
+        updateProgressForUser(userId, courseIdInt)
 
         return true;
     } catch (error) {
@@ -250,3 +259,122 @@ exports.markVideoChapterAndCourseCompleted = async (userId, videoId, chapterId, 
         return false;
     }
 };
+
+async function updateProgressForUser(username, courseId) {
+    // Fetch the user and their progress for the specified course
+    const user = await prisma.user.findUnique({
+        where: { user_id: username },
+        include: {
+            course_progress: {
+                where: {
+                    courseId: courseId // Make sure courseId matches correctly
+                },
+                include: {
+                    course: {
+                        include: {
+                            chapters: {
+                                include: {
+                                    videos: true
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    });
+
+    console.log('Fetched User:', user);
+
+    if (!user) {
+        console.log('User not found');
+        return { success: false, message: 'User not found' };
+    }
+
+    const courseProgress = user.course_progress[0]; // Get the first element
+    if (!courseProgress) {
+        console.log('No progress found for the specified course');
+        return { success: false, message: 'No progress found for the specified course' };
+    }
+
+    const course = courseProgress.course;
+    console.log('Fetched Course:', course);
+
+    if (!course) {
+        console.log('No course found for the given ID:', courseIdInt);
+        return { success: false, message: 'No course found for the given ID' };
+    }
+
+    // Fetch completed videos and calculate progress...
+
+    // Fetch completed videos for the user in the specific course
+    const completedVideos = await prisma.userVideoProgress.findMany({
+        where: {
+            userId: user.user_id,
+            completed: true,
+            video: {
+                chapter: {
+                    courseId: courseId // Ensure only videos from the specific course are considered
+                }
+            }
+        },
+        include: {
+            video: {
+                include: {
+                    chapter: true
+                }
+            }
+        }
+    });
+
+    // Calculate course progress
+    const courseProgressPercentage = calculateCourseProgress(course, completedVideos.map(cv => ({
+        chapterId: cv.video.chapterId,
+        videoId: cv.videoId
+    })));
+
+    console.log(`Course progress for ${course.title}: ${courseProgressPercentage}%`);
+
+    // Update course progress for the user
+    const updatedCourseProgress = await prisma.userCourseProgress.update({
+        where: {
+            id: courseProgress.id
+        },
+        data: {
+            completed_course: courseProgressPercentage,
+            completed: courseProgressPercentage === 100
+        }
+    });
+
+    console.log(`Progress updated successfully for course: ${course.title} and user: ${username}`);
+
+    // Return the completion status
+    if (courseProgressPercentage === 100) {
+        return { success: true, message: 'Course completed', redirect: true }; // Indicate completion
+    } else {
+        return { success: true, message: 'Progress updated', redirect: false }; // Indicate progress
+    }
+}
+
+// Helper function to calculate course progress
+function calculateCourseProgress(course, completedVideos) {
+    const totalChapters = course.chapters.length;
+    let totalProgress = 0;
+
+    course.chapters.forEach((chapter) => {
+        const eachChapterWeight = 1 / totalChapters;
+        const totalVideosInEachChapter = chapter.videos.length;
+        let completedVideosInEachChapter = 0;
+
+        chapter.videos.forEach((video) => {
+            if (completedVideos.some(cv => cv.chapterId === chapter.chapter_id && cv.videoId === video.video_id)) {
+                completedVideosInEachChapter++;
+            }
+        });
+
+        const chapterProgress = (completedVideosInEachChapter / totalVideosInEachChapter) * eachChapterWeight;
+        totalProgress += chapterProgress;
+    });
+
+    return parseFloat((totalProgress * 100).toFixed(2)); // Convert to percentage and ensure it's a float with 2 decimal places
+}

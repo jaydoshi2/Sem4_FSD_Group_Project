@@ -3,6 +3,7 @@ const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
 const getFirstChapterAndVideo = async (courseId) => {
+    console.log("i am comming in find first service")
     const firstChapter = await prisma.chapter.findFirst({
     where: { courseId },
     include: {
