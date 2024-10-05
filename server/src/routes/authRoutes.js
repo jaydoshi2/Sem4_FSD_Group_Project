@@ -23,22 +23,22 @@ router.post('/login', authController.login);
 router.get('/google', passport.authenticate('google', {
   scope: ['profile', 'email'],
   session: false
-}),authController.googleCallback);
+}), authController.googleCallback);
 
 // router.get('/google/callback', passport.authenticate('google', {
 //   failureRedirect: '/login',
-//   successRedirect:`http://${process.env.MY_IP}:5173/Course`,
+//   successRedirect:http://${process.env.MY_IP}:5173/Course,
 //   session: false
 // }), authController.googleCallback);
 
-router.post('/logout', authenticate, authController.logout);
+router.post('/logout',authController.logout);
 
 router.get('/check-auth', authenticate, authController.checkAuth);
 
 router.get('/presignedurl', authController.presignedurl);
 
-router.post('/forgot-password',authController.forgotPassword)
-router.post('/reset-password/:resetToken',authController.resetPassword);
+router.post('/forgot-password', authController.forgotPassword)
+router.post('/reset-password/:token', authController.resetPassword);
 
 
 module.exports = router;

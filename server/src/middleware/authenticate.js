@@ -11,9 +11,9 @@ exports.authenticate = async (req, res, next) => {
     const accessToken = req.cookies.accessToken;
     const refreshToken = req.cookies.refreshToken;
     console.log(accessToken, refreshToken)
-    if (accessToken && refreshToken) {
+    if (accessToken || refreshToken) {
       console.error('Cookie is present');
-    }else{
+    } else {
       console.error('Cookie is not present');
     }
 
@@ -25,9 +25,17 @@ exports.authenticate = async (req, res, next) => {
           console.error('User not found');
           return next(new AppError('User not found', 401));
         }
-        req.user = user;
-        return next();
+        return res.json({
+          isAuthenticated: true,
+          userId: user.user_id,
+          first_name: user.first_name,
+          profilePic: user.profilePic
+        });
       } catch (error) {
+        if (error.name !== 'TokenExpiredError') {
+          console.error('Access token invalid', error);
+          // return res.status(401).json({ isAuthenticated: false });
+        }
         console.error('Access token invalid or expired', error);
       }
     }
@@ -46,8 +54,14 @@ exports.authenticate = async (req, res, next) => {
           secure: process.env.NODE_ENV === 'production',
           maxAge: 3 * 60 * 60 * 1000 // 3 hours
         });
-        req.user = user;
-        return next();
+        return res.json({
+          isAuthenticated: true,
+          userId: user.user_id,
+          first_name: user.first_name,
+          profilePic: user.profilePic,
+          newAccessToken
+        });
+
       } catch (error) {
         console.error('Invalid refresh token', error);
         return next(new AppError('Invalid refresh token', 401));
