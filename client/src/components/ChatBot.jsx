@@ -31,13 +31,21 @@ const Chatbot = () => {
         body: JSON.stringify({ message: inputMessage }),
       });
 
-      const data = await response.json();
-      const botMessage = { name: 'Sam', message: data.answer };
-      setMessages((prevMessages) => [...prevMessages, botMessage]);
+      const textResponse = await response.text(); // Read response as plain text
+      console.log('Response from Flask:', textResponse);
+
+      try {
+        const data = JSON.parse(textResponse); // Try parsing the JSON response
+        const botMessage = { name: 'Sam', message: data.answer };
+        setMessages((prevMessages) => [...prevMessages, botMessage]);
+      } catch (jsonError) {
+        console.error('Error parsing JSON:', jsonError);
+      }
     } catch (error) {
-      console.error('Error:', error);
+      console.error('Error fetching from server:', error);
     }
   };
+
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
