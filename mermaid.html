@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mermaid Graph</title>
+    <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({ startOnLoad: true });
+    </script>
+</head>
+<body>
+    <div class="mermaid">
+        graph TD
+        A[Input Course Vector] --> B[Calculate Similarities]
+        C --> D[Sort & Filter]
+        
+        subgraph "Mathematical Process"
+            E[TF-IDF Calculation]
+            F[Cosine Similarity]
+            G[Score Normalization]
+        end
+        
+        B --> E
+        E --> F
+        F --> G
+        G --> C[Get Similarity Scores]
+        
+        subgraph "Recommendation Selection"
+            H[Apply Diversity Rules]
+            I[Type Filtering]
+            J[Final Ranking]
+        end
+        
+        D --> H
+        H --> I
+        I --> J
+    </div>
+</body>
+</html>
