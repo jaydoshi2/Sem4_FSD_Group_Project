@@ -77,7 +77,7 @@ if(loader) return <BookLoader/>
 
 return (
     <header className="fixed top-0 left-0 w-full bg-blue-950 shadow-md z-50">
-        <div className="container mx-auto px-4 py-2 flex justify-between items-center">
+        <div className="container mx-auto px-4 py-2 flex justify-between items-center h-16">
             {/* Logo */}
             <Link to="/" className="flex items-center">
                 <img src={webLogo} alt="Logo" className="h-10 w-10 sm:h-12 sm:w-12" />

@@ -15,10 +15,7 @@ exports.getCourses = async (req, res) => {
     // Use prisma.$queryRawUnsafe to execute the raw SQL directly
     const randomCourses = await prisma.$queryRawUnsafe(`
       SELECT title, thumbnail_pic_link, course_type, course_id 
-      FROM "Course"
-      ORDER BY RANDOM()
-      LIMIT 5;
-    `);
+      FROM "Course"`);
 
     console.log(randomCourses);
     res.status(200).json(randomCourses);
