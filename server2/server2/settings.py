@@ -29,10 +29,10 @@ SECRET_KEY = 'django-insecure-n(z3l#)i)ssrr7@cws4obmgb1ry@*f75l&g6#ut5_8vlk0x##r
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '192.168.88.65']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '192.168.5.65']
 
 CSRF_TRUSTED_ORIGINS = [
-    'http://192.168.88.65:5173'
+    'http://192.168.5.65:5173'
 ]
 
 # CSRF_COOKIE settings
@@ -41,7 +41,7 @@ CSRF_COOKIE_SAMESITE = 'Lax'  # Allows sending cookies on same-site or top-level
 CSRF_COOKIE_SECURE = False  # If you're using HTTP on localhost, set it to False. If HTTPS, set it to True.
 
 CORS_ORIGIN_WHITELIST = [
-    'http://192.168.88.65:5173',
+    'http://192.168.5.65:5173',
 ]
 
 # Application definition
@@ -56,6 +56,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'corsheaders',
     'chatbot_app',
+    'analytics',
 ]
 
 MIDDLEWARE = [
@@ -80,7 +81,7 @@ ROOT_URLCONF = 'server2.urls'
 CORS_ALLOW_ALL_ORIGINS = True
 
 CORS_ALLOWED_ORIGINS = [
-    'http://192.168.88.65:5173'
+    'http://192.168.5.65:5173'
 ]
 CORS_ALLOW_CREDENTIALS = True
 

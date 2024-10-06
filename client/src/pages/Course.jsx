@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
 import '../styles/Course.css';
+import BookLoader from '../components/BookLoader';
 
 const Course = () => {
   const [user, setUser] = useState(null);
@@ -86,7 +87,7 @@ const Course = () => {
       .catch((error) => console.error("Logout failed", error));
   };
 
-  if (loading) return <div>Loading...</div>;
+  if (loading) return <BookLoader/>;
 
   return (
     <div className="course-page">
@@ -103,7 +104,7 @@ const Course = () => {
         )}
       </header>
       
-      <div className="carousel-container">
+      {/* <div className="carousel-container">
         <button className="prev-btn" onClick={handlePrevious}>‹</button>
         <div className="slider-container" ref={carouselRef}>
           <div className="card-container">
@@ -125,7 +126,7 @@ const Course = () => {
           </div>
         </div>
         <button className="next-btn" onClick={handleNext}>›</button>
-      </div>
+      </div> */}
     </div>
   );
 };

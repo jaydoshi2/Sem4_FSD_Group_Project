@@ -100,82 +100,115 @@ const CourseDisplay = () => {
       [category]: showMore[category] ? initialDisplayCount : prev[category] + incrementDisplayCount,
     }));
   };
-
-  const handleReadMoreClick = async (course) => {
-    const courseId = course.course_id;
-    try {
-      const response = await axios.get(`http://${myIP}:3000/from/first-chapter-video/${courseId}`);
-      const data = response.data;
-
-      if (response.status === 200) {
-        const chapter_id = data.chapter_id;
-        const video_id = data.video_id;
-        navigate(`/video?course_id=${courseId}&chapter_id=${chapter_id}&video_id=${video_id}`);
-        // navigate(`/courseDetails?course_id=${courseId}`);
-      } else {
-        console.error('Error fetching chapter and video:', data.message);
-      }
-    } catch (error) {
-      console.error('Error:', error.message);
-    }
+  // try {
+    //   const response = await axios.get(`http://${myIP}:3000/from/first-chapter-video/${courseId}`);
+    //   const data = response.data;
+    
+    //   if (response.status === 200) {
+      //     const chapter_id = data.chapter_id;
+      //     const video_id = data.video_id;
+      //     navigate(`/video?course_id=${courseId}&chapter_id=${chapter_id}&video_id=${video_id}`);
+      //   } else {
+        //     console.error('Error fetching chapter and video:', data.message);
+        //   }
+        // } catch (error) {
+          //   console.error('Error:', error.message);
+          // }
+          
+            const handleReadMoreClick = async (course) => {
+              const userData = JSON.parse(localStorage.getItem('user'));
+              const userId = userData.userId;
+          
+              // const userId=localStorage.getItem('user')
+              const courseId = course.course_id;
+              // navigate(`/courseDetails?course_id=${courseId}`);
+              try {
+                const response = await axios.post(`http://${myIP}:3000/course/check`, {
+                  userId,
+                  courseId,
+                });
+          
+                // Redirect based on the response
+                if (response.data.redirect) {
+                  if(response.data.redirect=="/video"){
+                    const response = await axios.get(`http://${myIP}:3000/from/first-chapter-video/${courseId}`);
+                      const data = response.data;
+                      if (response.status === 200) {
+                        const chapter_id = data.chapter_id;
+                        const video_id = data.video_id;
+                        navigate(`/video?course_id=${courseId}&chapter_id=${chapter_id}&video_id=${video_id}`);
+                      } else {
+                        console.error('Error fetching chapter and video:', data.message);
+                      }
+                  }
+                  else{
+                    navigate(response.data.redirect);
+                  }
+                }
+              } catch (error) {
+                console.error('Error checking user progress:', error);
+              }
   };
 
   return (
     <>
-      <SubNavbar />
-      <div className="w-full p-4">
-        {loading ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            {Array(8).fill().map((_, index) => (
-              <SkeletonLoader key={index} />
-            ))}
-          </div>
-        ) : (
-          randomCategories.map((category) => {
-            const courses = course_data[category] || [];
-            const displayCount = displayCounts[category] || initialDisplayCount;
-            return (
-              <fieldset key={category} className="mb-8 border-2 border-gray-300 rounded-lg p-4">
-                <legend className="text-2xl font-bold text-gray-800 px-2 py-1 rounded-md">{category}</legend>
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-4">
-                  {courses.slice(0, displayCount).map((course, index) => (
-                    <div
-                      key={index}
-                      className="bg-white rounded-lg border-3 border-gray-250 shadow-lg text-center overflow-hidden transition-all duration-500"
-                    >
-                      <div className="h-48 rounded-t-lg flex justify-center items-center overflow-hidden p-2">
-                        <img
-                          src={course.thumbnail_pic_link}
-                          alt={course.title}
-                          className="h-full w-full object-cover rounded-lg"
-                        />
+      <div className='pt-20'>
+
+        <SubNavbar />
+        <div className="w-full p-4">
+          {loading ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+              {Array(8).fill().map((_, index) => (
+                <SkeletonLoader key={index} />
+              ))}
+            </div>
+          ) : (
+            randomCategories.map((category) => {
+              const courses = course_data[category] || [];
+              const displayCount = displayCounts[category] || initialDisplayCount;
+              return (
+                <fieldset key={category} className="mb-8 border-2 border-gray-300 rounded-lg p-4">
+                  <legend className="text-2xl font-bold text-gray-800 px-2 py-1 rounded-md">{category}</legend>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-4">
+                    {courses.slice(0, displayCount).map((course, index) => (
+                      <div
+                        key={index}
+                        className="bgwhite rounded-lg border-3 border-gray-250 shadow-lg text-center overflow-hidden transition-all duration-500"
+                      >
+                        <div className="h-48 rounded-t-lg flex justify-center items-center overflow-hidden p-2">
+                          <img
+                            src={course.thumbnail_pic_link}
+                            alt={course.title}
+                            className="h-full w-full object-cover rounded-lg"
+                          />
+                        </div>
+                        <div className="p-2">
+                          <h5 className="text-xl font-semibold mb-3">{course.title}</h5>
+                          <button
+                            className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-700"
+                            onClick={() => handleReadMoreClick(course)}
+                          >
+                            Read More
+                          </button>
+                        </div>
                       </div>
-                      <div className="p-2">
-                        <h5 className="text-xl font-semibold mb-3">{course.title}</h5>
-                        <button
-                          className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-700"
-                          onClick={() => handleReadMoreClick(course)}
-                        >
-                          Read More
-                        </button>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-                {courses.length > initialDisplayCount && (
-                  <div className="flex mt-4">
-                    <button
-                      className="bg-gray-600 text-white py-2 px-4 rounded hover:bg-gray-700"
-                      onClick={() => toggleShowMore(category)}
-                    >
-                      {showMore[category] ? 'Show Less' : 'Show More'}
-                    </button>
+                    ))}
                   </div>
-                )}
-              </fieldset>
-            );
-          })
-        )}
+                  {courses.length > initialDisplayCount && (
+                    <div className="flex mt-4">
+                      <button
+                        className="bg-gray-600 text-white py-2 px-4 rounded hover:bg-gray-700"
+                        onClick={() => toggleShowMore(category)}
+                      >
+                        {showMore[category] ? 'Show Less' : 'Show More'}
+                      </button>
+                    </div>
+                  )}
+                </fieldset>
+              );
+            })
+          )}
+        </div>
       </div>
     </>
   );

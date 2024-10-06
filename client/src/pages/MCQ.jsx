@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../styles/MCQ.css';
+import BookLoader from '../components/BookLoader';
 
 const MCQ = ({ props, onClose }) => {
     const navigate = useNavigate();
@@ -34,6 +35,7 @@ const MCQ = ({ props, onClose }) => {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({ videoId: ytvideoId }),
+                credentials:'include'
             });
 
             if (!response.ok) {
@@ -43,7 +45,7 @@ const MCQ = ({ props, onClose }) => {
             const data = await response.json();
 
             if (data.success) {
-                const response2 = await fetch(`http://${myIP}:3000/vid/generate-mcqs`, { method: 'GET' });
+                const response2 = await fetch(`http://${myIP}:3000/vid/generate-mcqs`, { method: 'GET' ,credentials:'include'});
                 const data2 = await response2.json();
 
                 const que = data2.questions || [];
@@ -114,7 +116,7 @@ const MCQ = ({ props, onClose }) => {
             // add at this line
             try {
                 const queryParams = new URLSearchParams(window.location.search);
-                const userId = 'user1';
+                const userId = localStorage.getItem('user').userId;
                 const videoId = queryParams.get('video_id');
                 const chapterId = queryParams.get('chapter_id');
                 const courseId = queryParams.get('course_id');
@@ -153,11 +155,7 @@ const MCQ = ({ props, onClose }) => {
     return (
         <div className="App">
             {loading && (
-                <div className="d-flex justify-content-center" id='loader1'>
-                    <div className="spinner-border" role="status">
-                        <span className="visually-hidden">Loading...</span>
-                    </div>
-                </div>
+                <span className=""><BookLoader/></span>
             )}
             {!loading && (
                 <div className="modal show">

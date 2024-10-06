@@ -6,7 +6,7 @@ import SkeletonLoader from '../components/SkeletonLoader'; // Import the skeleto
 import SubNavbar from '../components/SubNavbar';
 
 const CARDS_PER_PAGE = 12; // Variable to control the number of cards per page
-const myIP = import.meta.env.VITE_MY_IP;
+
 const shuffleArray = (array) => {
   for (let i = array.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
@@ -23,8 +23,9 @@ const Skills = () => {
   const courseType = searchParams.get("course_type"); // Get the course_type from query params
 
   const fetchCourseData = () => {
-    axios
-      .get("http://localhost:3000/course/getAll")
+    const myIP = import.meta.env.VITE_MY_IP;
+    axios.get(`http://${myIP}:3000/course`)
+
       .then((response) => {
         const fetchedData = response.data;
 
@@ -49,23 +50,10 @@ const Skills = () => {
     fetchCourseData();
   }, [courseType]); // Refetch when courseType changes
 
-  const handleReadMoreClick = async (course) => {
-    const courseId = course.course_id;
-    try {
-      const response = await axios.get(`http://${myIP}:3000/from/first-chapter-video/${courseId}`);
-      const data = response.data;
+  const handleReadMoreClick = (course) => {
+    // Navigate to the desired URL with the course ID
+    navigate(`/courseDetails?course_id=${course.course_id}&coursename=${course.title}`);
 
-      if (response.status === 200) {
-        const chapter_id = data.chapter_id;
-        const video_id = data.video_id;
-        navigate(`/video?course_id=${courseId}&chapter_id=${chapter_id}&video_id=${video_id}`);
-        // navigate(`/courseDetails?course_id=${courseId}`);
-      } else {
-        console.error('Error fetching chapter and video:', data.message);
-      }
-    } catch (error) {
-      console.error('Error:', error.message);
-    }
   };
 
   // Calculate the courses to display on the current page
@@ -77,85 +65,83 @@ const Skills = () => {
   const totalPages = Math.ceil(courseData.length / CARDS_PER_PAGE);
 
   return (
-    <>
+    <div className="flex flex-col h-screen overflow-hidden bg-[#F0F7FD] mt-16">
       <SubNavbar />
-      <div className="w-full p-4">
-        {loading ? (
-          // Display skeleton loaders while loading
-          <>
+      <div className="flex-grow overflow-y-auto">
+        <div className="w-full p-4">
+          {loading ? (
+
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
               {Array(8).fill().map((_, index) => (
                 <SkeletonLoader key={index} />
               ))}
             </div>
-          </>
-        ) : currentCourses.length > 0 ? (
-          <>
-            <fieldset className="mb-8 border-2 border-gray-300 rounded-lg p-4">
-              <legend className="text-2xl font-bold text-gray-800 px-2 py-1 rounded-md">
-                {courseType} Courses
-              </legend>
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-4">
-                {currentCourses.map((course, index) => (
-                  <div
-                    key={index}
-                    className="bg-white rounded-lg border-3 border-gray-250 shadow-lg text-center overflow-hidden transition-all duration-500"
-                  >
-                    <div className="h-48 rounded-t-lg flex justify-center items-center overflow-hidden p-2">
-                      <img
-                        src={course.thumbnail_pic_link}
-                        alt={course.title}
-                        className="h-full w-full object-cover rounded-lg"
-                      />
+          ) : currentCourses.length > 0 ? (
+            <>
+              <fieldset className="mb-8 border-2 border-gray-300 rounded-lg p-4">
+                <legend className="text-2xl font-bold text-[#1e3a8a] px-2 py-1 rounded-md">
+                  {courseType} Courses
+                </legend>
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-4">
+                  {currentCourses.map((course, index) => (
+                    <div
+                      key={index}
+                      className="bg-white rounded-lg border-3 border-gray-250 shadow-lg text-center overflow-hidden transition-all duration-500"
+                    >
+                      <div className="h-48 rounded-t-lg flex justify-center items-center overflow-hidden p-2">
+                        <img
+                          src={course.thumbnail_pic_link}
+                          alt={course.title}
+                          className="h-full w-full object-cover rounded-lg"
+                        />
+                      </div>
+                      <div className="p-2">
+                        <h5 className="text-xl text-[#1e3a8a] font-semibold mb-3">{course.title}</h5>
+                        <button
+                          className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-700"
+                          onClick={() => handleReadMoreClick(course)}
+                        >
+                          Read More
+                        </button>
+                      </div>
                     </div>
-                    <div className="p-2">
-                      <h5 className="text-xl font-semibold mb-3">{course.title}</h5>
-                      <button
-                        className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-700"
-                        onClick={() => handleReadMoreClick(course)} // Handle click to navigate
-                      >
-                        Read More
-                      </button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </fieldset>
+                  ))}
+                </div>
+              </fieldset>
 
-            {/* Pagination controls */}
-            <div className="flex justify-center mt-8">
-              <button
-                className="px-4 py-2 mx-1 bg-gray-300 rounded hover:bg-gray-400 flex items-center justify-center"
-                onClick={() => setCurrentPage(currentPage - 1)}
-                disabled={currentPage === 1}
-              >
-                <i class="fa-solid fa-angles-left"></i>
-              </button>
-              {[...Array(totalPages)].map((_, index) => (
+              <div className="flex justify-center mt-8 mb-4">
                 <button
-                  key={index}
-                  className={`px-4 py-2 mx-1 rounded ${currentPage === index + 1 ? 'bg-blue-500 text-white' : 'bg-gray-300 hover:bg-gray-400'
-                    }`}
-                  onClick={() => setCurrentPage(index + 1)}
+                  className="px-4 py-2 mx-1 bg-gray-300 rounded hover:bg-gray-400 flex items-center justify-center"
+                  onClick={() => setCurrentPage(currentPage - 1)}
+                  disabled={currentPage === 1}
                 >
-                  {index + 1}
+                  <i className="fa-solid fa-angles-left"></i>
                 </button>
-              ))}
-              <button
-                className="px-4 py-2 mx-1 bg-gray-300 rounded hover:bg-gray-400 flex items-center justify-center"
-                onClick={() => setCurrentPage(currentPage + 1)}
-                disabled={currentPage === totalPages}
-              >
-                <i className="fa-solid fa-angles-right"></i>
-              </button>
-            </div>
-
-          </>
-        ) : (
-          <p>No courses found for the selected category.</p>
-        )}
+                {[...Array(totalPages)].map((_, index) => (
+                  <button
+                    key={index}
+                    className={`px-4 py-2 mx-1 rounded ${currentPage === index + 1 ? 'bg-blue-500 text-white' : 'bg-gray-300 hover:bg-gray-400'
+                      }`}
+                    onClick={() => setCurrentPage(index + 1)}
+                  >
+                    {index + 1}
+                  </button>
+                ))}
+                <button
+                  className="px-4 py-2 mx-1 bg-gray-300 rounded hover:bg-gray-400 flex items-center justify-center"
+                  onClick={() => setCurrentPage(currentPage + 1)}
+                  disabled={currentPage === totalPages}
+                >
+                  <i className="fa-solid fa-angles-right"></i>
+                </button>
+              </div>
+            </>
+          ) : (
+            <p>No courses found for the selected category.</p>
+          )}
+        </div>
       </div>
-    </>
+    </div>
   );
 };
 

@@ -1,12 +1,12 @@
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
-async function truncateTables() {
-    await prisma.$executeRaw`TRUNCATE TABLE "Video" CASCADE;`;
-    await prisma.$executeRaw`TRUNCATE TABLE "Chapter" CASCADE;`;
-    await prisma.$executeRaw`TRUNCATE TABLE "Course" CASCADE;`;
-    console.log("Data Truncated")
-}
+// async function truncateTables() {
+//     await prisma.$executeRaw`TRUNCATE TABLE "Video" CASCADE;`;
+//     await prisma.$executeRaw`TRUNCATE TABLE "Chapter" CASCADE;`;
+//     await prisma.$executeRaw`TRUNCATE TABLE "Course" CASCADE;`;
+//     console.log("Data Truncated")
+// }
 
 async function setupCourses() {
     await truncateTables();

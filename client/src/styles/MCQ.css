@@ -1,5 +1,7 @@
 /* src/Quiz.css */
-
+.modal{
+    margin-top: 60px;
+}
 .quiz-container {
     display: flex;
     flex-direction: column;
@@ -43,6 +45,20 @@
     background-color: #4caf50;
     /* Green */
     color: #fff;
+}
+
+#loader1 {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 9999;
+}
+
+.spinner-border {
+    width: 3rem;
+    height: 3rem;
+    border-width: 0.3rem;
 }
 
 .option-button.incorrect {
@@ -206,6 +222,7 @@
     margin-top: 10px;
     font-size: 16px;
 }
+
 /* MCQ.css */
 
 .mcq-container {

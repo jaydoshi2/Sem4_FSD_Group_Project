@@ -1,0 +1,122 @@
+[
+    {
+        "model": "analytics.Chapter",
+        "pk": 1,
+        "fields": {
+            "title": "Chapter 1",
+            "course": 9
+        }
+    },
+    {
+        "model": "analytics.Chapter",
+        "pk": 2,
+        "fields": {
+            "title": "Chapter 2",
+            "course": 7
+        }
+    },
+    {
+        "model": "analytics.Chapter",
+        "pk": 3,
+        "fields": {
+            "title": "Chapter 3",
+            "course": 7
+        }
+    },
+    {
+        "model": "analytics.Chapter",
+        "pk": 4,
+        "fields": {
+            "title": "Chapter 4",
+            "course": 10
+        }
+    },
+    {
+        "model": "analytics.Chapter",
+        "pk": 5,
+        "fields": {
+            "title": "Chapter 5",
+            "course": 1
+        }
+    },
+    {
+        "model": "analytics.Chapter",
+        "pk": 6,
+        "fields": {
+            "title": "Chapter 6",
+            "course": 8
+        }
+    },
+    {
+        "model": "analytics.Chapter",
+        "pk": 7,
+        "fields": {
+            "title": "Chapter 7",
+            "course": 6
+        }
+    },
+    {
+        "model": "analytics.Chapter",
+        "pk": 8,
+        "fields": {
+            "title": "Chapter 8",
+            "course": 3
+        }
+    },
+    {
+        "model": "analytics.Chapter",
+        "pk": 9,
+        "fields": {
+            "title": "Chapter 9",
+            "course": 8
+        }
+    },
+    {
+        "model": "analytics.Chapter",
+        "pk": 10,
+        "fields": {
+            "title": "Chapter 10",
+            "course": 5
+        }
+    },
+    {
+        "model": "analytics.Chapter",
+        "pk": 11,
+        "fields": {
+            "title": "Chapter 11",
+            "course": 8
+        }
+    },
+    {
+        "model": "analytics.Chapter",
+        "pk": 12,
+        "fields": {
+            "title": "Chapter 12",
+            "course": 1
+        }
+    },
+    {
+        "model": "analytics.Chapter",
+        "pk": 13,
+        "fields": {
+            "title": "Chapter 13",
+            "course": 3
+        }
+    },
+    {
+        "model": "analytics.Chapter",
+        "pk": 14,
+        "fields": {
+            "title": "Chapter 14",
+            "course": 10
+        }
+    },
+    {
+        "model": "analytics.Chapter",
+        "pk": 15,
+        "fields": {
+            "title": "Chapter 15",
+            "course": 1
+        }
+    }
+]

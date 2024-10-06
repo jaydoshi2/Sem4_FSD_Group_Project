@@ -1,11 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import "../styles/Signup.css";
-import defaultProfilePic from "../images/profile.png";
-
-const BACKEND_URL = import.meta.env.VITE_BACKEND_URL; // Replace with your actual backend URL
-const CLOUDFRONT_URL = import.meta.env.VITE_CLOUDFRONT_URL; // Replace with your actual CloudFront URL
+import defaultProfilePic from "../assets/images/profile.png";
+import BookLoader from "../components/BookLoader";
 
 const Signup = () => {
   const [data, setData] = useState({
@@ -18,8 +16,36 @@ const Signup = () => {
   });
   const [error, setError] = useState("");
   const [imageFile, setImageFile] = useState(null); // Added state to store the image file
-  const navigate = useNavigate();
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [user, setUser] = useState(null);
   const [uploading, setUploading] = useState(false);
+  const [loading, setLoading] = useState(false); // Loading for auth check
+  const navigate = useNavigate();
+
+  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+  const CLOUDFRONT_URL = import.meta.env.VITE_CLOUDFRONT_URL;
+  const myIP = import.meta.env.VITE_MY_IP;
+
+  useEffect(() => {
+    checkAuthStatus();
+  }, []);
+
+  const checkAuthStatus = async () => {
+    // setLoading(true);
+    try {
+      const response = await axios.get(`http://${myIP}:3000/auth/check-auth`, { withCredentials: true });
+      if (response.data.isAuthenticated) {
+        localStorage.setItem("user", JSON.stringify(response.data.user));
+        setUser(response.data.user);
+        setIsAuthenticated(true);
+        navigate("/");
+      }
+    } catch (error) {
+      console.error("Auth check failed", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleChange = ({ currentTarget: input }) => {
     setData({ ...data, [input.name]: input.value });
@@ -27,52 +53,55 @@ const Signup = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setUploading(true); // Set uploading to true when form is submitted
+    setUploading(true);
     try {
-        let updatedData = { ...data }; // Copy the data object
+      let updatedData = { ...data }; // Copy the data object
 
-        // Upload the image if an image file is selected
-        if (imageFile) {
-            const mimeType = imageFile.type;
-            const response = await axios.get(`${BACKEND_URL}/auth/presignedurl`, {
-                params: { mimeType }
-            });
+      // Upload the image if an image file is selected
+      if (imageFile) {
+        const mimeType = imageFile.type;
+        const response = await axios.get(`${BACKEND_URL}/auth/presignedurl`, {
+          params: { mimeType }
+        });
 
-            const presignedUrl = response.data.url;
-            const formData = new FormData();
-            formData.append("bucket", response.data.fields["bucket"]);
-            formData.append("Content-Type", mimeType);
-            formData.append("X-Amz-Algorithm", response.data.fields["X-Amz-Algorithm"]);
-            formData.append("X-Amz-Credential", response.data.fields["X-Amz-Credential"]);
-            formData.append("X-Amz-Date", response.data.fields["X-Amz-Date"]);
-            formData.append("Policy", response.data.fields["Policy"]);
-            formData.append("X-Amz-Signature", response.data.fields["X-Amz-Signature"]);
-            formData.append("key", response.data.fields["key"]);
-            formData.append("file", imageFile);
+        const presignedUrl = response.data.url;
+        const formData = new FormData();
 
-            await axios.post(presignedUrl, formData, {
-                headers: {
-                    "Content-Type": "multipart/form-data"
-                }
-            });
+        formData.append("bucket", response.data.fields["bucket"]);
+        formData.append("Content-Type", mimeType);
+        formData.append("X-Amz-Algorithm", response.data.fields["X-Amz-Algorithm"]);
+        formData.append("X-Amz-Credential", response.data.fields["X-Amz-Credential"]);
+        formData.append("X-Amz-Date", response.data.fields["X-Amz-Date"]);
+        formData.append("Policy", response.data.fields["Policy"]);
+        formData.append("X-Amz-Signature", response.data.fields["X-Amz-Signature"]);
+        formData.append("key", response.data.fields["key"]);
+        formData.append("file", imageFile);
 
-            const imageUrl = `${CLOUDFRONT_URL}/${response.data.fields["key"]}`;
-            updatedData = { ...updatedData, profilePic: imageUrl }; // Update profilePic in the copied data object
-        }
+        await axios.post(presignedUrl, formData, {
+          headers: {
+            "Content-Type": "multipart/form-data"
+          }
+        });
 
-        // Submit the form data with the updated data object
-        const url = `${BACKEND_URL}/auth/signup`;
-        await axios.post(url, updatedData);
-        navigate("/login");
+        const imageUrl = `${CLOUDFRONT_URL}/${response.data.fields["key"]}`;
+        console.log(imageUrl);
+        updatedData = { ...updatedData, profilePic: imageUrl }; // Update profilePic in the copied data object
+      }
+
+      // Submit the form data with the updated data object
+      const url = `${BACKEND_URL}/auth/signup`;
+      await axios.post(url, updatedData);
+      navigate("/login");
     } catch (error) {
-        if (error.response && error.response.status >= 400 && error.response.status <= 500) {
-            setError(error.response.data.message);
-        }
+      if (error.response && error.response.status >= 400 && error.response.status <= 500) {
+        setError(error.response.data.message);
+      } else {
+        setError("An unexpected error occurred. Please try again.");
+      }
+    } finally {
+      setUploading(false);
     }
-    setUploading(false); // Set uploading to false when the process is complete
-};
-
-
+  };
 
   const handleImageUpload = async (e) => {
     try {
@@ -85,6 +114,8 @@ const Signup = () => {
       setError("Failed to handle image upload. Please try again.");
     }
   };
+
+  if (loading) return <div><BookLoader/></div>; // Loading screen for auth check
 
   return (
     <div className="signup_container">
@@ -110,7 +141,7 @@ const Signup = () => {
               name="file"
               onChange={handleImageUpload}
               disabled={uploading}
-            ></input>
+            />
           </div>
         </div>
         <div className="right">
