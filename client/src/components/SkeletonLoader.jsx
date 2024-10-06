@@ -1,12 +1,13 @@
+// /src/components/SkeletonLoader.js
 import React from 'react';
-import '../styles/SkeletonLoader.css'; // Import the CSS for styling the skeleton loader
+import styles from '../styles/SkeletonLoader.module.css'; // Import the CSS Module
 
 const SkeletonLoader = () => {
   return (
-    <div className="skeleton-wrapper">
-      <div className="skeleton-thumbnail"></div>
-      <div className="skeleton-title"></div>
-      <div className="skeleton-button"></div>
+    <div className={styles.skeletonWrapper}>
+      <div className={styles.skeletonThumbnail}></div>
+      <div className={styles.skeletonTitle}></div>
+      <div className={styles.skeletonButton}></div>
     </div>
   );
 };

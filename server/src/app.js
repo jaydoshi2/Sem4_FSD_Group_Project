@@ -9,9 +9,12 @@ const videoRouter = require("./routes/videoRoutes");
 const leaderRouter = require("./routes/LeaderBoardRoutes");
 const courseRouter = require("./routes/courseRoutes");
 const profileRouter = require('./routes/profileRoutes');
+const certificateRouter = require("./routes/certificateRoute");
 const passport = require('passport');
 const session = require('express-session');
 const errorHandler = require('./middleware/error_handler');
+
+const bodyParser = require('body-parser');
 const { PrismaClient } = require('@prisma/client');
 const axios = require('axios');
 
@@ -39,6 +42,7 @@ const corsOptions = {
   methods: "GET,POST,PUT,DELETE",
   credentials: true
 };
+app.use(bodyParser.json());
 
 app.use(cors(corsOptions));
 
@@ -101,6 +105,8 @@ app.use('/from', fromRouter);
 app.use('/vid', videoRouter);
 app.use('/leaderboard', leaderRouter);
 app.use('/profile', profileRouter);
+app.use('/certificate', certificateRouter);
+
 
 // Error handling middleware
 app.use(errorHandler);

@@ -1,0 +1,72 @@
+#num-animation {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5rem;
+    /* Reduced gap for smaller screens */
+    padding: 2rem;
+    flex-wrap: wrap;
+}
+
+.num-animation-container2 {
+    display: inline-block;
+    margin: 1rem;
+    /* Added margin for better spacing on small screens */
+}
+
+.animated-number::after {
+    content: "+";
+    font-size: xx-large;
+    font-weight: 700;
+    color: var(--default-color);
+    margin-left: 0.5rem;
+    margin-top: 0.6rem;
+}
+
+.number-label {
+    margin-top: 0.5rem;
+    font-size: xx-large;
+    font-weight: 500;
+    color: var(--default-color);
+}
+
+/* Media queries for responsiveness */
+@media (max-width: 1200px) {
+    #num-animation {
+        gap: 3rem;
+    }
+
+    /* .animated-number::after, */
+    .number-label {
+        font-size: xx-large;
+        font-weight: 600;
+        color: var(--default-color);
+        margin-left: 0.5rem;
+    }
+}
+
+@media (max-width: 768px) {
+    #num-animation {
+        gap: 1.5rem;
+    }
+
+    .number-label {
+        font-size: xx-large;
+        font-weight: 600;
+        color: var(--default-color);
+        margin-left: 0.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    #num-animation {
+        gap: 1rem;
+    }
+
+    .number-label {
+        font-size: xx-large;
+        font-weight: 600;
+        color: var(--default-color);
+        margin-left: 0.5rem;
+    }
+}

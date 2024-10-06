@@ -104,7 +104,7 @@ const Course = () => {
         )}
       </header>
       
-      <div className="carousel-container">
+      {/* <div className="carousel-container">
         <button className="prev-btn" onClick={handlePrevious}>‹</button>
         <div className="slider-container" ref={carouselRef}>
           <div className="card-container">
@@ -126,7 +126,7 @@ const Course = () => {
           </div>
         </div>
         <button className="next-btn" onClick={handleNext}>›</button>
-      </div>
+      </div> */}
     </div>
   );
 };

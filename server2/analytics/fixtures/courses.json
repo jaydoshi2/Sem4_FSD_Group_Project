@@ -1,0 +1,172 @@
+[
+    {
+        "model": "analytics.Course",
+        "pk": 1,
+        "fields": {
+            "title": "Course 1",
+            "course_type": "Web Development",
+            "description": "A description for Course 1",
+            "thumbnail_pic_link": "thumbnail1.jpg",
+            "certificate_preview_link": "certificate1.jpg",
+            "number_of_ratings": 113,
+            "course_level": "Beginner",
+            "Rate": 4.9,
+            "points_providing": 100,
+            "Enrollment_Counts": 116,
+            "price": 58
+        }
+    },
+    {
+        "model": "analytics.Course",
+        "pk": 2,
+        "fields": {
+            "title": "Course 2",
+            "course_type": "Programming",
+            "description": "A description for Course 2",
+            "thumbnail_pic_link": "thumbnail2.jpg",
+            "certificate_preview_link": "certificate2.jpg",
+            "number_of_ratings": 65,
+            "course_level": "Intermediate",
+            "Rate": 1.3,
+            "points_providing": 91,
+            "Enrollment_Counts": 256,
+            "price": 0
+        }
+    },
+    {
+        "model": "analytics.Course",
+        "pk": 3,
+        "fields": {
+            "title": "Course 3",
+            "course_type": "Programming",
+            "description": "A description for Course 3",
+            "thumbnail_pic_link": "thumbnail3.jpg",
+            "certificate_preview_link": "certificate3.jpg",
+            "number_of_ratings": 110,
+            "course_level": "Advanced",
+            "Rate": 3.5,
+            "points_providing": 56,
+            "Enrollment_Counts": 243,
+            "price": 122
+        }
+    },
+    {
+        "model": "analytics.Course",
+        "pk": 4,
+        "fields": {
+            "title": "Course 4",
+            "course_type": "Artificial Intelligence",
+            "description": "A description for Course 4",
+            "thumbnail_pic_link": "thumbnail4.jpg",
+            "certificate_preview_link": "certificate4.jpg",
+            "number_of_ratings": 159,
+            "course_level": "Intermediate",
+            "Rate": 4.5,
+            "points_providing": 51,
+            "Enrollment_Counts": 146,
+            "price": 172
+        }
+    },
+    {
+        "model": "analytics.Course",
+        "pk": 5,
+        "fields": {
+            "title": "Course 5",
+            "course_type": "Web Development",
+            "description": "A description for Course 5",
+            "thumbnail_pic_link": "thumbnail5.jpg",
+            "certificate_preview_link": "certificate5.jpg",
+            "number_of_ratings": 110,
+            "course_level": "Intermediate",
+            "Rate": 2.9,
+            "points_providing": 76,
+            "Enrollment_Counts": 250,
+            "price": 200
+        }
+    },
+    {
+        "model": "analytics.Course",
+        "pk": 6,
+        "fields": {
+            "title": "Course 6",
+            "course_type": "Programming",
+            "description": "A description for Course 6",
+            "thumbnail_pic_link": "thumbnail6.jpg",
+            "certificate_preview_link": "certificate6.jpg",
+            "number_of_ratings": 63,
+            "course_level": "Beginner",
+            "Rate": 1.1,
+            "points_providing": 67,
+            "Enrollment_Counts": 145,
+            "price": 193
+        }
+    },
+    {
+        "model": "analytics.Course",
+        "pk": 7,
+        "fields": {
+            "title": "Course 7",
+            "course_type": "Web Development",
+            "description": "A description for Course 7",
+            "thumbnail_pic_link": "thumbnail7.jpg",
+            "certificate_preview_link": "certificate7.jpg",
+            "number_of_ratings": 86,
+            "course_level": "Beginner",
+            "Rate": 1.6,
+            "points_providing": 67,
+            "Enrollment_Counts": 247,
+            "price": 87
+        }
+    },
+    {
+        "model": "analytics.Course",
+        "pk": 8,
+        "fields": {
+            "title": "Course 8",
+            "course_type": "Programming",
+            "description": "A description for Course 8",
+            "thumbnail_pic_link": "thumbnail8.jpg",
+            "certificate_preview_link": "certificate8.jpg",
+            "number_of_ratings": 199,
+            "course_level": "Beginner",
+            "Rate": 2.3,
+            "points_providing": 50,
+            "Enrollment_Counts": 215,
+            "price": 104
+        }
+    },
+    {
+        "model": "analytics.Course",
+        "pk": 9,
+        "fields": {
+            "title": "Course 9",
+            "course_type": "Data Science",
+            "description": "A description for Course 9",
+            "thumbnail_pic_link": "thumbnail9.jpg",
+            "certificate_preview_link": "certificate9.jpg",
+            "number_of_ratings": 93,
+            "course_level": "Intermediate",
+            "Rate": 4.8,
+            "points_providing": 78,
+            "Enrollment_Counts": 108,
+            "price": 122
+        }
+    },
+    {
+        "model": "analytics.Course",
+        "pk": 10,
+        "fields": {
+            "title": "Course 10",
+            "course_type": "Programming",
+            "description": "A description for Course 10",
+            "thumbnail_pic_link": "thumbnail10.jpg",
+            "certificate_preview_link": "certificate10.jpg",
+            "number_of_ratings": 190,
+            "course_level": "Beginner",
+            "Rate": 2.3,
+            "points_providing": 63,
+            "Enrollment_Counts": 105,
+            "price": 9
+        }
+    }
+]

@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-// import '../styles/Profile.css';
 
 const Profile = () => {
   const [isEditingAll, setIsEditingAll] = useState(false);
-  const [loading, setLaoding] = useState(false)
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     username: '',
     email: '',
@@ -27,12 +26,12 @@ const Profile = () => {
     try {
       const storedUser = JSON.parse(localStorage.getItem('user'));
 
-      if (!storedUser || !storedUser.user_id) {
+      if (!storedUser || !storedUser.userId) {
         throw new Error('No user data found in local storage');
       }
 
       const response = await axios.post(`http://${MY_IP}:3000/profile/getuser`, {
-        userId: storedUser.user_id
+        userId: storedUser.userId
       });
 
       setFormData({
@@ -105,12 +104,12 @@ const Profile = () => {
     try {
       const storedUser = JSON.parse(localStorage.getItem('user'));
 
-      if (!storedUser || !storedUser.user_id) {
+      if (!storedUser || !storedUser.userId) {
         throw new Error('No user data found in local storage');
       }
 
       await axios.put(`http://${MY_IP}:3000/profile/update`, {
-        userId: storedUser.user_id,
+        userId: storedUser.userId,
         ...formData
       });
 
@@ -123,98 +122,98 @@ const Profile = () => {
     setUploading(false);
   };
 
-  if (error) return <div className="error-message">{error}</div>;
+  if (error) return <div className="text-red-500">{error}</div>;
 
   return (
-    <div className="container mx-auto p-6 bg-gradient-to-r from-blue-300 to-green-300 min-h-screen">
-      <h1 className="text-4xl font-bold text-center mb-6">Student Profile</h1>
-
-      <div className="flex flex-col md:flex-row items-center justify-between md:space-x-8 space-y-6 md:space-y-0">
-        {/* Profile Picture and Basic Info */}
-        <div className="bg-white rounded-lg shadow-lg p-6 w-full md:w-1/3 text-center">
-          <img
-            src={formData.profilePic}
-            alt="Profile"
-            className="rounded-full w-32 h-32 mx-auto mb-4"
-          />
-          <h2 className="text-xl font-bold">{formData.first_name} {formData.last_name}</h2>
-          <p className="text-gray-600">Student ID: 321000001</p>
-          <p className="text-gray-600">Class: 4</p>
-          <p className="text-gray-600">Section: A</p>
-
-          {isEditingAll && (
-            <input
-              type="file"
-              accept="image/jpeg, image/png, image/gif"
-              onChange={handleImageUpload}
-              disabled={uploading}
-              className="mt-4"
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50 p-8">
+      <div className="bg-white shadow-lg rounded-lg p-6 w-full max-w-3xl mt-4"> {/* Added margin-top */}
+        <div className="flex flex-col md:flex-row items-start mb-4"> {/* Reduced margin-bottom */}
+          {/* Profile Picture and Basic Info */}
+          <div className="flex-shrink-0 text-center mb-4 md:mb-0 md:w-1/3">
+            <img
+              src={formData.profilePic}
+              alt="Profile"
+              className="rounded-full w-32 h-32 border-4 border-blue-500 shadow-lg mx-auto"
             />
-          )}
-        </div>
+            <h2 className="text-xl font-bold text-gray-800 mt-2">{formData.first_name} {formData.last_name}</h2>
+            <p className="text-gray-600 mt-1">Student ID: <span className="font-semibold">321000001</span></p>
+            <p className="text-gray-600 mt-1">Class: <span className="font-semibold">4</span></p>
+            <p className="text-gray-600 mt-1">Section: <span className="font-semibold">A</span></p>
 
-        {/* General Information */}
-        <div className="w-full md:w-1/2">
-          <div className="bg-white rounded-lg shadow-lg p-6 mb-6">
-            <h3 className="text-2xl font-bold mb-4">General Information</h3>
+            {isEditingAll && (
+              <input
+                type="file"
+                accept="image/jpeg, image/png, image/gif"
+                onChange={handleImageUpload}
+                disabled={uploading}
+                className="mt-4 text-sm text-gray-600 border border-blue-500 rounded-md p-2 block w-full"
+              />
+            )}
+          </div>
+
+          {/* General Information */}
+          <div className="md:w-2/3 mt-4 md:mt-0 md:ml-8"> {/* Reduced margin-top */}
+            <h3 className="text-2xl font-semibold text-gray-800 mb-2">General Information</h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {Object.entries(formData).map(([key, value]) => (
-                key !== 'profilePic' && (
-                  <div key={key} className="flex justify-between">
-                    <span className="font-bold">{key.charAt(0).toUpperCase() + key.slice(1)}:</span>
+                key !== 'profilePic' && key !== 'bio' && (  // Remove bio from here
+                  <div key={key} className="flex flex-col p-1"> {/* Reduced padding */}
+                    <label className="font-bold text-gray-700">{key.charAt(0).toUpperCase() + key.slice(1)}:</label>
                     {isEditingAll ? (
                       <input
                         type={key === 'birthDate' ? 'date' : 'text'}
                         name={key}
                         value={value}
                         onChange={handleInputChange}
-                        className="border rounded-md px-2 py-1 w-full"
+                        className="border border-blue-500 rounded-md px-2 py-1 w-full"
                       />
                     ) : (
-                      <span>{value}</span>
+                      <span className="text-gray-800">{value}</span>
                     )}
                   </div>
                 )
               ))}
             </div>
-          </div>
 
-          {/* Editable Bio Section */}
-          <div className="bg-white rounded-lg shadow-lg p-6">
-            <h3 className="text-2xl font-bold mb-4">Bio</h3>
-            {isEditingAll ? (
-              <textarea
-                name="bio"
-                value={formData.bio}
-                onChange={handleInputChange}
-                className="border rounded-md px-2 py-1 w-full h-24"
-              />
-            ) : (
-              <p className="text-gray-600">{formData.bio || 'No bio available.'}</p>
-            )}
+            {/* Editable Bio Section */}
+            <div className="mt-4"> {/* Reduced margin-top */}
+              <h3 className="text-2xl font-semibold text-gray-800 mb-2">Bio</h3>
+              {isEditingAll ? (
+                <textarea
+                  name="bio"
+                  value={formData.bio}
+                  onChange={handleInputChange}
+                  className="border border-blue-500 rounded-md px-3 py-1 w-full h-20 resize-none" // Adjusted height
+                  placeholder="Tell us about yourself..."
+                />
+              ) : (
+                <p className="text-gray-600">{formData.bio || 'No bio available.'}</p>
+              )}
+            </div>
           </div>
         </div>
+
+        {/* Edit/Submit Button */}
+        <div className="flex justify-center mt-4"> {/* Adjusted margin-top */}
+          {!isEditingAll ? (
+            <button
+              className="bg-blue-600 text-white px-6 py-2 rounded-lg shadow-md hover:bg-blue-700 transition duration-200"
+              onClick={handleMainEditToggle}
+            >
+              Edit Profile
+            </button>
+          ) : (
+            <button
+              className="bg-green-600 text-white px-6 py-2 rounded-lg shadow-md hover:bg-green-700 transition duration-200"
+              onClick={handleSubmit}
+              disabled={uploading}
+            >
+              {uploading ? 'Submitting...' : 'Submit'}
+            </button>
+          )}
+        </div>
       </div>
-
-      {/* Edit/Submit Button */}
-      {!isEditingAll ? (
-        <button
-          className="mt-6 bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-700 w-full md:w-auto"
-          onClick={handleMainEditToggle}
-        >
-          Edit Profile
-        </button>
-      ) : (
-        <button
-          className="mt-6 bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-700 w-full md:w-auto"
-          onClick={handleSubmit}
-          disabled={uploading}
-        >
-          {uploading ? 'Submitting...' : 'Submit'}
-        </button>
-      )}
     </div>
-
   );
 };
 

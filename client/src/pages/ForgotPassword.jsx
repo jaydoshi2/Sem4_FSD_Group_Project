@@ -11,7 +11,7 @@ const ForgotPassword = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      const url = `http://${myIP}:3000/auth/forgot-password`;
+      const url =`http://${myIP}:3000/auth/forgot-password`;
       const response = await axios.post(url, { email });
       setMessage(response.data.message);
     } catch (error) {
@@ -48,11 +48,10 @@ const ForgotPassword = () => {
         </button>
         {message && (
           <div
-            className={`mt-4 text-center ${
-              message.includes("error")
+            className={`mt-4 text-center ${message.includes("error")
                 ? "text-red-500"
                 : "text-green-500"
-            }`}
+              }`}
           >
             {message}
           </div>
