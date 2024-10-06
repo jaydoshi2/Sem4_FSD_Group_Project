@@ -2,8 +2,10 @@ import '@fortawesome/fontawesome-free/css/all.min.css'; // Import Font Awesome C
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import SubNavbar from '../components/SubNavbar';
 import SkeletonLoader from '../components/SkeletonLoader'; // Import the skeleton loader
+import SubNavbar from '../components/SubNavbar';
+
+// Helper function to group courses by category
 
 const initialDisplayCount = 4;
 const incrementDisplayCount = 4;
@@ -29,7 +31,7 @@ const shuffleArray = (array) => {
 const getRandomCategories = (categories) => {
   const keys = Object.keys(categories);
   const randomKeys = [];
-  while (randomKeys.length < 2 && keys.length > 0) {
+  while (randomKeys.length < 3 && keys.length > 0) {
     const randomIndex = Math.floor(Math.random() * keys.length);
     if (!randomKeys.includes(keys[randomIndex])) {
       randomKeys.push(keys[randomIndex]);
@@ -39,41 +41,47 @@ const getRandomCategories = (categories) => {
 };
 
 const CourseDisplay = () => {
-  const myIP = import.meta.env.VITE_MY_IP;
-
-  const [loading, setLoading] = useState(true);
-  const [course_data, setCourse_data] = useState({});
+  const [loading, setLoading] = useState(true); // State to track loading status
+  const [course_data, setCourse_data] = useState([]);
+  const [coursesByCategory, setCoursesByCategory] = useState({});
   const [randomCategories, setRandomCategories] = useState([]);
-  const [displayCounts, setDisplayCounts] = useState({});
-  const [showMore, setShowMore] = useState({});
-  const navigate = useNavigate();
+  const [displayCounts, setDisplayCounts] = useState({}); // State to manage displayed courses
+  const [showMore, setShowMore] = useState({}); // State to track show more/less
+  const navigate = useNavigate(); // Initialize useNavigate
 
   const fetchCourseData = () => {
-    axios.get(`http://${myIP}:3000/course`)
+    axios.get("http://localhost:3000/course/getall")
       .then((response) => {
         const fetchedData = response.data;
+        // Shuffle the courses within each category
+
         const groupedCourses = groupCoursesByCategory(fetchedData);
         const shuffledCoursesByCategory = {};
         for (const category in groupedCourses) {
           shuffledCoursesByCategory[category] = shuffleArray(groupedCourses[category]);
         }
+
         setCourse_data(shuffledCoursesByCategory);
-        setLoading(false);
+        setLoading(false); // Data has been fetched, so stop loading
       })
       .catch((error) => {
         console.error('Error fetching course data:', error);
-        setLoading(false);
+        setLoading(false); // Even on error, stop loading
+
       });
   };
 
   useEffect(() => {
     fetchCourseData();
-  }, []);
+  }, []); // Fetch course data only once
 
   useEffect(() => {
     if (Object.keys(course_data).length > 0) {
+      // Get two random categories
       const randomCats = getRandomCategories(course_data);
       setRandomCategories(randomCats);
+
+      // Initialize display counts and showMore states for each category
 
       const initialCounts = randomCats.reduce((acc, category) => {
         acc[category] = initialDisplayCount;
@@ -87,7 +95,8 @@ const CourseDisplay = () => {
       }, {});
       setShowMore(initialShowMore);
     }
-  }, [course_data]);
+  }, [course_data]); // Recalculate when course_data changes
+
 
   const toggleShowMore = (category) => {
     setShowMore((prev) => ({
@@ -100,61 +109,48 @@ const CourseDisplay = () => {
       [category]: showMore[category] ? initialDisplayCount : prev[category] + incrementDisplayCount,
     }));
   };
-  // try {
-    //   const response = await axios.get(`http://${myIP}:3000/from/first-chapter-video/${courseId}`);
-    //   const data = response.data;
-    
-    //   if (response.status === 200) {
-      //     const chapter_id = data.chapter_id;
-      //     const video_id = data.video_id;
-      //     navigate(`/video?course_id=${courseId}&chapter_id=${chapter_id}&video_id=${video_id}`);
-      //   } else {
-        //     console.error('Error fetching chapter and video:', data.message);
-        //   }
-        // } catch (error) {
-          //   console.error('Error:', error.message);
-          // }
-          
-            const handleReadMoreClick = async (course) => {
-              const userData = JSON.parse(localStorage.getItem('user'));
-              const userId = userData.userId;
-          
-              // const userId=localStorage.getItem('user')
-              const courseId = course.course_id;
-              // navigate(`/courseDetails?course_id=${courseId}`);
-              try {
-                const response = await axios.post(`http://${myIP}:3000/course/check`, {
-                  userId,
-                  courseId,
-                });
-          
-                // Redirect based on the response
-                if (response.data.redirect) {
-                  if(response.data.redirect=="/video"){
-                    const response = await axios.get(`http://${myIP}:3000/from/first-chapter-video/${courseId}`);
-                      const data = response.data;
-                      if (response.status === 200) {
-                        const chapter_id = data.chapter_id;
-                        const video_id = data.video_id;
-                        navigate(`/video?course_id=${courseId}&chapter_id=${chapter_id}&video_id=${video_id}`);
-                      } else {
-                        console.error('Error fetching chapter and video:', data.message);
-                      }
-                  }
-                  else{
-                    navigate(response.data.redirect);
-                  }
-                }
-              } catch (error) {
-                console.error('Error checking user progress:', error);
-              }
+
+  const handleReadMoreClick = async (course) => {
+    const userData = JSON.parse(localStorage.getItem('user'));
+    const userId = userData.userId;
+
+    // const userId=localStorage.getItem('user')
+    const courseId = course.course_id;
+    // navigate(`/courseDetails?course_id=${courseId}`);
+    try {
+      const response = await axios.post(`http://${myIP}:3000/course/check`, {
+        userId,
+        courseId,
+      });
+
+      // Redirect based on the response
+      if (response.data.redirect) {
+        if (response.data.redirect == "/video") {
+          const response = await axios.get(`http://${myIP}:3000/from/first-chapter-video/${courseId}`);
+          const data = response.data;
+          if (response.status === 200) {
+            const chapter_id = data.chapter_id;
+            const video_id = data.video_id;
+            navigate(`/video?course_id=${courseId}&chapter_id=${chapter_id}&video_id=${video_id}`);
+          } else {
+            console.error('Error fetching chapter and video:', data.message);
+          }
+        }
+        else {
+          navigate(response.data.redirect);
+        }
+      }
+    } catch (error) {
+      console.error('Error checking user progress:', error);
+    }
   };
 
+  // Adjusting the background to a light color scheme with darker buttons.
+  // Adjusting the background and other elements to a blue color scheme
   return (
-    <>
-      <div className='pt-20'>
-
-        <SubNavbar />
+    <div className="flex flex-col bg-[#E4EDF7]"> {/* Light blue background */}
+      <SubNavbar />
+      <div className="flex-grow mt-28"> {/* Added margin-top to push content below the fixed navbar */}
         <div className="w-full p-4">
           {loading ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
@@ -164,16 +160,16 @@ const CourseDisplay = () => {
             </div>
           ) : (
             randomCategories.map((category) => {
-              const courses = course_data[category] || [];
+              const courses = course_data[category];
               const displayCount = displayCounts[category] || initialDisplayCount;
               return (
-                <fieldset key={category} className="mb-8 border-2 border-gray-300 rounded-lg p-4">
-                  <legend className="text-2xl font-bold text-gray-800 px-2 py-1 rounded-md">{category}</legend>
+                <fieldset key={category} className="mb-8 border border-[#D9E6F5] rounded-lg p-4 bg-[#F0F7FD]"> {/* Lighter blue border */}
+                  <legend className="text-2xl font-bold text-[#1e3a8a] px-2 py-1 rounded-md">{category}</legend>
                   <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-4">
                     {courses.slice(0, displayCount).map((course, index) => (
                       <div
                         key={index}
-                        className="bgwhite rounded-lg border-3 border-gray-250 shadow-lg text-center overflow-hidden transition-all duration-500"
+                        className="bg-white rounded-lg border border-[#D9E6F5] shadow-md text-center overflow-hidden transition-all duration-500 hover:shadow-lg"
                       >
                         <div className="h-48 rounded-t-lg flex justify-center items-center overflow-hidden p-2">
                           <img
@@ -183,9 +179,9 @@ const CourseDisplay = () => {
                           />
                         </div>
                         <div className="p-2">
-                          <h5 className="text-xl font-semibold mb-3">{course.title}</h5>
+                          <h5 className="text-xl font-semibold mb-3 text-[#1e3a8a]">{course.title}</h5> {/* Dark blue text */}
                           <button
-                            className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-700"
+                            className="bg-[#1d4ed8] text-white py-2 px-4 rounded hover:bg-[#1e40af] transition-colors duration-300"
                             onClick={() => handleReadMoreClick(course)}
                           >
                             Read More
@@ -194,24 +190,25 @@ const CourseDisplay = () => {
                       </div>
                     ))}
                   </div>
-                  {courses.length > initialDisplayCount && (
-                    <div className="flex mt-4">
+                  <div className="flex mt-4">
+                    {courses.length > initialDisplayCount && (
                       <button
-                        className="bg-gray-600 text-white py-2 px-4 rounded hover:bg-gray-700"
+                        className="bg-[#1d4ed8] text-white py-2 px-4 rounded hover:bg-[#1e40af] transition-colors duration-300"
                         onClick={() => toggleShowMore(category)}
                       >
                         {showMore[category] ? 'Show Less' : 'Show More'}
                       </button>
-                    </div>
-                  )}
+                    )}
+                  </div>
                 </fieldset>
               );
             })
           )}
         </div>
       </div>
-    </>
+    </div>
   );
+
 };
 
 export default CourseDisplay;

@@ -10,6 +10,8 @@ const getSignedUrl = require('@aws-sdk/s3-request-presigner');
 const crypto = require('crypto');
 const sendEmail = require('../utils/sendEmail');
 
+const dotenv = require('dotenv');
+dotenv.config();
 
 const s3Client = new S3Client({
   credentials: {
