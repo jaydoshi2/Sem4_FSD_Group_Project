@@ -23,8 +23,8 @@ const Skills = () => {
   const courseType = searchParams.get("course_type"); // Get the course_type from query params
 
   const fetchCourseData = () => {
-    const myIP = import.meta.env.VITE_MY_IP;
-    axios.get(`http://${myIP}:3000/course`)
+    axios
+      .get("http://localhost:3000/course/getall")
 
       .then((response) => {
         const fetchedData = response.data;
@@ -65,10 +65,9 @@ const Skills = () => {
   const totalPages = Math.ceil(courseData.length / CARDS_PER_PAGE);
 
   return (
-    <div className="flex flex-col h-screen overflow-hidden bg-[#F0F7FD] mt-16">
+    <div className="flex flex-col min-h-screen bg-[#F0F7FD]">
       <SubNavbar />
-      <div className="flex-grow overflow-y-auto">
-        <div className="w-full p-4">
+      <div className="flex-grow flex-grow pt-32 pb-8 px-4">
           {loading ? (
 
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
@@ -140,7 +139,6 @@ const Skills = () => {
             <p>No courses found for the selected category.</p>
           )}
         </div>
-      </div>
     </div>
   );
 };
