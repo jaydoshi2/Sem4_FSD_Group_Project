@@ -12,7 +12,10 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 import os
+from os import getenv
+from dotenv import load_dotenv
 
+load_dotenv()
 # Set NLTK data path
 NLTK_DATA_PATH = 'E:\\Sem4_FSD_Group_Project\\server2\\chatbot_app\\nltk_data'
 os.environ['NLTK_DATA'] = NLTK_DATA_PATH
@@ -56,6 +59,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'corsheaders',
     'chatbot_app',
+    'analytics',
 ]
 
 MIDDLEWARE = [
@@ -128,12 +132,28 @@ WSGI_APPLICATION = 'server2.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': getenv('PGDATABASE'),
+        'USER': getenv('PGUSER'),
+        'PASSWORD': getenv('PGPASSWORD'),
+        'HOST': getenv('PGHOST'),
+        'PORT': getenv('PGPORT', '5432'),
+        'OPTIONS': {
+            'sslmode': 'require',  # Keep this to enforce SSL
+            # 'sslmode': 'disable',
+        },
+        'DISABLE_SERVER_SIDE_CURSORS': True,
     }
 }
+
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
