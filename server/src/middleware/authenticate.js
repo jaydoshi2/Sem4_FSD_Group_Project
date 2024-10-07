@@ -10,9 +10,9 @@ exports.authenticate = async (req, res, next) => {
     const accessToken = req.cookies.accessToken;
     const refreshToken = req.cookies.refreshToken;
 
-    // If neither token exists, reject the request early
+    // // If neither token exists, reject the request early
     if (!accessToken && !refreshToken) {
-      return res.status(401).json({ isAuthenticated: false, message: "No authentication tokens provided." });
+      return res.status(200).json({ isAuthenticated: false, message: "No authentication tokens provided." });
     }
 
     // Handle Access Token
