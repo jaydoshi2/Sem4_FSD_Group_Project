@@ -23,7 +23,7 @@ dotenv.config();
 const app = express();
 const prisma = new PrismaClient();
 const MYIP = process.env.MY_IP;
-
+console.log(MYIP)
 const allowedOrigins = [
   `http://${MYIP}:5173`, 
   'http://localhost:5173',

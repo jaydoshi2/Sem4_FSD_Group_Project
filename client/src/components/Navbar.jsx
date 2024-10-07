@@ -17,6 +17,7 @@ const NavBar = () => {
     setloader(true)
         const fetchUserData = async () => {
             try {
+                console.log("in try block")
                 const response = await axios.get(`http://${myIP}:3000/auth/check-auth`, {
                     withCredentials: true,
                 });
