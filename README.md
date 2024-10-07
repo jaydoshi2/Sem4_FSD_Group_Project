@@ -1,4 +1,4 @@
-# <p align="center">
+ <p align="center">
     <img src="https://drive.google.com/uc?id=1B3-QSN0_TdvONf4oNb6Rg9xwyPjUAoTG" alt="Skill Bridge Logo" width="150"/>
   </p>
 
