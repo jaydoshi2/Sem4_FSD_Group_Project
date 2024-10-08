@@ -5,20 +5,20 @@ import Avatar3 from '../assets/Avatar3.svg';
 import '../styles/Testimonials.css'
 const testimonials = [
   {
-    name: "— Sarah T.",
-    text: "Skillbridge made learning new skills easy and fun. The course structure is clear and concise!",
+    name: "— Jay Badgujar",
+    text: "Skillbridge Made Learning New Skills Easy And Fun. The Course Structure Is Clear And Concise!",
     imgSrc: Avatar1, // Replace with actual image path
     bgColor: "#9aa7d5"
   },
   {
-    name: "— Celia Almeda",
-    text: "The platform's flexibility allowed me to study on my schedule, which was perfect for balancing work and learning.",
+    name: "—Niv Shah",
+    text: "The Platform's Flexibility Allowed Me To Study On My Schedule, Which Was Perfect For Balancing Work And Learning.",
     imgSrc: Avatar2, // Replace with actual image path
     bgColor: "#9aa7d5"
   },
   {
-    name: "— Bob Roberts",
-    text: "Navigating the courses was a breeze, and the information provided was spot-on. A fantastic learning experience!",
+    name: "—Het Soni",
+    text: "Navigating The courses Was A Breeze, And The Information Provided Was Spot-On. A Fantastic Learning Experience!",
     imgSrc: Avatar3, // Replace with actual image path
     bgColor: "#9aa7d5"
   }
