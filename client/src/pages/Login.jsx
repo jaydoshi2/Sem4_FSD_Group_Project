@@ -63,8 +63,10 @@ const Login = () => {
     } catch (error) {
       if (error.response && error.response.status >= 400 && error.response.status <= 500) {
         setError(error.response.data.message);
+        setloading(false)
       } else {
         setError("An unexpected error occurred. Please try again.");
+        setloading(false)
       }
     }
   };
@@ -83,11 +85,13 @@ const Login = () => {
 } catch (err) {
   console.error(err);
   setError("Google Sign-In failed. Please try again.");
+  setloading(false)
 }
     },
 onError: (error) => {
   console.log('Login Failed:', error);
   setError("Google Sign-In failed. Please try again.");
+  setloading(false)
 }
   });
 if(loading) return <BookLoader/>
