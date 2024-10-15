@@ -23,7 +23,7 @@ const Chatbot = () => {
     setInputMessage('');
 
     try {
-      const response = await fetch('http://localhost:8000/api/predict/', {
+      const response = await fetch(`http://${import.meta.env.VITE_MY_IP}:8000/api/predict/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -46,10 +46,6 @@ exports.authenticate = async (req, res, next) => {
         const decoded = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET);
         const user = await prisma.user.findUnique({ where: { user_id: decoded.id } });
 
-        if (!user || user.refreshToken !== refreshToken) {
-          return next(new AppError('Invalid refresh token', 401));
-        }
-
         // Issue new access token
         const newAccessToken = generateAccessToken(user.user_id);
         res.cookie('accessToken', newAccessToken, {

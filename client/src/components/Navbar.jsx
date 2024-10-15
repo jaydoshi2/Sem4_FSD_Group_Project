@@ -4,65 +4,66 @@ import axios from 'axios';
 import webLogo from '../assets/images/myimg.png'; // Adjust path if necessary
 import { HiMenu, HiX } from 'react-icons/hi'; // Icons for mobile menu toggle
 import BookLoader from './BookLoader';
-
+import { useUser } from '../contexts/UserContexts';
 const NavBar = () => {
     const navigate = useNavigate();
     const myIP = import.meta.env.VITE_MY_IP;
-    const [isMenuOpen, setIsMenuOpen] = useState(false); // State for menu toggle
-    const [dropdownVisible, setDropdownVisible] = useState(false); // State for dropdown visibility
-    const [loader, setloader] = useState(true)
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
-    const [user, setUser] = useState();
-    useEffect(() => {
-    setloader(true)
-        const fetchUserData = async () => {
-            try {
-                console.log("in try block")
-                const response = await axios.get(`http://${myIP}:3000/auth/check-auth`, {
-                    withCredentials: true,
-                });
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const [dropdownVisible, setDropdownVisible] = useState(false);
+    const [loader, setLoader] = useState(false);
+    const { user, isAuthenticated, setIsAuthenticated, loading, setUser } = useUser();
+    console.log("NAVBAR IS AUTHENTICATED ", isAuthenticated)
+//     useEffect(() => {
+//     setloader(true)
+//         const fetchUserData = async () => {
+//             try {
+//                 console.log("in try block")
+//                 const response = await axios.get(`http://${myIP}:3000/auth/check-auth`, {
+//                     withCredentials: true,
+//                 });
 
-    // Check if manual login is authenticated
-    if (response.data.isAuthenticated) {
-        const userData = {
-            userId: response.data.userId,
-            first_name: response.data.first_name,
-            profilePic: response.data.profilePic,
-        };
-        setUser(userData);
-        console.log("/////////* ", userData)
-        localStorage.setItem('user', JSON.stringify(userData));
-        setIsAuthenticated(true);
-        setloader(false)
-    } else {
-        console.log('Manual login not authenticated, checking Google login...');
+//     // Check if manual login is authenticated
+//     if (response.data.isAuthenticated) {
+//         const userData = {
+//             userId: response.data.userId,
+//             first_name: response.data.first_name,
+//             profilePic: response.data.profilePic,
+//         };
+//         setUser(userData);
+//         console.log("/////////* ", userData)
+//         localStorage.setItem('user', JSON.stringify(userData));
+//         setIsAuthenticated(true);
+//         setloader(false)
+//     } else {
+//         console.log('Manual login not authenticated, checking Google login...');
 
-        // Check if there is data stored in localStorage
-        const userDataFromStorage = localStorage.getItem('user');
+//         // Check if there is data stored in localStorage
+//         const userDataFromStorage = localStorage.getItem('user');
 
-        if (userDataFromStorage) {
-            // If user data exists in localStorage, set it to state
-            const parsedUser = JSON.parse(userDataFromStorage);
-            setUser(parsedUser);
-            setIsAuthenticated(true);
-            setloader(false)
-        } else {
-            // No user data in localStorage, redirect to login
-            setIsAuthenticated(false);
-            localStorage.clear()
-            setloader(false)
-        }
-    }
-} catch (error) {
-    console.error('Error fetching user data', error);
-    setIsAuthenticated(false);
-}
-        };
+//         if (userDataFromStorage) {
+//             // If user data exists in localStorage, set it to state
+//             const parsedUser = JSON.parse(userDataFromStorage);
+//             setUser(parsedUser);
+//             setIsAuthenticated(true);
+//             setloader(false)
+//         } else {
+//             // No user data in localStorage, redirect to login
+//             setIsAuthenticated(false);
+//             localStorage.clear()
+//             setloader(false)
+//         }
+//     }
+// } catch (error) {
+//     console.error('Error fetching user data', error);
+//     setIsAuthenticated(false);
+// }
+//         };
 
-fetchUserData();
-    }, [myIP]);
+// fetchUserData();
+//     }, [myIP]);
 
 const logout = () => {
+    setLoader(true)
     axios
         .post(`http://${myIP}:3000/auth/logout`, {}, { withCredentials: true })
             .then(() => {
@@ -70,11 +71,14 @@ const logout = () => {
             setUser(null);
             setIsAuthenticated(false);
             navigate('/');
+            setLoader(false)
         })
-        .catch((error) => console.error('Logout failed', error));
+        .catch((error) => 
+            console.error('Logout failed', error))
+    
 };
 
-if(loader) return <BookLoader/>
+    if(loading || loader) return <BookLoader/>
 
     return (
         <header className="fixed top-0 left-0 w-full bg-blue-950 shadow-md z-50">

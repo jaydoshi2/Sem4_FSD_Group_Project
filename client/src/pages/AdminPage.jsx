@@ -14,9 +14,9 @@ const AdminPage = () => {
                 <h1 className={styles.title}>Admin Engagement Dashboard</h1>
                 <nav className={styles.nav}>
                     <ul className={styles.navList}>
-                        <li className={styles.navItem}>
+                        {/* <li className={styles.navItem}>
                             <Link className={styles.navLink} to="/admin/course-enrollment">Course Enrollment Counts</Link>
-                        </li>
+                        </li> */}
                         <li className={styles.navItem}>
                             <Link className={styles.navLink} to="/admin/course-distribution">Course Distribution By Type</Link>
                         </li>

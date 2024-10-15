@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import BookLoader from '../components/BookLoader';
+import { useUser } from '../contexts/UserContexts';
 
 const Profile = () => {
   const [isEditingAll, setIsEditingAll] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [formData, setFormData] = useState({
     username: '',
     email: '',
@@ -16,6 +18,7 @@ const Profile = () => {
   const [error, setError] = useState(null);
   const [imageFile, setImageFile] = useState(null);
   const [uploading, setUploading] = useState(false);
+  const { user, updateUser } = useUser();
 
   useEffect(() => {
     fetchUserDetails();
@@ -24,14 +27,12 @@ const Profile = () => {
   const fetchUserDetails = async () => {
     const MY_IP = import.meta.env.VITE_MY_IP;
     try {
-      const storedUser = JSON.parse(localStorage.getItem('user'));
-
-      if (!storedUser || !storedUser.userId) {
-        throw new Error('No user data found in local storage');
+      if (!user || !user.userId) {
+        throw new Error('No user data found');
       }
 
       const response = await axios.post(`http://${MY_IP}:3000/profile/getuser`, {
-        userId: storedUser.userId
+        userId: user.userId
       });
 
       setFormData({
@@ -43,11 +44,14 @@ const Profile = () => {
         birthDate: response.data.birthDate ? new Date(response.data.birthDate).toISOString().split('T')[0] : '',
         profilePic: response.data.profilePic || 'https://via.placeholder.com/150',
       });
+      setLoading(false);
     } catch (error) {
+      setLoading(false);
       console.error('Error fetching user data:', error);
       setError(error.message || 'An error occurred while fetching user data');
     }
   };
+
 
   const handleMainEditToggle = () => {
     setIsEditingAll(!isEditingAll);
@@ -60,6 +64,9 @@ const Profile = () => {
       [name]: value
     }));
   };
+  
+  if (loading) return <BookLoader/>
+
 
   const handleImageUpload = async (e) => {
     try {
@@ -98,19 +105,22 @@ const Profile = () => {
     }
   };
 
-  const handleSubmit = async () => {
+   const handleSubmit = async () => {
     setUploading(true);
     const MY_IP = import.meta.env.VITE_MY_IP;
     try {
-      const storedUser = JSON.parse(localStorage.getItem('user'));
-
-      if (!storedUser || !storedUser.userId) {
-        throw new Error('No user data found in local storage');
+      if (!user || !user.userId) {
+        throw new Error('No user data found');
       }
 
-      await axios.put(`http://${MY_IP}:3000/profile/update`, {
-        userId: storedUser.userId,
+      const response = await axios.put(`http://${MY_IP}:3000/profile/update`, {
+        userId: user.userId,
         ...formData
+      });
+      updateUser({
+        ...user,
+        first_name: formData.first_name,
+        profilePic: formData.profilePic
       });
 
       setIsEditingAll(false);
