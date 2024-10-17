@@ -25,6 +25,7 @@ export const AuthProvider = ({ children }) => {
                     setIsAuthenticated(true);
                 } else {
                     const userDataFromStorage = localStorage.getItem('user');
+                    console.log("USER FROM LOCAL BY GOOGLE LOGIN ",userDataFromStorage)
                     if (userDataFromStorage) {
                         const parsedUser = JSON.parse(userDataFromStorage);
                         setUser(parsedUser);

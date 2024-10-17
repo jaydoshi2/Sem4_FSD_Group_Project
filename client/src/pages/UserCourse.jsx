@@ -101,7 +101,7 @@ const UserCoursesPage = () => {
         if (Array.isArray(response.data) && response.data.length > 0) {
           setCourses(response.data);
         } else {
-          console.warn('No courses data available');
+          console.warn('You have no purchases');
         }
 
         // Fetch recommendations based on enrolled courses
@@ -144,7 +144,7 @@ const UserCoursesPage = () => {
             />
           ))
         ) : (
-          <p>No courses available</p>
+          <p>You have No Purchased Courses</p>
         )}
       </div>
 
