@@ -11,6 +11,7 @@
 
 This is a group Project of an EDTECH platform. 
 
+### Flowchart of the course recommendation system inside server2 directory 
 
 ```mermaid
 graph TD
@@ -37,3 +38,4 @@ graph TD
     D --> H
     H --> I
     I --> J
+

@@ -54,7 +54,7 @@ const UserCoursesPage = () => {
         setLoading(false);
 
         const enrolledCourses = response.data.map(course => course.course.title);
-        const recResponse = await axios.post(`http://127.0.0.1:8000/course_recommendations/getrecommendations/`, {
+        const recResponse = await axios.post(`http://${import.meta.env.VITE_MY_IP}:8000/course_recommendations/getrecommendations/`, {
           user_courses: enrolledCourses,
         }, {
           headers: {
