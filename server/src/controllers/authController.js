@@ -62,6 +62,8 @@ exports.login = async (req, res, next) => {
       message: 'Logged in successfully',
       user: {
         userId: user.user_id,
+        first_name: user.first_name,
+        profilePic: user.profilePic,
       }
     });
 
@@ -94,6 +96,7 @@ exports.googleCallback = async (req, res, next) => {
 
 
 exports.checkAuth = async (req, res) => {
+  console.log("Hii I a check auth")
   const accessToken = req.cookies.accessToken;
   const refreshToken = req.cookies.refreshToken;
   console.log("ACCESS TOKEN ", accessToken)

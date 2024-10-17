@@ -23,18 +23,18 @@ const VideoPage = () => {
     const [videoId1, setVideoId1] = useState('');
     const [showMCQModal, setShowMCQModal] = useState(false);
     const [mcqLoading, setMcqLoading] = useState(false);
-    const [chapter, setChapter] = useState();
+    const [chapterId, setChapterId] = useState('');
     const [courseCompleted, setCourseCompleted] = useState(false);
 
     useEffect(() => {
         const queryParams = new URLSearchParams(window.location.search);
         const courseId = queryParams.get('course_id');
         const videoId = queryParams.get('video_id');
-        const chapterId = queryParams.get('chapter_id');  // Ensure this is the correct name
+        const chapterId1 = queryParams.get('chapter_id');  // Ensure this is the correct name
         const userData = JSON.parse(localStorage.getItem('user'));
         setCourseId(Number(courseId)); // Ensuring courseId is a number
         setVideoId(Number(videoId));
-        setChapter(chapterId); // Set the chapter state correctly
+        setChapterId(chapterId1); // Set the chapter state correctly
 
         console.log('Chapter ID:', chapterId); // Debugging line
 
@@ -64,13 +64,11 @@ const VideoPage = () => {
                 setUserDisliked(videoData.userDisliked);
             }
 
-            if (courseId && userId) {
-                console.log("Payload being sent:", { userId, videoId, chapterId: chapter, courseId }); // Log the payload
-                const progressResponse = await axios.post(`http://${myIP}:3000/vid/update-chapter-course-progress/${courseId}`, { userId, videoId, chapterId: chapter, courseId });
-                console.log("Progress Response:", progressResponse.data); // Log the response
+            if (courseId && userId) {  // Ensure userId is not undefined
+                console.log("User ID in fetchData:", userId);
+                const progressResponse = await axios.post(`http://${myIP}:3000/vid/course-progress/${courseId}`, { userId });
                 setProgress(progressResponse.data.completed_course);
                 setCourseProgress(progressResponse.data.chapters);
-                
             }
 
             setLoader(false);
@@ -79,6 +77,7 @@ const VideoPage = () => {
             setLoader(false);
         }
     };
+
 
 
     const handleLike = async () => {

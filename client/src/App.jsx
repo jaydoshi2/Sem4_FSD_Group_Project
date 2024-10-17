@@ -22,6 +22,7 @@ import Certificate from './pages/Certificate';
 import AdminDashboard from './pages/AdminPage';
 import ProtectedRoute from './components/ProtectedRoute';
 import NotFound from './pages/NotFound'; // Import the NotFound component
+import { UserProvider } from './contexts/UserContexts';
 
 const App = () => {
         const location = useLocation();
@@ -39,6 +40,7 @@ const App = () => {
         const hideNavBar = hideNavBarPaths.some(path => location.pathname.startsWith(path));
 
         return (
+                <UserProvider>
                 <div className="App">
                         <Chatbot />
                         {!hideNavBar && <NavBar />}
@@ -104,6 +106,7 @@ const App = () => {
                         </Routes>
                         {!hideNavBar && <Footer />}
                 </div>
+                </UserProvider>
         );
 };
 

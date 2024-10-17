@@ -14,14 +14,14 @@ class AuthService {
     });
 
     if (exsistingEmail) {
-      throw new Error('Username already exists');
+      throw new Error('Username or email already exists');
     }
     const exsistingUsername = await prisma.user.findUnique({
       where: { username: username },
     });
 
     if (exsistingUsername) {
-      throw new Error('Username already exists');
+      throw new Error('Username or email already exists');
     }
 
 

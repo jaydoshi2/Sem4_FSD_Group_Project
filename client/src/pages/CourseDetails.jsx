@@ -1,8 +1,7 @@
+import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import BookLoader from '../components/BookLoader';
-import { Link } from 'react-router-dom';
 
 function CourseDetail() {
   const location = useLocation();
@@ -143,41 +142,69 @@ function CourseDetail() {
 
   return (
     <div className="bg-gray-50 min-h-screen p-6">
-      <div className="bg-white rounded-lg shadow-lg p-8">
-        <h1 className="text-4xl font-bold text-gray-900 mb-4">{course.title}</h1>
-        <div className="flex items-center space-x-4 mb-6">
-          <button
-            className="bg-blue-600 text-white font-semibold px-6 py-2 rounded-lg"
-            onClick={nextpage}
-          >
-            Enroll Now
-          </button>
+      {/* Main Content */}
+      <div className="bg-white rounded-lg shadow-lg p-8 mt-16">
+        {/* Title Section */}
+        <h1 className="text-4xl font-bold text-gray-900 mb-4">
+          {course.title}
+        </h1>
+  
+        <div className="flex mb-6">
+          {/* Left Side: Title, Description, and Enroll Button */}
+          <div className="flex-1 pr-4">
+            <p className="text-lg text-gray-700 mb-4">
+              <strong>Description:</strong> {course.description}
+            </p>
+            <div className="flex items-center space-x-4 mb-6">
+              <button
+                className="bg-blue-600 text-white font-semibold px-6 py-2 rounded-lg"
+                onClick={nextpage}
+              >
+                Enroll Now
+              </button>
+            </div>
+          </div>
+  
+          {/* Right Side: Image Section */}
+          <div className="flex-none w-1/3">
+            <img
+              src={course.thumbnail_pic_link}
+              alt={course.title}
+              className="w-full h-auto object-cover rounded-md max-h-64 lg:max-h-72"
+            />
+          </div>
         </div>
-
-        <div className="mt-8">
-          <img
-            src={course.thumbnail_pic_link}
-            alt={course.title}
-            className="w-full h-auto object-cover mb-4
-              sm:w-[80%] sm:max-h-[200px]   
-              md:w-[75%] md:max-h-[300px]   
-              lg:w-[70%] lg:max-h-[400px]"
-          />
-          <p className="text-lg text-gray-700 mb-4"><strong>Description:</strong> {course.description}</p>
-          <p className="text-lg text-gray-700 mb-4"><strong>Price:</strong> ₹{course.price}</p>
-          <p className="text-lg text-gray-700 mb-4"><strong>Enrollment Count:</strong> {course.Enrollment_Counts}</p>
-          <p className="text-lg text-gray-700 mb-4">
-            <strong>Certificate Preview:</strong> <Link onClick={preview}>View Preview</Link>
-          </p>
-          <p className="text-lg text-gray-700 mb-4"><strong>Course Type:</strong> {course.course_type}</p>
-          <p className="text-lg text-gray-700 mb-4"><strong>Points Providing:</strong> {course.points_providing}</p>
-          <p className="text-lg text-gray-700 mb-4"><strong>Rate:</strong> {course.Rate}</p>
-          <p className="text-lg text-gray-700 mb-4"><strong>Course Level:</strong> {course.course_level}</p>
-          <p className="text-lg text-gray-700 mb-4"><strong>Number of Ratings:</strong> {course.number_of_people_rated}</p>
+  
+        {/* Additional Info Section */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 text-center mt-8">
+          <div className="border-r-2 pr-4">
+            <a href="#" className="text-blue-600 font-bold text-lg hover:underline">
+              4 modules
+            </a>
+            <p className="text-gray-500 text-sm mt-1">
+              Gain insight into a topic and learn the fundamentals.
+            </p>
+          </div>
+          <div className="border-r pr-4">
+            <p className="text-2xl font-bold text-gray-900">4.8 ★</p>
+            <p className="text-gray-500 text-sm mt-1">(58 reviews)</p>
+          </div>
+          <div className="border-r pr-4">
+            <p className="text-2xl font-bold text-gray-900">3 hours to complete</p>
+            <p className="text-gray-500 text-sm mt-1">
+              3 weeks at 1 hour a week
+            </p>
+          </div>
+          <div>
+            <p className="text-2xl font-bold text-gray-900">Flexible schedule</p>
+            <p className="text-gray-500 text-sm mt-1">Learn at your own pace</p>
+          </div>
         </div>
       </div>
     </div>
   );
+  
+  
 }
 
 export default CourseDetail;

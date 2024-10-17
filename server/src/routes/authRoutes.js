@@ -8,7 +8,6 @@ const passportConfig = require('../config/passportConfig');
 const authService = require('../services/authService');
 
 const router = express.Router();
-
 router.post('/signup', [
   body('first_name').notEmpty().withMessage('First name is required'),
   body('last_name').notEmpty().withMessage('Last name is required'),

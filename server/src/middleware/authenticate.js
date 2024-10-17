@@ -10,10 +10,10 @@ exports.authenticate = async (req, res, next) => {
     const accessToken = req.cookies.accessToken;
     const refreshToken = req.cookies.refreshToken;
 
-    // If neither token exists, reject the request early
-    if (!accessToken && !refreshToken) {
-      return res.status(401).json({ isAuthenticated: false, message: "No authentication tokens provided." });
-    }
+    // // // If neither token exists, reject the request early
+    // if (!accessToken && !refreshToken) {
+    //   return res.status(200).json({ isAuthenticated: false, message: "No authentication tokens provided." });
+    // }
 
     // Handle Access Token
     if (accessToken) {
@@ -46,10 +46,6 @@ exports.authenticate = async (req, res, next) => {
         const decoded = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET);
         const user = await prisma.user.findUnique({ where: { user_id: decoded.id } });
 
-        if (!user || user.refreshToken !== refreshToken) {
-          return next(new AppError('Invalid refresh token', 401));
-        }
-
         // Issue new access token
         const newAccessToken = generateAccessToken(user.user_id);
         res.cookie('accessToken', newAccessToken, {
@@ -70,6 +66,8 @@ exports.authenticate = async (req, res, next) => {
         console.error('Invalid or expired refresh token', error);
         return next(new AppError('Invalid refresh token', 401));
       }
+    }else{
+      return res.status(200).json({ isAuthenticated: false });
     }
 
   } catch (error) {

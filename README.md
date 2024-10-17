@@ -1,6 +1,17 @@
-# Sem4_FSD_Group_Project
+ <p align="center">
+    <img src="https://drive.google.com/uc?id=1B3-QSN0_TdvONf4oNb6Rg9xwyPjUAoTG" alt="Skill Bridge Logo" width="150"/>
+  </p>
+
+<h1 align="center">Skill Bridge</h1>
+
+<p align="center">
+    <strong>Empowering skills for the future</strong>
+</p>
+
+
 This is a group Project of an EDTECH platform. 
 
+### Flowchart of the course recommendation system inside server2 directory 
 
 ```mermaid
 graph TD
@@ -27,3 +38,4 @@ graph TD
     D --> H
     H --> I
     I --> J
+
