@@ -48,9 +48,10 @@ const CourseDisplay = () => {
   const [displayCounts, setDisplayCounts] = useState({}); // State to manage displayed courses
   const [showMore, setShowMore] = useState({}); // State to track show more/less
   const navigate = useNavigate(); // Initialize useNavigate
+  const myIP = import.meta.env.VITE_MY_IP;
 
   const fetchCourseData = () => {
-    axios.get("http://localhost:3000/course/getall")
+    axios.get(`http://${myIP}:3000/course/getall`)
       .then((response) => {
         const fetchedData = response.data;
         // Shuffle the courses within each category
@@ -148,12 +149,12 @@ const CourseDisplay = () => {
   // Adjusting the background to a light color scheme with darker buttons.
   // Adjusting the background and other elements to a blue color scheme
   return (
-    <div className="flex flex-col bg-[#E4EDF7]"> {/* Light blue background */}
+    <div className="flex flex-col min-h-screen bg-indigo-100">
       <SubNavbar />
-      <div className="flex-grow mt-28"> {/* Added margin-top to push content below the fixed navbar */}
-        <div className="w-full p-4">
+      <div className="flex-grow mt-32 px-4 sm:px-6 lg:px-8 pb-8"> {/* Added bottom padding */}
+        <div className="w-full">
           {loading ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {Array(8).fill().map((_, index) => (
                 <SkeletonLoader key={index} />
               ))}
@@ -163,43 +164,49 @@ const CourseDisplay = () => {
               const courses = course_data[category];
               const displayCount = displayCounts[category] || initialDisplayCount;
               return (
-                <fieldset key={category} className="mb-8 border border-[#D9E6F5] rounded-lg p-4 bg-[#F0F7FD]"> {/* Lighter blue border */}
-                  <legend className="text-2xl font-bold text-[#1e3a8a] px-2 py-1 rounded-md">{category}</legend>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-4">
+                <fieldset key={category} className="mb-8 border border-indigo-900 rounded-lg p-4 sm:p-6 bg-indigo-50">
+                  <legend className="text-xl sm:text-2xl font-bold text-indigo-900 px-3 py-1 rounded-md">
+                    {category}
+                  </legend>
+                  <div className={`p-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 mt-4 transition-all duration-500 ease-in-out ${showMore[category] ? 'max-h-full' : 'max-h-[1200px] overflow-hidden'}`}>
                     {courses.slice(0, displayCount).map((course, index) => (
                       <div
-                        key={index}
-                        className="bg-white rounded-lg border border-[#D9E6F5] shadow-md text-center overflow-hidden transition-all duration-500 hover:shadow-lg"
-                      >
-                        <div className="h-48 rounded-t-lg flex justify-center items-center overflow-hidden p-2">
-                          <img
-                            src={course.thumbnail_pic_link}
-                            alt={course.title}
-                            className="h-full w-full object-cover rounded-lg"
-                          />
-                        </div>
-                        <div className="p-2">
-                          <h5 className="text-xl font-semibold mb-3 text-[#1e3a8a]">{course.title}</h5> {/* Dark blue text */}
+                      key={index}
+                      className="bg-white rounded-xl border border-[#D9E6F5] shadow-md overflow-hidden transition-all duration-300 hover:shadow-2xl hover:scale-105 transform flex flex-col h-full" // Added scale and shadow effect on hover
+                    >
+                      <div className="h-40 sm:h-48 flex justify-center items-center overflow-hidden p-2">
+                        <img
+                          src={course.thumbnail_pic_link}
+                          alt={course.title}
+                          className="h-full w-full object-cover rounded-lg"
+                        />
+                      </div>
+                      <div className="p-4 flex flex-col flex-grow">
+                        <h5 className="text-lg sm:text-xl font-semibold mb-3 text-[#0F306D] line-clamp-2">{course.title}</h5>
+                        <div className="mt-auto flex justify-center">
                           <button
-                            className="bg-[#1d4ed8] text-white py-2 px-4 rounded hover:bg-[#1e40af] transition-colors duration-300"
+                            className="bg-[#1A73E8] text-white py-2 px-4 rounded hover:bg-[#1558B1] transition-colors duration-300 inline-block"
                             onClick={() => handleReadMoreClick(course)}
                           >
                             Read More
                           </button>
                         </div>
                       </div>
+                    </div>
+                    
                     ))}
                   </div>
-                  <div className="flex mt-4">
-                    {courses.length > initialDisplayCount && (
+
+                  {courses.length > initialDisplayCount && (
+                    <div className="flex justify-center mt-6">
                       <button
-                        className="bg-[#1d4ed8] text-white py-2 px-4 rounded hover:bg-[#1e40af] transition-colors duration-300"
+                        className="bg-[#1A73E8] text-white py-2 px-6 rounded hover:bg-[#1558B1] transition-colors duration-300"
                         onClick={() => toggleShowMore(category)}
                       >
                         {showMore[category] ? 'Show Less' : 'Show More'}
                       </button>
-                    )}
-                  </div>
+                    </div>
+                  )}
                 </fieldset>
               );
             })
@@ -208,7 +215,6 @@ const CourseDisplay = () => {
       </div>
     </div>
   );
-
 };
 
 export default CourseDisplay;

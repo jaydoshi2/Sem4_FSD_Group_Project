@@ -6,7 +6,7 @@ const path = require('path');
 const router = express.Router();
 
 // Get course progress by course ID
-router.get('/course-progress/:courseId', videoController.getCourseProgress);
+router.post('/course-progress/:courseId', videoController.getCourseProgress);
 // Get video details by video ID
 router.get('/video-details/:videoId', videoController.getVideoDetails);
 
@@ -16,7 +16,7 @@ router.post('/like-video', videoController.likeVideo);
 // Dislike a video
 router.post('/dislike-video', videoController.dislikeVideo);
 
-router.post('/update-chapter-course-progress/:id', videoController.markChapterAndCourseCompleted);
+router.post('/update-chapter-course-progress', videoController.markChapterAndCourseCompleted);
 
 
 // const dataRoutes = require('./routes')
@@ -71,8 +71,9 @@ router.get('/generate-mcqs', (req, res) => {
 const userDataMap = new Map();
 
 router.post('/generate-mcqs', async (req, res) => {
-    console.log('All cookies:', req.cookies.accessToken);
+
     const accessToken = req.cookies.accessToken;
+
     console.log(accessToken)
     if (!accessToken) {
         return res.status(401).send({ success: false, message: "Unauthorized: No access token provided" });

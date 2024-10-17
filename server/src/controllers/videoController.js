@@ -62,11 +62,10 @@ exports.dislikeVideo = async (req, res) => {
 
 
 exports.markChapterAndCourseCompleted = async (req, res) => {
-    console.log('UPDATE IS GETTING CALLED ')
     const { userId, videoId, chapterId, courseId } = req.body;
+    console.log('UPDATE IS GETTING CALLED',userId,videoId,chapterId,courseId)
 
     if (!userId || !videoId || !chapterId || !courseId) {
-        console.log(userId,videoId,chapterId,courseId)
         return res.status(400).json({ success: false, message: 'Missing required fields.' });
     }
     console.log("CHAPTERID ON SERVER SIDE ",chapterId)

@@ -1,19 +1,14 @@
-// /src/components/SkeletonSubNavbar.js
 import React from 'react';
-import styles from '../styles/SkeletonSubNavbar.module.css'; // Import the CSS Module
 
 const SkeletonSubNavbar = () => {
     return (
-        <div className={styles.skeletonSubNavbar}>
-            <div className={styles.skeletonItem}></div>
-            <div className={styles.skeletonItem}></div>
-            <div className={styles.skeletonItem}></div>
-            <div className={styles.skeletonItem}></div>
-            <div className={styles.skeletonItem}></div>
-            <div className={styles.skeletonItem}></div>
-            <div className={styles.skeletonItem}></div>
-            <div className={styles.skeletonItem}></div>
-            <div className={styles.skeletonItem}></div>
+        <div className="flex overflow-x-hidden w-full">
+            {Array(9).fill().map((_, index) => (
+                <div
+                    key={index}
+                    className="h-7 w-36 bg-indigo-100 rounded-md mx-2 animate-pulse flex-shrink-0"
+                ></div>
+            ))}
         </div>
     );
 };
