@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import webLogo from '../assets/images/myimg.png'; // Adjust path if necessary
+import React, { useEffect, useState } from 'react';
 import { HiMenu, HiX } from 'react-icons/hi'; // Icons for mobile menu toggle
+import { Link, useNavigate } from 'react-router-dom';
+import webLogo from '../assets/images/myimg.png'; // Adjust path if necessary
 import BookLoader from './BookLoader';
 
 const NavBar = () => {
@@ -14,7 +14,7 @@ const NavBar = () => {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [user, setUser] = useState();
     useEffect(() => {
-    setloader(true)
+        setloader(true)
         const fetchUserData = async () => {
             try {
                 console.log("in try block")
@@ -22,66 +22,71 @@ const NavBar = () => {
                     withCredentials: true,
                 });
 
-    // Check if manual login is authenticated
-    if (response.data.isAuthenticated) {
-        const userData = {
-            userId: response.data.userId,
-            first_name: response.data.first_name,
-            profilePic: response.data.profilePic,
+                // Check if manual login is authenticated
+                if (response.data.isAuthenticated) {
+                    const userData = {
+                        userId: response.data.userId,
+                        first_name: response.data.first_name,
+                        profilePic: response.data.profilePic,
+                    };
+                    setUser(userData);
+                    localStorage.setItem('user', JSON.stringify(userData));
+                    setIsAuthenticated(true);
+                    setloader(false)
+                } else {
+                    console.log('Manual login not authenticated, checking Google login...');
+
+                    // Check if there is data stored in localStorage
+                    const userDataFromStorage = localStorage.getItem('user');
+
+                    if (userDataFromStorage) {
+                        // If user data exists in localStorage, set it to state
+                        const parsedUser = JSON.parse(userDataFromStorage);
+                        setUser(parsedUser);
+                        setIsAuthenticated(true);
+                        setloader(false)
+                    } else {
+                        // No user data in localStorage, redirect to login
+                        setIsAuthenticated(false);
+                        localStorage.clear()
+                        setloader(false)
+                    }
+                }
+            } catch (error) {
+                console.error('Error fetching user data', error);
+                setIsAuthenticated(false);
+            }
         };
-        setUser(userData);
-        console.log("/////////* ", userData)
-        localStorage.setItem('user', JSON.stringify(userData));
-        setIsAuthenticated(true);
-        setloader(false)
-    } else {
-        console.log('Manual login not authenticated, checking Google login...');
 
-        // Check if there is data stored in localStorage
-        const userDataFromStorage = localStorage.getItem('user');
-
-        if (userDataFromStorage) {
-            // If user data exists in localStorage, set it to state
-            const parsedUser = JSON.parse(userDataFromStorage);
-            setUser(parsedUser);
-            setIsAuthenticated(true);
-            setloader(false)
-        } else {
-            // No user data in localStorage, redirect to login
-            setIsAuthenticated(false);
-            localStorage.clear()
-            setloader(false)
-        }
-    }
-} catch (error) {
-    console.error('Error fetching user data', error);
-    setIsAuthenticated(false);
-}
-        };
-
-fetchUserData();
+        fetchUserData();
     }, [myIP]);
 
-const logout = () => {
-    axios
-        .post(`http://${myIP}:3000/auth/logout`, {}, { withCredentials: true })
+    const logout = () => {
+        axios
+            .post(`http://${myIP}:3000/auth/logout`, {}, { withCredentials: true })
             .then(() => {
-            localStorage.clear();
-            setUser(null);
-            setIsAuthenticated(false);
-            navigate('/');
-        })
-        .catch((error) => console.error('Logout failed', error));
-};
+                localStorage.clear();
+                setUser(null);
+                setIsAuthenticated(false);
+                navigate('/');
+            })
+            .catch((error) => console.error('Logout failed', error));
+    };
 
-if(loader) return <BookLoader/>
+    if (loader) return <BookLoader />
 
     return (
         <header className="fixed top-0 left-0 w-full bg-blue-950 shadow-md z-50">
             <div className="container mx-auto px-4 py-2 flex justify-between items-center h-16 max-w-full">
                 {/* Logo */}
                 <Link to="/" className="flex items-center">
-                    <img src={webLogo} alt="Logo" className="h-10 w-10 sm:h-12 sm:w-12" />
+                    <img
+                        src={webLogo}
+                        alt="Logo"
+                        className="h-20 w-24 sm:h-20 sm:w-24 filter grayscale p-1.5"
+                        style={{ filter: 'invert(100%) sepia(100%) saturate(0%) hue-rotate(100deg)' }} // Adjust the filter as needed
+                    />
+
                     <h1 className="text-white font-bold text-xl sm:text-2xl ml-2 sm:ml-3">
                         Skill-Bridge
                     </h1>
@@ -132,7 +137,7 @@ if(loader) return <BookLoader/>
                 <div className="md:hidden bg-blue-800 w-full"> {/* Change from sm:hidden to md:hidden */}
                     <nav className="flex flex-col items-center space-y-4 py-4">
                         <Link to="/" onClick={() => setIsMenuOpen(false)} className="text-white hover:text-gray-200">Home</Link>
-                        <Link to="/about" onClick={() => setIsMenuOpen(false)} className="text-white hover:text-gray-200">About</Link>
+                        <Link to="/aboutpage" onClick={() => setIsMenuOpen(false)} className="text-white hover:text-gray-200">About</Link>
                         <Link to="/course" onClick={() => setIsMenuOpen(false)} className="text-white hover:text-gray-200">Courses</Link>
                         <Link to="/contact" onClick={() => setIsMenuOpen(false)} className="text-white hover:text-gray-200">Contact</Link>
                         <Link to="/leaderBoard" onClick={() => setIsMenuOpen(false)} className="text-white hover:text-gray-200">LeaderBoard</Link>

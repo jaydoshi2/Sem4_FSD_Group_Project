@@ -8,6 +8,9 @@ exports.getUserData = async (req, res) => {
                 points: true,
                 profilePic: true,
                 username: true,
+                user_id: true,
+                first_name:true,
+                last_name:true
             },
             orderBy: [
                 {

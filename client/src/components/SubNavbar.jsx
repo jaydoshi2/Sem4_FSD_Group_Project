@@ -4,7 +4,6 @@ import axios from 'axios';
 import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import SubNavbarSkeleton from '../components/SkeletonSubNavbar';
-import '../styles/SubNavbar.css';
 
 const SubNavbar = () => {
     const [course_data, setCourse_data] = useState([]);
@@ -16,9 +15,10 @@ const SubNavbar = () => {
     const [scrollInterval, setScrollInterval] = useState(null);
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
-    
+    const myIP = import.meta.env.VITE_MY_IP;
+
     useEffect(() => {
-        axios.get("http://localhost:3000/course/getall")
+        axios.get(`http://${myIP}:3000/course/getall`)
             .then((response) => {
                 setCourse_data(response.data);
                 setCourse_types([...new Set(response.data.map(item => item.course_type))]);
@@ -46,7 +46,7 @@ const SubNavbar = () => {
         if (!isDragging) return;
         e.preventDefault();
         const x = e.pageX || e.touches[0].pageX;
-        const walk = (x - startX) * 2; // Multiplied by 2 to increase the scroll speed
+        const walk = (x - startX) * 2; // Increase scroll speed
         navbarRef.current.scrollLeft = scrollLeft - walk;
     };
 
@@ -54,7 +54,7 @@ const SubNavbar = () => {
         const amount = direction === 'left' ? -10 : 10;
         const interval = setInterval(() => {
             navbarRef.current.scrollBy({ left: amount });
-        }, 10); // Adjust speed by changing interval or amount
+        }, 10);
         setScrollInterval(interval);
     };
 
@@ -67,20 +67,30 @@ const SubNavbar = () => {
         navigate(`/skill?course_type=${encodeURIComponent(courseType)}`);
     };
 
+    const handleTouchStart = (direction) => {
+        startScrolling(direction);
+    };
+
+    const handleTouchEnd = () => {
+        stopScrolling();
+    };
+
     return (
-        <div className="fixed top-0 left-0 w-full bg-[#A0B9E0] shadow-md z-49 p-2 mt-16"> {/* Updated styles */}
+        <div className="fixed top-0 left-0 w-full bg-indigo-200 shadow-md z-40 p-2 mt-16">
             <div className="flex items-center whitespace-nowrap select-none">
                 <button
-                    className="scroll-button bg-gray-700 text-white p-2 cursor-pointer select-none hover:bg-gray-800 hover:scale-105 transition-transform duration-200 focus:outline-none left-0"
+                    className="scroll-button bg-blue-950 text-white p-2 cursor-pointer hover:bg-[#1558B1] hover:scale-105 transition-transform duration-300 rounded-r-md focus:outline-none"
                     onMouseDown={() => startScrolling('left')}
                     onMouseUp={stopScrolling}
                     onMouseLeave={stopScrolling}
+                    onTouchStart={() => handleTouchStart('left')}
+                    onTouchEnd={handleTouchEnd}
                 >
                     <FontAwesomeIcon icon={faChevronLeft} />
                 </button>
 
                 <div
-                    className="scroll-area flex overflow-x-auto hide-scrollbar cursor-grab active:cursor-grabbing w-full pr-8"
+                    className="scroll-area flex overflow-hidden hide-scrollbar cursor-grab active:cursor-grabbing w-full px-4"
                     ref={navbarRef}
                     onMouseDown={startDragging}
                     onMouseUp={stopDragging}
@@ -91,12 +101,12 @@ const SubNavbar = () => {
                     onTouchMove={onDragging}
                 >
                     {loading ? (
-                        <SubNavbarSkeleton />  // Show skeleton when loading
+                        <SubNavbarSkeleton />
                     ) : (
                         course_types.map((item, index) => (
                             <div
                                 key={index}
-                                className="px-4 py-2 cursor-pointer flex-shrink-0 text-base transition-transform transform hover:scale-105 hover:bg-[#F0F7FD] rounded-md duration-200"
+                                className="px-4 py-2 cursor-pointer flex-shrink-0 text-base transition-transform transform hover:scale-105 hover:bg-indigo-300 rounded-md duration-200"
                                 onClick={() => handleNavigate(item)}
                             >
                                 {item}
@@ -106,10 +116,12 @@ const SubNavbar = () => {
                 </div>
 
                 <button
-                    className="scroll-button bg-gray-700 text-white p-2 cursor-pointer select-none hover:bg-gray-800 hover:scale-105 transition-transform duration-200 focus:outline-none absolute right-0"
+                    className="scroll-button bg-blue-950 text-white p-2 cursor-pointer hover:bg-[#1558B1] hover:scale-105 transition-transform duration-300 rounded-l-md focus:outline-none"
                     onMouseDown={() => startScrolling('right')}
                     onMouseUp={stopScrolling}
                     onMouseLeave={stopScrolling}
+                    onTouchStart={() => handleTouchStart('right')}
+                    onTouchEnd={handleTouchEnd}
                 >
                     <FontAwesomeIcon icon={faChevronRight} />
                 </button>

@@ -5,22 +5,19 @@ import Avatar3 from '../assets/Avatar3.svg';
 import '../styles/Testimonials.css'
 const testimonials = [
   {
-    name: "— Jay Badgujar",
+    name: "— Archan Patel",
     text: "Skillbridge Made Learning New Skills Easy And Fun. The Course Structure Is Clear And Concise!",
     imgSrc: Avatar1, // Replace with actual image path
-    bgColor: "#9aa7d5"
   },
   {
-    name: "—Niv Shah",
+    name: "— Kavya Trivedi",
     text: "The Platform's Flexibility Allowed Me To Study On My Schedule, Which Was Perfect For Balancing Work And Learning.",
     imgSrc: Avatar2, // Replace with actual image path
-    bgColor: "#9aa7d5"
   },
   {
-    name: "—Het Soni",
+    name: "— Jay Pandya",
     text: "Navigating The courses Was A Breeze, And The Information Provided Was Spot-On. A Fantastic Learning Experience!",
     imgSrc: Avatar3, // Replace with actual image path
-    bgColor: "#9aa7d5"
   }
 ];
 
@@ -34,9 +31,8 @@ const Testimonials = () => {
         {testimonials.map((testimonial, index) => (
           <div
             key={index}
-            className="testimonial"
+            className="testimonial bg-indigo-300"
             data-aos="fade-up"
-            style={{ backgroundColor: testimonial.bgColor }}
           >
             <img
               src={testimonial.imgSrc}
