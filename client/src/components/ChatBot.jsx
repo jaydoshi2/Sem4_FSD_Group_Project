@@ -74,7 +74,7 @@ const Chatbot = () => {
                 <p className="text-sm opacity-80">Hi, I'm Sam. How can I assist you today?</p>
               </div>
             </div>
-            <div className="h-64 sm:h-80 md:h-96 overflow-y-auto p-4 bg-gray-50">
+            <div className="h-64 sm:h-80 md:h-80 overflow-y-auto p-4 bg-gray-50">
               {messages.map((msg, index) => (
                 <div
                   key={index}
