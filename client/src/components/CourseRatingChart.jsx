@@ -46,7 +46,7 @@ const CourseRatingsChart = () => {
     }
 
     return (
-        <div className="container mx-auto px-4 py-8">
+        <div className="z-10 container mx-auto px-4 py-8">
             <div className="bg-white shadow-md rounded-lg p-4 sm:p-6">
                 <h2 className="text-xl sm:text-2xl font-semibold text-gray-800 mb-4 sm:mb-6 text-center">
                     Course Ratings
