@@ -4,7 +4,8 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useGoogleLogin } from '@react-oauth/google';
 import "../styles/Login.css";
 import BookLoader from "../components/BookLoader";
-import { useUser } from '../contexts/UserContexts';
+ 
+import { useAuthUser } from '../contexts/AuthUserContexts';
 
 const Login = () => {
   const [data, setData] = useState({ email: "", password: "" });
@@ -13,7 +14,7 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
   const location = useLocation();
   const myIP = import.meta.env.VITE_MY_IP;
-  const { login } = useUser();
+  const { login } = useAuthUser();
 
   useEffect(() => {
     handleRedirect();
@@ -24,7 +25,7 @@ const Login = () => {
     const userId = params.get('userId');
     if (userId) {
       login({ userId: userId });
-      navigate("/Course");
+      navigate("/");
     }
   };
 
@@ -59,7 +60,7 @@ const Login = () => {
           token: tokenResponse.access_token,
         });
         await login(res.data.user);
-        navigate('/Course');
+        navigate('/');
       } catch (err) {
         console.error(err);
         setError("Google Sign-In failed. Please try again.");

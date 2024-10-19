@@ -3,13 +3,14 @@ import React, { useContext } from 'react';
 import { Navigate } from 'react-router-dom';
 import AuthContext from '../contexts/authContexts';
 import LoginModal from './LoginModal';
+import { useAuthUser } from '../contexts/AuthUserContexts';
 
 const ProtectedRoute = ({ children }) => {
-    var { isAuthenticated, loading } = useContext(AuthContext);
+    const { isAuthenticated } = useAuthUser();
 
-    if(localStorage.getItem('user')){
-        isAuthenticated=true;
-    }
+    // if(localStorage.getItem('user')){
+    //     isAuthenticated=true;
+    // }
 
     if (!isAuthenticated) {
         return <LoginModal />;
