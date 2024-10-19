@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import BookLoader from '../components/BookLoader';
-import { useUser } from '../contexts/UserContexts';
+ 
+import { useAuthUser } from '../contexts/AuthUserContexts';
 
 const Profile = () => {
   const [isEditingAll, setIsEditingAll] = useState(false);
@@ -18,7 +19,7 @@ const Profile = () => {
   const [error, setError] = useState(null);
   const [imageFile, setImageFile] = useState(null);
   const [uploading, setUploading] = useState(false);
-  const { user, updateUser } = useUser();
+  const { user, updateUser } = useAuthUser();
 
   useEffect(() => {
     fetchUserDetails();

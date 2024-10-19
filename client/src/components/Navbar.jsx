@@ -4,14 +4,14 @@ import axios from 'axios';
 import webLogo from '../assets/images/myimg.png'; // Adjust path if necessary
 import { HiMenu, HiX } from 'react-icons/hi'; // Icons for mobile menu toggle
 import BookLoader from './BookLoader';
-import { useUser } from '../contexts/UserContexts';
+import { useAuthUser } from '../contexts/AuthUserContexts';
 const NavBar = () => {
     const navigate = useNavigate();
     const myIP = import.meta.env.VITE_MY_IP;
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [dropdownVisible, setDropdownVisible] = useState(false);
     const [loader, setLoader] = useState(false);
-    const { user, isAuthenticated, setIsAuthenticated, loading, setUser } = useUser();
+    const { user, isAuthenticated, logout } = useAuthUser();
     console.log("NAVBAR IS AUTHENTICATED ", isAuthenticated)
 //     useEffect(() => {
 //     setloader(true)
@@ -62,23 +62,17 @@ const NavBar = () => {
 // fetchUserData();
 //     }, [myIP]);
 
-const logout = () => {
-    setLoader(true)
-    axios
-        .post(`http://${myIP}:3000/auth/logout`, {}, { withCredentials: true })
-            .then(() => {
-            localStorage.clear();
-            setUser(null);
-            setIsAuthenticated(false);
+const handleLogout = () => {
+    setLoader(true);
+    logout()
+        .then(() => {
             navigate('/');
-            setLoader(false)
         })
-        .catch((error) => 
-            console.error('Logout failed', error))
-    
+        .catch((error) => console.error('Logout failed', error))
+        .finally(() => setLoader(false));
 };
 
-    if(loading || loader) return <BookLoader/>
+    // if(loader) return <BookLoader/>
 
     return (
         <header className="fixed top-0 left-0 w-full bg-blue-950 shadow-md z-50">
@@ -121,7 +115,7 @@ const logout = () => {
                                 <div className="absolute right-0 mt-2 w-48 bg-white shadow-md rounded-lg">
                                     <Link to="/profile" className="block px-4 py-2 text-gray-800 hover:bg-gray-200">Profile</Link>
                                     <Link to="/my-courses" className="block px-4 py-2 text-gray-800 hover:bg-gray-200">My Courses</Link>
-                                    <button onClick={logout} className="block w-full text-left px-4 py-2 text-gray-800 hover:bg-gray-200">Logout</button>
+                                    <button onClick={handleLogout} className="block w-full text-left px-4 py-2 text-gray-800 hover:bg-gray-200">Logout</button>
                                 </div>
                             )}
                         </div>
