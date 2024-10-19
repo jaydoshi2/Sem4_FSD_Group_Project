@@ -13,55 +13,6 @@ const NavBar = () => {
     const [loader, setLoader] = useState(false);
     const { user, isAuthenticated, logout } = useAuthUser();
     console.log("NAVBAR IS AUTHENTICATED ", isAuthenticated)
-//     useEffect(() => {
-//     setloader(true)
-//         const fetchUserData = async () => {
-//             try {
-//                 console.log("in try block")
-//                 const response = await axios.get(`http://${myIP}:3000/auth/check-auth`, {
-//                     withCredentials: true,
-//                 });
-
-//     // Check if manual login is authenticated
-//     if (response.data.isAuthenticated) {
-//         const userData = {
-//             userId: response.data.userId,
-//             first_name: response.data.first_name,
-//             profilePic: response.data.profilePic,
-//         };
-//         setUser(userData);
-//         console.log("/////////* ", userData)
-//         localStorage.setItem('user', JSON.stringify(userData));
-//         setIsAuthenticated(true);
-//         setloader(false)
-//     } else {
-//         console.log('Manual login not authenticated, checking Google login...');
-
-//         // Check if there is data stored in localStorage
-//         const userDataFromStorage = localStorage.getItem('user');
-
-//         if (userDataFromStorage) {
-//             // If user data exists in localStorage, set it to state
-//             const parsedUser = JSON.parse(userDataFromStorage);
-//             setUser(parsedUser);
-//             setIsAuthenticated(true);
-//             setloader(false)
-//         } else {
-//             // No user data in localStorage, redirect to login
-//             setIsAuthenticated(false);
-//             localStorage.clear()
-//             setloader(false)
-//         }
-//     }
-// } catch (error) {
-//     console.error('Error fetching user data', error);
-//     setIsAuthenticated(false);
-// }
-//         };
-
-// fetchUserData();
-//     }, [myIP]);
-
 const handleLogout = () => {
     setLoader(true);
     logout()
