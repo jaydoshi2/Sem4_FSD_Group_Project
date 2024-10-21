@@ -10,7 +10,7 @@ const Home = () => {
     navigate('/course')
   }
   return (
-    <div className="home-page bg-[#adbbda]">
+    <div className="home-page bg-indigo-200">
       {/* Hero Section */}
       <div className="h-screen bg-[#3d52a0] flex flex-col md:flex-row items-center justify-center relative p-8">
         {/* Centered text */}

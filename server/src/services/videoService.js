@@ -160,6 +160,7 @@ exports.fetchVideoDetails = async (videoId, userId) => {
 exports.markVideoAsCompleted = async (userId, videoId, courseId) => {
     try {
         // Find the existing user video progress
+        console.log("-avi gayo")
         const videoIdInt = parseInt(videoId, 10);
         const userVideoProgress = await prisma.userVideoProgress.findFirst({
             where: {

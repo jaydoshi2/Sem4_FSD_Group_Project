@@ -16,6 +16,7 @@ from os import getenv
 from dotenv import load_dotenv
 
 load_dotenv()
+
 # Set NLTK data path
 NLTK_DATA_PATH = 'E:\\Sem4_FSD_Group_Project\\server2\\chatbot_app\\nltk_data'
 os.environ['NLTK_DATA'] = NLTK_DATA_PATH
@@ -32,63 +33,33 @@ SECRET_KEY = 'django-insecure-n(z3l#)i)ssrr7@cws4obmgb1ry@*f75l&g6#ut5_8vlk0x##r
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '192.168.5.65']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '192.168.5.65']  # Make sure your IP is added here
 
+# Fetch MY_IP from environment variables
+MY_IP = os.getenv('MY_IP')
+
+# CORS Settings
+CORS_ALLOW_ALL_ORIGINS = False  # Disable this since you're specifying origins
+CORS_ALLOWED_ORIGINS = [
+    f"http://{MY_IP}:5173",  # Dynamically insert MY_IP
+    'http://127.0.0.1:5173',  # Localhost fallback
+    'http://localhost:5173',
+]
+
+# CSRF trusted origins
 CSRF_TRUSTED_ORIGINS = [
-    'http://192.168.5.65:5173'
+    f"http://{MY_IP}:5173",  # Dynamically insert MY_IP
+    'http://127.0.0.1:5173',
+    'http://localhost:5173',
 ]
 
 # CSRF_COOKIE settings
 CSRF_COOKIE_HTTPONLY = False  # Allows JavaScript to access the cookie
 CSRF_COOKIE_SAMESITE = 'Lax'  # Allows sending cookies on same-site or top-level navigation
-CSRF_COOKIE_SECURE = False  # If you're using HTTP on localhost, set it to False. If HTTPS, set it to True.
+CSRF_COOKIE_SECURE = False  # If you're using HTTP on localhost, set it to False
 
-CORS_ORIGIN_WHITELIST = [
-    'http://192.168.5.65:5173',
-]
-
-# Application definition
-# new se
-INSTALLED_APPS = [
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
-    'rest_framework',
-    'corsheaders',
-    'chatbot_app',
-    'analytics',
-]
-
-MIDDLEWARE = [
-    'corsheaders.middleware.CorsMiddleware',
-    'django.middleware.security.SecurityMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
-]
-# REST_FRAMEWORK = {
-#     'DEFAULT_AUTHENTICATION_CLASSES': (
-#         'path.to.CsrfExemptSessionAuthentication',
-#         'rest_framework.authentication.BasicAuthentication',
-#     ),
-# }
-
-ROOT_URLCONF = 'server2.urls'
-
-CORS_ALLOW_ALL_ORIGINS = True
-
-CORS_ALLOWED_ORIGINS = [
-    'http://192.168.5.65:5173'
-]
+# CORS configuration for allowed methods and headers
 CORS_ALLOW_CREDENTIALS = True
-
-# To allow specific HTTP methods
 CORS_ALLOW_METHODS = [
     'DELETE',
     'GET',
@@ -98,7 +69,6 @@ CORS_ALLOW_METHODS = [
     'PUT',
 ]
 
-# To allow specific headers
 CORS_ALLOW_HEADERS = [
     "accept",
     "accept-encoding",
@@ -111,6 +81,50 @@ CORS_ALLOW_HEADERS = [
     "x-requested-with",
 ]
 
+# Application definition
+INSTALLED_APPS = [
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+    'rest_framework',
+    'corsheaders',  # CORS support
+    'chatbot_app',
+    'analytics',
+]
+
+MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',  # Ensure this comes first
+    'django.middleware.security.SecurityMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.common.CommonMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+]
+
+ROOT_URLCONF = 'server2.urls'
+
+# Database configuration
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': getenv('PGDATABASE'),
+        'USER': getenv('PGUSER'),
+        'PASSWORD': getenv('PGPASSWORD'),
+        'HOST': getenv('PGHOST'),
+        'PORT': getenv('PGPORT', '5432'),
+        'OPTIONS': {
+            'sslmode': 'require',  # Keep this to enforce SSL, adjust as needed
+        },
+        'DISABLE_SERVER_SIDE_CURSORS': True,
+    }
+}
+
+# Templating configuration
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -129,71 +143,30 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'server2.wsgi.application'
 
-# Database
-# https://docs.djangoproject.com/en/4.2/ref/settings/#databases
-
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': getenv('PGDATABASE'),
-        'USER': getenv('PGUSER'),
-        'PASSWORD': getenv('PGPASSWORD'),
-        'HOST': getenv('PGHOST'),
-        'PORT': getenv('PGPORT', '5432'),
-        'OPTIONS': {
-            'sslmode': 'require',  # Keep this to enforce SSL
-            # 'sslmode': 'disable',
-        },
-        'DISABLE_SERVER_SIDE_CURSORS': True,
-    }
-}
-
-
 # Password validation
-# https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
-
 AUTH_PASSWORD_VALIDATORS = [
     {
-        'NAME':
-        'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
     },
     {
-        'NAME':
-        'django.contrib.auth.password_validation.MinimumLengthValidator',
+        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
     },
     {
-        'NAME':
-        'django.contrib.auth.password_validation.CommonPasswordValidator',
+        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
     },
     {
-        'NAME':
-        'django.contrib.auth.password_validation.NumericPasswordValidator',
+        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
 
 # Internationalization
-# https://docs.djangoproject.com/en/4.2/topics/i18n/
-
 LANGUAGE_CODE = 'en-us'
-
 TIME_ZONE = 'UTC'
-
 USE_I18N = True
-
 USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/4.2/howto/static-files/
-
 STATIC_URL = 'static/'
 
 # Default primary key field type
-# https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
-
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

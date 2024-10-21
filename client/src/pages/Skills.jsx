@@ -21,10 +21,11 @@ const Skills = () => {
   const navigate = useNavigate(); // Initialize useNavigate
   const [searchParams] = useSearchParams(); // Get the query parameters
   const courseType = searchParams.get("course_type"); // Get the course_type from query params
+  const myIP = import.meta.env.VITE_MY_IP;
 
   const fetchCourseData = () => {
     axios
-      .get("http://localhost:3000/course/getall")
+      .get(`http://${myIP}:3000/course/getall`)
 
       .then((response) => {
         const fetchedData = response.data;
@@ -65,7 +66,7 @@ const Skills = () => {
   const totalPages = Math.ceil(courseData.length / CARDS_PER_PAGE);
 
   return (
-    <div className="flex flex-col min-h-screen bg-[#F0F7FD]">
+    <div className="flex flex-col min-h-screen bg-indigo-100">
       <SubNavbar />
       <div className="flex-grow flex-grow pt-32 pb-8 px-4">
           {loading ? (
@@ -77,16 +78,16 @@ const Skills = () => {
             </div>
           ) : currentCourses.length > 0 ? (
             <>
-              <fieldset className="mb-8 border-2 border-gray-300 rounded-lg p-4">
-                <legend className="text-2xl font-bold text-[#1e3a8a] px-2 py-1 rounded-md">
+              <fieldset  className="mb-8 border border-indigo-900 rounded-lg p-6 bg-indigo-50"> 
+              <legend className="text-2xl font-bold text-indigo-900 px-3 py-1 rounded-md ">
                   {courseType} Courses
                 </legend>
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-4">
-                  {currentCourses.map((course, index) => (
+                <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-4 transition-all duration-500 ease-in-out '>
+                {currentCourses.map((course, index) => (
                     <div
                       key={index}
-                      className="bg-white rounded-lg border-3 border-gray-250 shadow-lg text-center overflow-hidden transition-all duration-500"
-                    >
+                      className="bg-white rounded-xl border border-[#D9E6F5] shadow-md text-center overflow-hidden transition-transform transform hover:scale-105 duration-300 hover:shadow-xl"
+                        >
                       <div className="h-48 rounded-t-lg flex justify-center items-center overflow-hidden p-2">
                         <img
                           src={course.thumbnail_pic_link}

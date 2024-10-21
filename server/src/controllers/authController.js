@@ -62,6 +62,8 @@ exports.login = async (req, res, next) => {
       message: 'Logged in successfully',
       user: {
         userId: user.user_id,
+        first_name: user.first_name,
+        profilePic: user.profilePic,
       }
     });
 

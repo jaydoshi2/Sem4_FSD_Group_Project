@@ -86,10 +86,11 @@ const UserCoursesPage = () => {
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [recommendations, setRecommendations] = useState([]);
+  const myIP = import.meta.env.VITE_MY_IP;
   console.log(courses)
   useEffect(() => {
     const fetchUserCourses = async () => {
-      const userId = JSON.parse(localStorage.getItem('user')).userId;
+      var userId = JSON.parse(localStorage.getItem('user')).userId;
       const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
       try {
@@ -100,7 +101,7 @@ const UserCoursesPage = () => {
         if (Array.isArray(response.data) && response.data.length > 0) {
           setCourses(response.data);
         } else {
-          console.warn('No courses data available');
+          console.warn('You have no purchases');
         }
 
         // Fetch recommendations based on enrolled courses
@@ -109,7 +110,7 @@ const UserCoursesPage = () => {
           description: course.course.description,
         }));
         const recResponse = await axios.post(
-          'http://127.0.0.1:8000/course_recommendations/getrecommendations/',
+          `http://${myIP}:8000/course_recommendations/getrecommendations/`,
           { user_courses: enrolledCourses },
           { headers: { 'Content-Type': 'application/json' } }
         );
@@ -143,7 +144,7 @@ const UserCoursesPage = () => {
             />
           ))
         ) : (
-          <p>No courses available</p>
+          <p>You have No Purchased Courses</p>
         )}
       </div>
 

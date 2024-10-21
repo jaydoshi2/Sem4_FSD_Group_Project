@@ -90,7 +90,16 @@ app.post('/api/auth/google', async (req, res) => {
       });
     }
 
-    res.json({ user });
+    res.json({
+      user: {
+        userId: user.user_id, // Include user_id in the response
+        email: user.email,
+        username: user.username,
+        first_name: user.first_name,
+        last_name: user.last_name,
+        profilePic: user.profilePic
+      }
+    });
   } catch (error) {
     console.error('Error processing Google authentication:', error);
     res.status(400).json({ error: 'Authentication failed' });

@@ -61,7 +61,7 @@ const TeamCards = () => {
     ];
 
     return (
-        <div className="container mx-auto px-4 py-16 mt-8 bg-[#adbbda]">
+        <div className="container mx-auto px-4 py-16 mt-8 bg-indigo-200">
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 justify-center">
                 {teamMembers.map((member) => (
                     <div key={member.id} className="bg-[#ede8f5] shadow-lg rounded-lg overflow-hidden transform transition-transform hover:translate-y-[-10px] relative group w-[250px] mx-auto">
