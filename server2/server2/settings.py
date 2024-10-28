@@ -32,11 +32,11 @@ SECRET_KEY = 'django-insecure-n(z3l#)i)ssrr7@cws4obmgb1ry@*f75l&g6#ut5_8vlk0x##r
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '192.168.5.65']  # Make sure your IP is added here
+MY_IP = os.getenv('MY_IP')
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '192.168.5.65',f"{MY_IP}"]  # Make sure your IP is added here
 
 # Fetch MY_IP from environment variables
-MY_IP = os.getenv('MY_IP')
+
 
 # CORS Settings
 CORS_ALLOW_ALL_ORIGINS = False  # Disable this since you're specifying origins
