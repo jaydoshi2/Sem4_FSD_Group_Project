@@ -7,7 +7,7 @@ import App from './App.jsx'
 import './index.css'
 import { AuthProvider } from './contexts/authContexts'; // Import the AuthProvider
 ReactDOM.createRoot(document.getElementById('root')).render(
-  <React.StrictMode>
+  // <React.StrictMode>
     <AuthProvider>
     <BrowserRouter>
       <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
@@ -15,5 +15,5 @@ ReactDOM.createRoot(document.getElementById('root')).render(
       </GoogleOAuthProvider>
     </BrowserRouter>
     </AuthProvider>
-   </React.StrictMode>
+  //  </React.StrictMode> 
 )

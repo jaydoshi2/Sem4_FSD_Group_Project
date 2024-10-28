@@ -25,12 +25,18 @@ const handleLogout = () => {
 
     // if(loader) return <BookLoader/>
 
-    return (
+return (
         <header className="fixed top-0 left-0 w-full bg-blue-950 shadow-md z-50">
             <div className="container mx-auto px-4 py-2 flex justify-between items-center h-16 max-w-full">
                 {/* Logo */}
                 <Link to="/" className="flex items-center">
-                    <img src={webLogo} alt="Logo" className="h-10 w-10 sm:h-12 sm:w-12" />
+                    <img
+                        src={webLogo}
+                        alt="Logo"
+                        className="h-20 w-24 filter grayscale p-2"
+                        style={{ filter: 'invert(100%) sepia(100%) saturate(0%) hue-rotate(100deg)' }} // Adjust the filter as needed
+                    />
+
                     <h1 className="text-white font-bold text-xl sm:text-2xl ml-2 sm:ml-3">
                         Skill-Bridge
                     </h1>
@@ -63,10 +69,30 @@ const handleLogout = () => {
                                 onClick={() => setDropdownVisible(!dropdownVisible)}
                             />
                             {dropdownVisible && (
-                                <div className="absolute right-0 mt-2 w-48 bg-white shadow-md rounded-lg">
-                                    <Link to="/profile" className="block px-4 py-2 text-gray-800 hover:bg-gray-200">Profile</Link>
-                                    <Link to="/my-courses" className="block px-4 py-2 text-gray-800 hover:bg-gray-200">My Courses</Link>
-                                    <button onClick={handleLogout} className="block w-full text-left px-4 py-2 text-gray-800 hover:bg-gray-200">Logout</button>
+                                <div className="absolute right-0 mt-2 w-48 bg-indigo-50 shadow-md rounded-lg">
+                                    <Link
+                                        to="/profile"
+                                        className="block px-4 py-2 text-gray-800 hover:bg-indigo-200"
+                                        onClick={() => setDropdownVisible(false)}
+                                    >
+                                        Profile
+                                    </Link>
+                                    <Link
+                                        to="/my-courses"
+                                        className="block px-4 py-2 text-gray-800 hover:bg-indigo-200"
+                                        onClick={() => setDropdownVisible(false)}
+                                    >
+                                        My Courses
+                                    </Link>
+                                    <button
+                                        onClick={() => {
+                                            logout();
+                                            setDropdownVisible(false);
+                                        }}
+                                        className="block w-full text-left px-4 py-2 text-gray-800 hover:bg-indigo-200"
+                                    >
+                                        Logout
+                                    </button>
                                 </div>
                             )}
                         </div>
@@ -93,9 +119,29 @@ const handleLogout = () => {
                                     alt="Profile"
                                     className="h-10 w-10 rounded-full mb-2 border-2 border-white"
                                 />
-                                <Link to="/profile" onClick={() => setIsMenuOpen(false)} className="text-white hover:text-gray-200">Profile</Link>
-                                <Link to="/my-courses" onClick={() => setIsMenuOpen(false)} className="text-white hover:text-gray-200">My Courses</Link>
-                                <button onClick={logout} className="text-white hover:text-gray-200">Logout</button>
+                                <Link
+                                    to="/profile"
+                                    onClick={() => setIsMenuOpen(false)}
+                                    className="text-white hover:text-gray-200"
+                                >
+                                    Profile
+                                </Link>
+                                <Link
+                                    to="/my-courses"
+                                    onClick={() => setIsMenuOpen(false)}
+                                    className="text-white hover:text-gray-200"
+                                >
+                                    My Courses
+                                </Link>
+                                <button
+                                    onClick={() => {
+                                        handleLogout();
+                                        setIsMenuOpen(false);
+                                    }}
+                                    className="text-white hover:text-gray-200"
+                                >
+                                    Logout
+                                </button>
                             </div>
                         ) : (
                             <Link to="/login" onClick={() => setIsMenuOpen(false)} className="bg-white text-blue-600 font-bold py-2 px-4 rounded hover:bg-gray-100">Login / Sign Up</Link>
@@ -104,9 +150,7 @@ const handleLogout = () => {
                 </div>
             )}
         </header>
-
     );
-
 };
 
 export default NavBar;

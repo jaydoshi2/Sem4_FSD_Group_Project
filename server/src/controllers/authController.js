@@ -52,7 +52,7 @@ exports.login = async (req, res, next) => {
     const user = await authService.authenticateUser(email, password);
 
     if (!user) {
-      return next(new AppError('Email not found', 400));
+      return res.status(400).json({ message: 'Email not found' });
     }
 
     const { accessToken, refreshToken } = setTokens(res, user);
@@ -69,7 +69,7 @@ exports.login = async (req, res, next) => {
 
   } catch (error) {
     if (error.message.includes('Incorrect password')) {
-      return next(new AppError('Incorrect password', 400));
+      return res.status(400).json({ message: 'Incorrect password' });
     }
     next(new AppError(error.message, 401));
   }

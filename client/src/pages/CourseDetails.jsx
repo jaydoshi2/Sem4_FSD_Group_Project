@@ -129,16 +129,16 @@ function CourseDetail() {
     window.location.reload()
   };
   const preview = () => {
-    navigate(`/certificate/${courseId}`);
+    navigate(`/certificatepreview/${courseId}`);
   };
 
   if (loading) return <BookLoader />;
   if (error) return <p className="text-red-500">{error}</p>;
   return (
     <div className='mt-28'>
-      <div className="bg-indigo-200 min-h-screen -mt-16 p-6 flex justify-center items-center">
+      <div className="bg-indigo-100 min-h-screen -mt-16 p-6 flex justify-center items-center">
         {/* Main Content Wrapper */}
-        <div className="bg-indigo-100 rounded-lg shadow-lg p-8">
+        <div className="bg-indigo-50 rounded-lg shadow-lg p-8 border border-indigo-950">
           {/* Parallel Layout: Course Details and Image */}
           <div className="flex flex-col lg:flex-row lg:items-start lg:space-x-8">
             {/* Course Details */}
