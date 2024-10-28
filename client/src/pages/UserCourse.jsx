@@ -174,7 +174,7 @@ const UserCoursesPage = () => {
           <div className="bg-indigo-50 mt-12 mb-8">
           <div className="container mx-auto px-4 pt-20 pb-8">
             <h1 className="text-[#324aad] text-3xl md:text-4xl font-bold text-center mb-2">
-              Recomanded Courses
+              Recommend Courses
               <span className="block w-48 h-1 bg-[#5c8bf5] mx-auto mt-2"></span>
             </h1>
           </div>
