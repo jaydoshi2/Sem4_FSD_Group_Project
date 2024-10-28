@@ -1,8 +1,9 @@
 import React from 'react';
 import four from "../assets/images/hero-img.png";
 import NumAnimation from '../components/NumAnimation';
+import TrendingCourse from '../components/TrendingCourse';
 import Testimonials from './Testimonials';
-import About from './About';
+import AboutPage from '../pages/AboutPage';
 import {useNavigate} from 'react-router-dom'
 const Home = () => {
   const navigate = useNavigate()
@@ -37,13 +38,16 @@ const Home = () => {
       </div>
 
       <div className="py-16 flex justify-center">
-        <About />
+        <TrendingCourse  />
       </div>
       <div className="py-16 flex justify-center">
         <NumAnimation />
       </div>
       <div className="py-16 flex justify-center w-full">
         <Testimonials />
+      </div>
+      <div className="py-16 flex justify-center">
+        <AboutPage />
       </div>
 
     </div>

@@ -13,7 +13,6 @@ const razorpay = new Razorpay({
 exports.getUserCourses = async (req, res) => {
     try {
         const { userId } = req.body; // Assuming userId is sent as a string in the request body
-        console.log("USER ID ", userId);
 
         const userCourses = await prisma.userCourseProgress.findMany({
             where: {
@@ -33,8 +32,8 @@ exports.getUserCourses = async (req, res) => {
             },
         });
 
-        console.log(userCourses);
-        res.status(200).json(userCourses); // Send the result as a response
+          res.status(200).json(userCourses); // Send the result as a response
+
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: "ERROR IN GETTING USER COURSES" }); // Send an error response

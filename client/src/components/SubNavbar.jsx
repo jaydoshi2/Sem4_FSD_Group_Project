@@ -18,7 +18,9 @@ const SubNavbar = () => {
     const myIP = import.meta.env.VITE_MY_IP;
 
     useEffect(() => {
-        axios.get(`http://${myIP}:3000/course/getall`)
+        const userData = JSON.parse(localStorage.getItem('user'));
+        const userId = userData.userId;
+        axios.post(`http://${myIP}:3000/course/getall`,{userId})
             .then((response) => {
                 setCourse_data(response.data);
                 setCourse_types([...new Set(response.data.map(item => item.course_type))]);

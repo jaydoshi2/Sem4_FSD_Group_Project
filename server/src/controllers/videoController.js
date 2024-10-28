@@ -18,7 +18,6 @@ exports.getVideoDetails = async (req, res) => {
 
 exports.getCourseProgress = async (req, res) => {
     const { userId } = req.body;
-    console.log("user id in  : ", userId)
     const courseId = parseInt(req.params.courseId, 10);
 
     if (isNaN(courseId)) {
@@ -63,12 +62,11 @@ exports.dislikeVideo = async (req, res) => {
 
 exports.markChapterAndCourseCompleted = async (req, res) => {
     const { userId, videoId, chapterId, courseId } = req.body;
-    console.log('UPDATE IS GETTING CALLED',userId,videoId,chapterId,courseId)
 
     if (!userId || !videoId || !chapterId || !courseId) {
         return res.status(400).json({ success: false, message: 'Missing required fields.' });
     }
-    console.log("CHAPTERID ON SERVER SIDE ",chapterId)
+    console.log("CHAPTERID ON SERVER SIDE ", chapterId)
 
     try {
         const result = await videoService.markVideoChapterAndCourseCompleted(userId, videoId, chapterId, courseId);
@@ -83,3 +81,33 @@ exports.markChapterAndCourseCompleted = async (req, res) => {
         res.status(500).json({ success: false, message: 'Server error.' });
     }
 };
+exports.updateProgress = async (req, res) => {
+    const { userId, courseId } = req.body
+    try {
+        const result = await videoService.updateProgressForUser(userId, courseId)
+        if (result) {
+            res.status(200).json({ success: true, message: 'Progress updated successfully.' });
+        } else {
+            res.status(400).json({ success: false, message: 'Could not update progress.' });
+        }
+    }
+    catch (error) {
+        console.error(error);
+        res.status(500).json({ success: false, message: 'Server error.' });
+    }
+}
+exports.getpoints = async (req, res) => {
+    const { userId, courseId } = req.body
+    try {
+        const result = await videoService.getpoints(userId, courseId)
+        if (result) {
+            res.status(200).json({ success: true, message: 'Progress updated successfully.' });
+        } else {
+            res.status(400).json({ success: false, message: 'Could not update progress.' });
+        }
+    }
+    catch (error) {
+        console.error(error);
+        res.status(500).json({ success: false, message: 'Server error.' });
+    }
+}

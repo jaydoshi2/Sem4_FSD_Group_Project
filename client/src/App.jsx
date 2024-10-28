@@ -6,7 +6,7 @@ import NavBar from './components/Navbar';
 import ProtectedRoute from './components/ProtectedRoute';
 import ResetPassword from './components/ResetPassword';
 import { AuthUserProvider } from './contexts/AuthUserContexts';
-import AboutPage from './pages/AboutPage';
+import About from './pages/About';
 import AdminDashboard from './pages/AdminPage';
 import Certificate from './pages/Certificate';
 import ContactSection from './pages/ContactSection';
@@ -23,6 +23,7 @@ import Signup from './pages/SignUp';
 import Skills from './pages/Skills';
 import UserCoursesPage from './pages/UserCourse';
 import VideoPage from './pages/VideoPage';
+import CertificatePreview from './pages/CertificatePreview';
 
 const App = () => {
         const location = useLocation();
@@ -88,11 +89,16 @@ const App = () => {
                                         <Route path='/home' element={<Home />} />
                                         <Route path="/course" element={<CourseDisplay />} />
                                         <Route path="/skill" element={<Skills />} />
-                                        <Route path='/aboutpage' element={<AboutPage />} />
+                                        <Route path='/aboutpage' element={<About />} />
 
                                         <Route path="/certificate/:courseId" element={
                                                 <ProtectedRoute>
                                                         <Certificate />
+                                                </ProtectedRoute>
+                                        } />
+                                        <Route path="/certificatepreview/:courseId" element={
+                                                <ProtectedRoute>
+                                                        <CertificatePreview />
                                                 </ProtectedRoute>
                                         } />
                                         <Route path="/admin/*" element={<AdminDashboard />} />
