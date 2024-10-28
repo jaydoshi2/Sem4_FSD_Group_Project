@@ -34,7 +34,7 @@ var questions = [];
 var options = [];
 var answers = [];
 
-const genAI = new GoogleGenerativeAI("AIzaSyBgCDR02nUjEfH2LXfhatnwxxI4mOXZlts");
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 const publicPath = path.join(__dirname, '..', 'public');
 
 // Serve static files from the 'public' directory
@@ -88,7 +88,7 @@ router.post('/generate-mcqs', async (req, res) => {
         const params = {
             engine: "youtube_transcripts",
             video_id: video_id,
-            api_key: 'gJYYWn2atWgg1vWeDhn59t9s',
+            api_key: process.env.YOUTUBE_SEARCH_API_KEY,
         };
         let fullTranscript = "";
         // First API call without the lang parameter
