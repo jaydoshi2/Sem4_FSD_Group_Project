@@ -160,7 +160,6 @@ exports.fetchVideoDetails = async (videoId, userId) => {
 exports.markVideoAsCompleted = async (userId, videoId, courseId) => {
     try {
         // Find the existing user video progress
-        console.log("-avi gayo")
         const videoIdInt = parseInt(videoId, 10);
         const userVideoProgress = await prisma.userVideoProgress.findFirst({
             where: {
@@ -252,23 +251,21 @@ exports.markVideoChapterAndCourseCompleted = async (userId, videoId, chapterId, 
                 });
             }
         }
-        updateProgressForUser(userId, courseIdInt)
-
         return true;
     } catch (error) {
         console.error('Error updating video/chapter/course progress:', error);
         return false;
     }
 };
-
-async function updateProgressForUser(username, courseId) {
+exports.updateProgressForUser = async (username, courseId) => {
+    const courseIdInt = parseInt(10, courseId)
     // Fetch the user and their progress for the specified course
     const user = await prisma.user.findUnique({
         where: { user_id: username },
         include: {
             course_progress: {
                 where: {
-                    courseId: courseId // Make sure courseId matches correctly
+                    courseId: courseIdInt // Make sure courseId matches correctly
                 },
                 include: {
                     course: {
@@ -315,7 +312,7 @@ async function updateProgressForUser(username, courseId) {
             completed: true,
             video: {
                 chapter: {
-                    courseId: courseId // Ensure only videos from the specific course are considered
+                    courseId: courseIdInt // Ensure only videos from the specific course are considered
                 }
             }
         },
@@ -378,4 +375,61 @@ function calculateCourseProgress(course, completedVideos) {
     });
 
     return parseFloat((totalProgress * 100).toFixed(2)); // Convert to percentage and ensure it's a float with 2 decimal places
+}
+exports.getpoints = async (userId, courseId) => {
+    try {
+        // 1. Fetch the course based on courseId to get points_providing
+        const course = await prisma.course.findUnique({
+            where: {
+                course_id: courseId,
+            },
+            select: {
+                points_providing: true,
+            },
+        });
+
+        if (!course) {
+            throw new Error('Course not found');
+        }
+
+        const coursePoints = course.points_providing;
+
+        // 2. Fetch the user to get current points
+        const user = await prisma.user.findUnique({
+            where: {
+                user_id: userId,
+            },
+            select: {
+                points: true,
+            },
+        });
+
+        if (!user) {
+            throw new Error('User not found');
+        }
+
+        const userPoints = user.points;
+
+        const updatedPoints = userPoints + coursePoints;
+
+        // 4. Update the user's points
+        await prisma.user.update({
+            where: {
+                user_id: userId,
+            },
+            data: {
+                points: updatedPoints,
+            },
+        });
+
+        return {
+            message: 'Points redeemed successfully',
+            userId: userId,
+            courseId: courseId,
+            remainingPoints: updatedPoints,
+        };
+    } catch (error) {
+        console.error(error);
+        throw new Error('Failed to redeem points');
+    }
 }

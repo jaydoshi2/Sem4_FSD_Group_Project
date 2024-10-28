@@ -1,19 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import '../styles/certificate.css';
+// import '../styles/certificate.css';
 import { useParams } from 'react-router-dom';
 import myimg from '../assets/images/myimg.png'
 import BookLoader from '../components/BookLoader';
-const Certificate = () => {
+const CertificatePreview = () => {
     const [username, setUsername] = useState('');
     const [courseName, setCourseName] = useState('');
+    const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const { courseId } = useParams();
     // Extract courseId from the URL params
 
     const myIP = import.meta.env.VITE_MY_IP;
-    const [loading, setLoading] = useState(false);
-
     useEffect(() => {
         const fetchData = async () => {
             setLoading(true)
@@ -27,15 +26,13 @@ const Certificate = () => {
             }
 
             try {
-                console.log("courseid in certificate : ", courseId)
                 const response = await axios.post(`http://${myIP}:3000/certificate`, {
                     userId,  // Pass userId in the request body
                     courseId // Pass courseId in the request body
                 });
-
+                setLoading(false)
                 setUsername(response.data.username);
                 setCourseName(response.data.courseName);
-                setLoading(false)
             } catch (error) {
                 setError('Failed to fetch data');
                 console.error('Error fetching data:', error);
@@ -44,27 +41,6 @@ const Certificate = () => {
 
         fetchData();
     }, []);
-
-    // Function to download certificate as PDF
-    const downloadPDF = async () => {
-        try {
-            setLoading(true);
-            const response = await axios.post(`http://${myIP}:3000/certificate/get`, { username, courseName }, { responseType: 'blob' });
-            const url = window.URL.createObjectURL(new Blob([response.data]));
-            const link = document.createElement('a');
-            link.href = url;
-            link.setAttribute('download', `${username}-certificate.pdf`);
-            document.body.appendChild(link);
-            link.click();
-            link.parentNode.removeChild(link);
-        } catch (error) {
-            console.error('Error generating and downloading certificate:', error);
-        } finally {
-            setLoading(false);
-        }
-    };
-
-
 
     return (
         <div className="w-[90vw] max-w-[80vh] mx-auto bg-indigo-50 p-[5vh_4vw] shadow-md rounded-[2vh] box-border mt-10 ">
@@ -88,12 +64,13 @@ const Certificate = () => {
                     </>
                 )}
             </div>
-            <button onClick={downloadPDF} className="download-btn">Download Certificate</button>
             {loading && (
-                < BookLoader />
+               < BookLoader/>
             )}
 
         </div>
     );
-}
-    export default Certificate;
+
+};
+
+export default CertificatePreview;
