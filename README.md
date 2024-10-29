@@ -8,8 +8,6 @@
     <strong>Empowering skills for the future</strong>
 </p>
 
-# 🎓 SkillsBridge
-
 ## Overview
 Welcome to SkillsBridge, an innovative EdTech platform that bridges the skills gap with engaging, personalized learning experiences. Built with a microservices architecture, this platform combines AI-powered features like a recommendation engine and a chatbot, detailed user insights, and robust security features to create a seamless, secure, and insightful learning environment.
 
