@@ -50,84 +50,198 @@ Welcome to SkillsBridge, an innovative EdTech platform that bridges the skills g
 - **Data Processing:** TF-IDF and NLP libraries for recommendation and chatbot
 
 ## 📁 Project Structure
-SkillsBridge is built with a microservices architecture:
-- **Frontend (React):** Dynamic, interactive user interface
-- **Backend 1 (Node.js):** Main API server handling authentication, user management, course data, and email functions
-- **Backend 2 (Django):** Manages AI-driven services, recommendation engine, and analytics with Plotly
 
-## 🧩 Setup Guide
+### Client (Frontend)
+```
+client/
+├── node_modules/
+├── public/
+├── src/
+│   ├── assets/
+│   ├── components/
+│   ├── contexts/
+│   ├── pages/
+│   └── styles/
+```
 
-### 1. Clone the Repository
+### Server (Backend 1)
+```
+server/
+├── node_modules/
+├── src/
+│   ├── config/
+│   ├── controllers/
+│   ├── image/
+│   ├── middleware/
+│   ├── prisma/
+│   ├── public/
+│   ├── routes/
+│   ├── services/
+│   ├── temp/
+│   └── utils/
+```
+
+### Server2 (Backend 2)
+```
+server2/
+├── analytics/
+├── chatbot_app/
+├── course_recommendations/
+└── server2/
+```
+
+Our project uses a microservices architecture:
+- **Client**: React-based frontend for the user interface
+- **Server**: Node.js backend handling core functionality
+- **Server2**: Django backend managing AI services and analytics
+
+## 🧩 SkillsBridge Setup Guide
+
+This guide will help you set up the SkillsBridge platform locally for development.
+
+### 1. Repository Setup
+
+```bash
+# Clone the repository
 git clone <repository-url>
 cd skillsBridge
 
-### 2. Install Dependencies
+# Create necessary environment files
+touch client/.env server/.env server2/.env
+```
 
-Client (React):
+### 2. Service Setup
+
+#### Client (Frontend)
+```bash
 cd client
 npm install
 
-Server 1 (Node.js):
-cd ../server1
+# Start development server
+npm run dev  # Runs on http://localhost:5173
+```
+
+#### Server 1 (Node.js Backend)
+```bash
+cd server
 npm install
 
-Server 2 (Django):
-cd ../server2
+# Database setup
+npx prisma generate
+npx prisma migrate deploy
+npx prisma db seed
+
+# Start server
+npm run dev  # Runs on http://localhost:3000
+```
+
+#### Server 2 (Django Backend)
+```bash
+cd server2
+
+# Create and activate virtual environment
+python -m venv venv
+source venv/bin/activate  # On Windows: .\venv\Scripts\activate
+
+# Install dependencies
 pip install -r requirements.txt
 
-### 3. Environment Variables
+# Database setup
+python manage.py migrate
 
-Client (.env):
+# Start server
+python manage.py runserver  # Runs on http://localhost:8000
+```
+
+### 3. Environment Configuration
+
+#### Client (.env)
+```env
+# Frontend Configuration
 VITE_MY_IP=your_ip_here
 VITE_CLOUDFRONT_URL=https://d1zl26g01esfr6.cloudfront.net
-VITE_BACKEND_URL=http://your_backend_url_here
+VITE_BACKEND_URL=http://localhost:3000
 VITE_GOOGLE_CLIENT_ID=your_google_client_id
+```
 
-Server 1 - Node.js (.env):
+#### Server (.env)
+```env
+# Server Configuration
 PORT=3000
-DATABASE_URL="your_database_url"
-GEMINI_API_KEY=your_gemini_api_key
 NODE_ENV=development
+
+# Database
+DATABASE_URL="postgresql://user:password@localhost:5432/skillsbridge"
+
+# Authentication
 JWT_SECRET=your_jwt_secret
 JWT_EXPIRE=15m
 REFRESH_TOKEN_SECRET=your_refresh_token_secret
 REFRESH_TOKEN_EXPIRE=7d
 SESSION_SECRET=your_session_secret
-EMAIL_USER=your_email_user
-EMAIL_PASS=your_email_password
+
+# Google OAuth
 GOOGLE_CLIENT_ID=your_google_client_id
 GOOGLE_CLIENT_SECRET=your_google_client_secret
+
+# AWS S3
 S3_ACCESS_KEY_ID=your_s3_access_key
 S3_ACCESS_SECRET_KEY=your_s3_secret_key
+
+# APIs
+GEMINI_API_KEY=your_gemini_api_key
 YOUTUBE_SEARCH_API_KEY=your_youtube_api_key
 
-Server 2 - Django (.env):
+# Email
+EMAIL_USER=your_email_user
+EMAIL_PASS=your_email_password
+```
+
+#### Server2 (.env)
+```env
+# Database Configuration
 PGPASSWORD=your_pg_password
 PGUSER=your_pg_user
 PGDATABASE=your_pg_database
-PGHOST=your_pg_host
+PGHOST=localhost
 MY_IP=your_ip_here
 
-### 4. Run the Services
+# Django Configuration
+DJANGO_SECRET_KEY=your_django_secret_key
+DEBUG=True
+ALLOWED_HOSTS=localhost,127.0.0.1
+```
 
-Start Client (React):
-cd client
-npm run dev
+### 4. Verification Steps
 
-Start Server 1 (Node.js):
-cd ../server1
-node index.js
+1. **Frontend Check**:
+   - Visit `http://localhost:5173`
+   - Verify that the landing page loads
+   - Check for console errors
 
-Start Server 2 (Django):
-cd ../server2
-python manage.py runserver
+2. **Backend 1 Check**:
+   - Visit `http://localhost:3000/api/health`
+   - Should receive a status OK response
 
-### 5. Database Migration
-npx prisma migrate deploy
+3. **Backend 2 Check**:
+   - Visit `http://localhost:8000/admin`
+   - Should see Django admin login page
+
+4. **Database Check**:
+   ```bash
+   # Check Prisma database
+   npx prisma studio  # Opens database GUI on http://localhost:5555
+   ```
+
+### 5. Common Issues & Solutions
+
+#### Database Connection Issues
+```bash
+# Reset Prisma database
+npx prisma migrate reset
+npx prisma generate
 npx prisma db seed
-
-### 6. Test Setup
-Visit http://localhost:3000 to ensure the frontend connects with both backends and database functionalities work.
+```
 
 ## 🧑‍🤝‍🧑 Team and Contributions
 - **Teammate 1 - Frontend Specialist:** Developed React components, managed state, and handled client-side routing
