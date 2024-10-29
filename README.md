@@ -13,13 +13,12 @@
 ## Overview
 Welcome to SkillsBridge, an innovative EdTech platform that bridges the skills gap with engaging, personalized learning experiences. Built with a microservices architecture, this platform combines AI-powered features like a recommendation engine and a chatbot, detailed user insights, and robust security features to create a seamless, secure, and insightful learning environment.
 
-![image](https://github.com/user-attachments/assets/49efa76a-15ef-42de-a238-50026eb24f73)
 
 
 ## 🚀 Features and Concepts Applied
 1. **Robust Authentication & Authorization:**
     <p>
-    <img src="https://github.com/user-attachments/assets/49efa76a-15ef-42de-a238-50026eb24f73" alt="Skill Bridge Logo" width="150"/>
+    <img src="https://github.com/user-attachments/assets/49efa76a-15ef-42de-a238-50026eb24f73" alt="Skill Bridge Logo" width="550"/>
   </p>
 
   - JWT-based secure access management 
