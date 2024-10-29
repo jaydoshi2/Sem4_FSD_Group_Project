@@ -29,6 +29,39 @@ Welcome to SkillsBridge, an innovative EdTech platform that bridges the skills g
   - Transcript generation for video content using Gemini API, with automatic MCQ creation
 
 3. **AI-Powered Chatbot & Recommendation System:**
+
+```mermaid
+graph LR
+    subgraph "Frontend"
+        A[User Input] --> B[API Request]
+    end
+
+    subgraph "Django Backend - views.py"
+        B --> C[predict API]
+        C --> D[get_response]
+    end
+
+    subgraph "Chatbot Processing - chat.py"
+        D --> E[Tokenize Input]
+        E --> F[Create Bag of Words]
+        F --> G[Neural Network Prediction]
+        G --> H[Get Intent Tag]
+        H --> I[Select Random Response]
+    end
+
+    subgraph "Model Components"
+        J[NeuralNet Model] --> G
+        K[Intents.json] --> I
+        L[data.pth<br>Trained Weights] --> J
+    end
+
+    I --> M[Return Response]
+    M --> N[API Response]
+
+    style J fill:#f9f,stroke:#333
+    style K fill:#bbf,stroke:#333
+    style L fill:#fbf,stroke:#333
+```
     
 ```mermaid
 graph LR
