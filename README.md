@@ -254,7 +254,7 @@ SkillsBridge is licensed under the MIT License. See the LICENSE file for more de
 ### Flowchart of the course recommendation system inside server2 directory 
 
 ```mermaid
-graph TD
+graph LR
     A[Input Course Vector] --> B[Calculate Similarities]
     C --> D[Sort & Filter]
     
@@ -278,4 +278,3 @@ graph TD
     D --> H
     H --> I
     I --> J
-
