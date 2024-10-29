@@ -268,11 +268,60 @@ npx prisma generate
 npx prisma db seed
 ```
 
-## 🧑‍🤝‍🧑 Team and Contributions
-- **Teammate 1 - Frontend Specialist:** Developed React components, managed state, and handled client-side routing
-- **Teammate 2 - Backend Engineer (Node.js):** Designed authentication flow, handled API routes, and managed database interactions
-- **Teammate 3 - AI Engineer (Django):** Built chatbot and recommendation system, managed data visualizations for admin insights
-- **Teammate 4 - Database & Integration:** Configured Prisma with NeonDB, optimized database queries, and ensured data accuracy across services
+## 👥 Team & Contributions
+
+### Core Team Members
+
+#### Frontend & UI/UX
+1 **[archanpatel1425](https://github.com/archanpatel1425)**
+  - Developed comprehensive course page functionality
+  - Implemented responsive design across all pages
+  - Built core course interaction features
+
+2 **[1JAYPANDYA1](https://github.com/1JAYPANDYA1)**
+  - Developed video page functionality (like/dislike system)
+  - Implemented certificate generation system
+  - Enhanced overall website styling and UI polish
+  - Managed video-related backend integrations
+
+3 **[kavya-trivedi](https://github.com/kavya-trivedi)**
+  - Designed and implemented responsive home page
+  - Created auxiliary pages (About, Contact, Profile)
+  - Built supporting backend services for user-facing pages
+
+#### Backend & Architecture
+4 **[jaydoshi2](https://github.com/jaydoshi2)** - *Project Lead & Backend Architect*
+  - Led project ideation and planning
+  - Designed and implemented database architecture
+  - Implemented JWT authentication system
+  - Established project architecture and code structure
+  - Managed Django integration for AI services made by xKirtan.
+
+#### AI & Analytics
+5 **[xKIRTAN](https://github.com/xKIRTAN)** - *AI/ML Specialist*
+  - Developed chatbot system architecture
+  - Created analytics dashboard and visualizations
+  - Implemented content-based course recommendation engine
+  - Designed and integrated ML algorithms
+
+
+```mermaid
+graph TD
+    A[Project Leadjaydoshi2] -->|Oversees| B[Frontend Team]
+    A -->|Manages| C[Backend Services]
+    A -->|Coordinates| D[AI Integration]
+    
+    B --> E[UI/UX1JAYPANDYA1]
+    B --> F[Course Pagesarchanpatel1425]
+    B --> G[Home & Profilekavya-trivedi]
+    
+    C --> H[Databasejaydoshi2]
+    C --> I[Authenticationjaydoshi2]
+    
+    D --> J[ML ServicesxKIRTAN]
+    D --> K[AnalyticsxKIRTAN]
+```
+
 
 ## ⚖️ License
 SkillsBridge is licensed under the MIT License. See the LICENSE file for more details.
