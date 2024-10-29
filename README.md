@@ -31,6 +31,33 @@ Welcome to SkillsBridge, an innovative EdTech platform that bridges the skills g
   - Transcript generation for video content using Gemini API, with automatic MCQ creation
 
 3. **AI-Powered Chatbot & Recommendation System:**
+    
+```mermaid
+graph LR
+    A[Input Course Vector] --> B[Calculate Similarities]
+    C --> D[Sort & Filter]
+    
+    subgraph "Mathematical Process"
+        E[TF-IDF Calculation]
+        F[Cosine Similarity]
+        G[Score Normalization]
+    end
+    
+    B --> E
+    E --> F
+    F --> G
+    G --> C[Get Similarity Scores]
+    
+    subgraph "Recommendation Selection"
+        H[Apply Diversity Rules]
+        I[Type Filtering]
+        J[Final Ranking]
+    end
+    
+    D --> H
+    H --> I
+    I --> J
+  ```
   - Chatbot crafted with NLP and neural networks for instant support
   - Personalized course recommendations using TF-IDF matrices, with cosine similarity based on user's learning history
 
@@ -251,30 +278,3 @@ npx prisma db seed
 
 ## ⚖️ License
 SkillsBridge is licensed under the MIT License. See the LICENSE file for more details.
-### Flowchart of the course recommendation system inside server2 directory 
-
-```mermaid
-graph LR
-    A[Input Course Vector] --> B[Calculate Similarities]
-    C --> D[Sort & Filter]
-    
-    subgraph "Mathematical Process"
-        E[TF-IDF Calculation]
-        F[Cosine Similarity]
-        G[Score Normalization]
-    end
-    
-    B --> E
-    E --> F
-    F --> G
-    G --> C[Get Similarity Scores]
-    
-    subgraph "Recommendation Selection"
-        H[Apply Diversity Rules]
-        I[Type Filtering]
-        J[Final Ranking]
-    end
-    
-    D --> H
-    H --> I
-    I --> J
