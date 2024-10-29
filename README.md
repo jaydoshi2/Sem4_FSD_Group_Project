@@ -29,40 +29,48 @@ Welcome to SkillsBridge, an innovative EdTech platform that bridges the skills g
   - Transcript generation for video content using Gemini API, with automatic MCQ creation
 
 3. **AI-Powered Chatbot & Recommendation System:**
-
 ```mermaid
 graph LR
-    subgraph "Frontend"
-        A[User Input] --> B[API Request]
+    subgraph "🖥️ User Interface"
+        A[User Question] --> B[API Gateway]
+        style A fill:#e1f5fe,stroke:#01579b
+        style B fill:#e8eaf6,stroke:#1a237e
     end
 
-    subgraph "Django Backend - views.py"
-        B --> C[predict API]
-        C --> D[get_response]
+    subgraph "🧠 Neural Processing"
+        B --> C[Intent Analysis]
+        C --> D[Context Engine]
+        style C fill:#f3e5f5,stroke:#4a148c
+        style D fill:#f3e5f5,stroke:#4a148c
     end
 
-    subgraph "Chatbot Processing - chat.py"
-        D --> E[Tokenize Input]
-        E --> F[Create Bag of Words]
-        F --> G[Neural Network Prediction]
-        G --> H[Get Intent Tag]
-        H --> I[Select Random Response]
+    subgraph "🔄 Language Processing"
+        D --> E[Token Magic]
+        E --> F[Word Vectors]
+        F --> G[AI Brain]
+        style E fill:#e8f5e9,stroke:#1b5e20
+        style F fill:#e8f5e9,stroke:#1b5e20
+        style G fill:#e8f5e9,stroke:#1b5e20
     end
 
-    subgraph "Model Components"
-        J[NeuralNet Model] --> G
-        K[Intents.json] --> I
-        L[data.pth<br>Trained Weights] --> J
+    subgraph "💡 Knowledge Base"
+        H[Neural Network] --> G
+        I[Response Library] --> J
+        K[Learning Data] --> H
+        style H fill:#fff3e0,stroke:#e65100
+        style I fill:#fff3e0,stroke:#e65100
+        style K fill:#fff3e0,stroke:#e65100
     end
 
-    I --> M[Return Response]
-    M --> N[API Response]
-
-    style J fill:#f9f,stroke:#333
-    style K fill:#bbf,stroke:#333
-    style L fill:#fbf,stroke:#333
-```
+    G --> J[Response Crafting]
+    J --> L[Smart Reply]
+    L --> M[User Interface]
     
+    style J fill:#fce4ec,stroke:#880e4f
+    style L fill:#fce4ec,stroke:#880e4f
+    style M fill:#e1f5fe,stroke:#01579b
+```
+
 ```mermaid
 graph LR
     A[Input Course Vector] --> B[Calculate Similarities]
