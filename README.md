@@ -18,7 +18,9 @@ Welcome to SkillsBridge, an innovative EdTech platform that bridges the skills g
 ## 🚀 Features and Concepts Applied
 1. **Robust Authentication & Authorization:**
     <p>
-    <img src="https://github.com/user-attachments/assets/49efa76a-15ef-42de-a238-50026eb24f73" alt="Skill Bridge Logo" width="550"/>
+    <img src="https://github.com/user-attachments/assets/49efa76a-15ef-42de-a238-50026eb24f73" width="550"/>
+    <img src="https://github.com/user-attachments/assets/e2988700-1e8c-4a1d-aeb5-236527fa181b" width="550"/>
+
   </p>
 
   - JWT-based secure access management 
