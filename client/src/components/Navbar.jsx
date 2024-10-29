@@ -1,13 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import webLogo from '../assets/images/myimg.png'; // Adjust path if necessary
 import { HiMenu, HiX } from 'react-icons/hi'; // Icons for mobile menu toggle
-import BookLoader from './BookLoader';
 import { useAuthUser } from '../contexts/AuthUserContexts';
 const NavBar = () => {
     const navigate = useNavigate();
-    const myIP = import.meta.env.VITE_MY_IP;
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [dropdownVisible, setDropdownVisible] = useState(false);
     const [loader, setLoader] = useState(false);
