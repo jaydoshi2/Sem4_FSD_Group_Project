@@ -143,7 +143,7 @@ cd client
 npm install
 
 # Start development server
-npm run dev  # Runs on http://localhost:5173
+npm run dev -- --host  # Runs on http://{yourIP}:5173
 ```
 
 #### Server 1 (Node.js Backend)
@@ -157,7 +157,7 @@ npx prisma migrate deploy
 npx prisma db seed
 
 # Start server
-npm run dev  # Runs on http://localhost:3000
+npm start  # Runs on http://localhost:3000
 ```
 
 #### Server 2 (Django Backend)
@@ -184,7 +184,7 @@ python manage.py runserver  # Runs on http://localhost:8000
 ```env
 # Frontend Configuration
 VITE_MY_IP=your_ip_here
-VITE_CLOUDFRONT_URL=https://d1zl26g01esfr6.cloudfront.net
+VITE_CLOUDFRONT_URL=your_cloudfront_url
 VITE_BACKEND_URL=http://localhost:3000
 VITE_GOOGLE_CLIENT_ID=your_google_client_id
 ```
@@ -237,91 +237,36 @@ DEBUG=True
 ALLOWED_HOSTS=localhost,127.0.0.1
 ```
 
-### 4. Verification Steps
-
-1. **Frontend Check**:
-   - Visit `http://localhost:5173`
-   - Verify that the landing page loads
-   - Check for console errors
-
-2. **Backend 1 Check**:
-   - Visit `http://localhost:3000/api/health`
-   - Should receive a status OK response
-
-3. **Backend 2 Check**:
-   - Visit `http://localhost:8000/admin`
-   - Should see Django admin login page
-
-4. **Database Check**:
-   ```bash
-   # Check Prisma database
-   npx prisma studio  # Opens database GUI on http://localhost:5555
-   ```
-
-### 5. Common Issues & Solutions
-
-#### Database Connection Issues
-```bash
-# Reset Prisma database
-npx prisma migrate reset
-npx prisma generate
-npx prisma db seed
-```
-
 ## 👥 Team & Contributions
 
-### Core Team Members
-
-#### Frontend & UI/UX
-1 **[archanpatel1425](https://github.com/archanpatel1425)**
-  - Developed comprehensive course page functionality
-  - Implemented responsive design across all pages
-  - Built core course interaction features
-
-2 **[1JAYPANDYA1](https://github.com/1JAYPANDYA1)**
-  - Developed video page functionality (like/dislike system)
-  - Implemented certificate generation system
-  - Enhanced overall website styling and UI polish
-  - Managed video-related backend integrations
-
-3 **[kavya-trivedi](https://github.com/kavya-trivedi)**
-  - Designed and implemented responsive home page
-  - Created auxiliary pages (About, Contact, Profile)
-  - Built supporting backend services for user-facing pages
-
-#### Backend & Architecture
-4 **[jaydoshi2](https://github.com/jaydoshi2)** - *Project Lead & Backend Architect*
+1 **[jaydoshi2](https://github.com/jaydoshi2)** - *Project Lead & Backend Architect*
   - Led project ideation and planning
   - Designed and implemented database architecture
   - Implemented JWT authentication system
   - Established project architecture and code structure
   - Managed Django integration for AI services made by xKirtan.
 
-#### AI & Analytics
+2 **[archanpatel1425](https://github.com/archanpatel1425)**
+  - Developed comprehensive course page functionality
+  - Implemented responsive design across all pages
+  - Built core course interaction features
+
+3 **[1JAYPANDYA1](https://github.com/1JAYPANDYA1)**
+  - Developed video page functionality (like/dislike system)
+  - Implemented certificate generation system
+  - Enhanced overall website styling and UI polish
+  - Managed video-related backend integrations
+
+4 **[kavya-trivedi](https://github.com/kavya-trivedi)**
+  - Designed and implemented responsive home page
+  - Created auxiliary pages (About, Contact, Profile)
+  - Built supporting backend services for user-facing pages
+
 5 **[xKIRTAN](https://github.com/xKIRTAN)** - *AI/ML Specialist*
   - Developed chatbot system architecture
   - Created analytics dashboard and visualizations
   - Implemented content-based course recommendation engine
   - Designed and integrated ML algorithms
-
-
-```mermaid
-graph TD
-    A[Project Leadjaydoshi2] -->|Oversees| B[Frontend Team]
-    A -->|Manages| C[Backend Services]
-    A -->|Coordinates| D[AI Integration]
-    
-    B --> E[UI/UX1JAYPANDYA1]
-    B --> F[Course Pagesarchanpatel1425]
-    B --> G[Home & Profilekavya-trivedi]
-    
-    C --> H[Databasejaydoshi2]
-    C --> I[Authenticationjaydoshi2]
-    
-    D --> J[ML ServicesxKIRTAN]
-    D --> K[AnalyticsxKIRTAN]
-```
-
 
 ## ⚖️ License
 SkillsBridge is licensed under the MIT License. See the LICENSE file for more details.
