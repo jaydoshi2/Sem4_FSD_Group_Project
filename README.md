@@ -29,46 +29,59 @@ Welcome to SkillsBridge, an innovative EdTech platform that bridges the skills g
   - Transcript generation for video content using Gemini API, with automatic MCQ creation
 
 3. **AI-Powered Chatbot & Recommendation System:**
+
 ```mermaid
+%%{init: {
+    'theme': 'dark',
+    'themeVariables': {
+        'fontFamily': 'arial',
+        'fontSize': '14px',
+        'textColor': '#ffffff',
+        'lineColor': '#ffffff'
+    }
+}}%%
 graph LR
     subgraph "🖥️ User Interface"
-        A[User Question] --> B[API Gateway]
-        style A fill:#e1f5fe,stroke:#01579b
-        style B fill:#e8eaf6,stroke:#1a237e
+        A["👤 User Question"] --> B["🌐 API Gateway"]
+        style A fill:#012a4a,stroke:#ffffff,color:#ffffff,stroke-width:2px
+        style B fill:#013a63,stroke:#ffffff,color:#ffffff,stroke-width:2px
     end
-
-    subgraph "🧠 Neural Processing"
-        B --> C[Intent Analysis]
-        C --> D[Context Engine]
-        style C fill:#f3e5f5,stroke:#4a148c
-        style D fill:#f3e5f5,stroke:#4a148c
-    end
-
-    subgraph "🔄 Language Processing"
-        D --> E[Token Magic]
-        E --> F[Word Vectors]
-        F --> G[AI Brain]
-        style E fill:#e8f5e9,stroke:#1b5e20
-        style F fill:#e8f5e9,stroke:#1b5e20
-        style G fill:#e8f5e9,stroke:#1b5e20
-    end
-
-    subgraph "💡 Knowledge Base"
-        H[Neural Network] --> G
-        I[Response Library] --> J
-        K[Learning Data] --> H
-        style H fill:#fff3e0,stroke:#e65100
-        style I fill:#fff3e0,stroke:#e65100
-        style K fill:#fff3e0,stroke:#e65100
-    end
-
-    G --> J[Response Crafting]
-    J --> L[Smart Reply]
-    L --> M[User Interface]
     
-    style J fill:#fce4ec,stroke:#880e4f
-    style L fill:#fce4ec,stroke:#880e4f
-    style M fill:#e1f5fe,stroke:#01579b
+    subgraph "🧠 Neural Processing"
+        B --> C["🎯 Intent Analysis"]
+        C --> D["🔄 Context Engine"]
+        style C fill:#2c0735,stroke:#ffffff,color:#ffffff,stroke-width:2px
+        style D fill:#3a0ca3,stroke:#ffffff,color:#ffffff,stroke-width:2px
+    end
+    
+    subgraph "🔄 Language Processing"
+        D --> E["✨ Token Magic"]
+        E --> F["📊 Word Vectors"]
+        F --> G["🤖 AI Brain"]
+        style E fill:#0a4c1d,stroke:#ffffff,color:#ffffff,stroke-width:2px
+        style F fill:#156b2a,stroke:#ffffff,color:#ffffff,stroke-width:2px
+        style G fill:#1b892e,stroke:#ffffff,color:#ffffff,stroke-width:2px
+    end
+    
+    subgraph "💡 Knowledge Base"
+        H["🧩 Neural Network"] --> G
+        I["📚 Response Library"] --> J
+        K["📈 Learning Data"] --> H
+        style H fill:#662e1c,stroke:#ffffff,color:#ffffff,stroke-width:2px
+        style I fill:#8b3a1d,stroke:#ffffff,color:#ffffff,stroke-width:2px
+        style K fill:#ae4a1e,stroke:#ffffff,color:#ffffff,stroke-width:2px
+    end
+    
+    G --> J["⚡ Response Crafting"]
+    J --> L["📤 Smart Reply"]
+    L --> M["🎯 User Interface"]
+    
+    style J fill:#590d22,stroke:#ffffff,color:#ffffff,stroke-width:2px
+    style L fill:#800f2f,stroke:#ffffff,color:#ffffff,stroke-width:2px
+    style M fill:#012a4a,stroke:#ffffff,color:#ffffff,stroke-width:2px
+    
+    %% Set all connection lines to white
+    linkStyle default stroke:#ffffff,stroke-width:2px
 ```
 
 ```mermaid
