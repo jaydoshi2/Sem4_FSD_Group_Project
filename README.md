@@ -285,10 +285,6 @@ PGDATABASE=your_pg_database
 PGHOST=localhost
 MY_IP=your_ip_here
 
-# Django Configuration
-DJANGO_SECRET_KEY=your_django_secret_key
-DEBUG=True
-ALLOWED_HOSTS=localhost,127.0.0.1
 ```
 
 ## 👥 Team & Contributions
