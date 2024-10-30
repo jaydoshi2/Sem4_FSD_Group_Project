@@ -293,7 +293,7 @@ ALLOWED_HOSTS=localhost,127.0.0.1
 
 ## 👥 Team & Contributions
 
-1 **[jaydoshi2](https://github.com/jaydoshi2)** - *Project Lead & Backend Architect*
+1 **[jaydoshi2](https://github.com/jaydoshi2)**
   - Led project ideation and planning
   - Designed and implemented database architecture
   - Implemented JWT authentication system
@@ -316,7 +316,7 @@ ALLOWED_HOSTS=localhost,127.0.0.1
   - Created auxiliary pages (About, Contact, Profile)
   - Built supporting backend services for user-facing pages
 
-5 **[xKIRTAN](https://github.com/xKIRTAN)** - *AI/ML Specialist*
+5 **[xKIRTAN](https://github.com/xKIRTAN)**
   - Developed chatbot system architecture
   - Created analytics dashboard and visualizations
   - Implemented content-based course recommendation engine
