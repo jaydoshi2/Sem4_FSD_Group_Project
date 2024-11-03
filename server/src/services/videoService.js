@@ -2,11 +2,16 @@ const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
 exports.fetchCourseProgress = async (userId, courseId) => {
+    // Here we are fetching the Current Progress of the User and to check that user Has completed the course or not
     const progress = await prisma.userCourseProgress.findFirst({
         where: { userId: userId, courseId: courseId },
-        select: { completed_course: true },
+        select: { completed_course: true,completed:true },
     });
 
+    // Here we are fetching the chapters of the course including the videos of that chapter and the progress of that chapter based on videos
+    /*
+    chapters -> (videos => user_video_progress which means video is completed or not) all videos in Ascending Order. 
+     */
     const chapters = await prisma.chapter.findMany({
         where: { courseId },
         include: {
@@ -22,6 +27,7 @@ exports.fetchCourseProgress = async (userId, courseId) => {
         },
     });
 
+    // LOGIC FOR THE PROGRESS OF COURSE 
     const courseProgress = chapters.map((chapter, chapterIndex) => ({
         week: `week${chapterIndex + 1}`,
         chapter_id: chapter.chapter_id,
@@ -34,6 +40,7 @@ exports.fetchCourseProgress = async (userId, courseId) => {
 
     return {
         completed_course: progress?.completed_course || 0,
+        completed: progress?.completed,
         chapters: courseProgress,
     };
 };

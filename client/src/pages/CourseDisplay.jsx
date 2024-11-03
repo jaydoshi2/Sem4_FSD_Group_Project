@@ -52,9 +52,10 @@ const CourseDisplay = () => {
   const navigate = useNavigate(); // Initialize useNavigate
   const myIP = import.meta.env.VITE_MY_IP;
   const userData = JSON.parse(localStorage.getItem('user'));
-  const userId = userData.userId;
   const fetchCourseData = () => {
-    axios.post(`http://${myIP}:3000/course/getall`, { userId })
+    
+    if(userData==null){
+      axios.post(`http://${myIP}:3000/course/getall`)
       .then((response) => {
         const fetchedData = response.data;
         console.log(response.data)
@@ -74,6 +75,30 @@ const CourseDisplay = () => {
         setLoading(false); // Even on error, stop loading
 
       });
+    }else{
+      const userId = userData.userId;
+      axios.post(`http://${myIP}:3000/course/getall`, { userId })
+      .then((response) => {
+        const fetchedData = response.data;
+        console.log(response.data)
+        // Shuffle the courses within each category
+
+        const groupedCourses = groupCoursesByCategory(fetchedData);
+        const shuffledCoursesByCategory = {};
+        for (const category in groupedCourses) {
+          shuffledCoursesByCategory[category] = shuffleArray(groupedCourses[category]);
+        }
+
+        setCourse_data(shuffledCoursesByCategory);
+        setLoading(false); // Data has been fetched, so stop loading
+      })
+      .catch((error) => {
+        console.error('Error fetching course data:', error);
+        setLoading(false); // Even on error, stop loading
+
+      });
+    }
+   
   };
 
   useEffect(() => {
@@ -192,9 +217,9 @@ if(loading1){
                             ) : course.completed_course === 100 ? (
                               <button
                                 className="bg-green-500 text-white py-2 px-4 rounded hover:bg-green-600 transition-colors duration-300"
-                                onClick={() => viewCertificate(course)}
+                                onClick={() => resumeCourse(course)}
                               >
-                                Download Certificate
+                                Completed Course
                               </button>
                             ) : (
                               <button

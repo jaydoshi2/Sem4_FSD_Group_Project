@@ -63,86 +63,100 @@ exports.getCourseDetails = async (req, res) => {
 };
 exports.check = async (req, res) => {
   const { userId } = req.body;
-
-  try {
-    const coursesWithUserData = await prisma.course.findMany({
-      include: {
-        course_progress: {
-          where: {
-            userId: userId,
-          },
-          select: {
-            completed_course: true,
-            completed: true,
+  console.log("userId to check is ", userId)
+  if (userId == null) {
+    const all_courses = await prisma.course.findMany();
+    res.status(200).json(all_courses);
+  } else {
+    try {
+      const coursesWithUserData = await prisma.course.findMany({
+        include: {
+          course_progress: {
+            where: {
+              userId: userId,
+            },
+            select: {
+              completed_course: true,
+              completed: true,
+            },
           },
         },
-      },
-    });
+      });
 
-    const courses = coursesWithUserData.map((course) => {
-      const userProgress = course.course_progress[0]; // Assumes at most one entry per user per course
+      const courses = coursesWithUserData.map((course) => {
+        const userProgress = course.course_progress[0]; // Assumes at most one entry per user per course
 
-      return {
-        ...course,
-        purchased: !!userProgress, // If userProgress exists, then purchased is true
-        completed_course: userProgress ? userProgress.completed_course : 0,
-        completed: userProgress ? userProgress.completed : false,
-      };
-    });
-    res.json(courses);
+        return {
+          ...course,
+          purchased: !!userProgress, // If userProgress exists, then purchased is true
+          completed_course: userProgress ? userProgress.completed_course : 0,
+          completed: userProgress ? userProgress.completed : false,
+        };
+      });
+      res.json(courses);
 
 
-  } catch (error) {
-    console.error('Error fetching trending courses:', error);
-    res.status(500).json({ error: 'Failed to fetch trending courses' });
+    } catch (error) {
+      console.error('Error fetching trending courses:', error);
+      res.status(500).json({ error: 'Failed to fetch trending courses' });
+    }
+
   }
 };
 
 
 exports.gettrendingCourses = async (req, res) => {
   const userId = req.body.userId; // Assuming userId is sent in the request body
-
-  try {
-    // Fetch trending courses ordered by Enrollment_Counts
-    const courses = await prisma.course.findMany({
+  if(userId == null){
+    const trendingCourses = await prisma.course.findMany({
       orderBy: {
         Enrollment_Counts: 'desc', // Example: order by number of enrollments
       },
     });
-
-    // Fetch user progress for all courses at once
-    const userProgress = await prisma.userCourseProgress.findMany({
-      where: {
-        userId: userId,
-        courseId: {
-          in: courses.map(course => course.course_id), // Get course IDs from the trending courses
+    return res.status(200).json(trendingCourses)
+  }else{
+    try {
+      // Fetch trending courses ordered by Enrollment_Counts
+      const courses = await prisma.course.findMany({
+        orderBy: {
+          Enrollment_Counts: 'desc', // Example: order by number of enrollments
         },
-      },
-    });
-
-    // Create a mapping of course progress for the user
-    const progressMap = {};
-    userProgress.forEach(progress => {
-      progressMap[progress.courseId] = progress;
-    });
-
-    // Construct the response data
-    const responseData = courses.map(course => {
-      const progress = progressMap[course.course_id] || null; // Get user progress if exists
-
-      return {
-        course_id: course.course_id,
-        title: course.title,
-        thumbnail_pic_link: course.thumbnail_pic_link,
-        completed_course: progress ? progress.completed_course : 0, // Progress percentage
-        completed: progress ? progress.completed : false, // Purchase status
-        purchased: !!progress, // Check if the user has purchased the course
-      };
-    });
-    // console.log(responseData)
-    res.json(responseData);
-  } catch (error) {
-    console.error('Error fetching trending courses:', error);
-    res.status(500).json({ error: 'Failed to fetch trending courses' });
+      });
+  
+      // Fetch user progress for all courses at once
+      const userProgress = await prisma.userCourseProgress.findMany({
+        where: {
+          userId: userId,
+          courseId: {
+            in: courses.map(course => course.course_id), // Get course IDs from the trending courses
+          },
+        },
+      });
+  
+      // Create a mapping of course progress for the user
+      const progressMap = {};
+      userProgress.forEach(progress => {
+        progressMap[progress.courseId] = progress;
+      });
+  
+      // Construct the response data
+      const responseData = courses.map(course => {
+        const progress = progressMap[course.course_id] || null; // Get user progress if exists
+  
+        return {
+          course_id: course.course_id,
+          title: course.title,
+          thumbnail_pic_link: course.thumbnail_pic_link,
+          completed_course: progress ? progress.completed_course : 0, // Progress percentage
+          completed: progress ? progress.completed : false, // Purchase status
+          purchased: !!progress, // Check if the user has purchased the course
+        };
+      });
+      // console.log(responseData)
+      res.json(responseData);
+    } catch (error) {
+      console.error('Error fetching trending courses:', error);
+      res.status(500).json({ error: 'Failed to fetch trending courses' });
+    }
   }
 }

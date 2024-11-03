@@ -122,6 +122,5 @@
     courseId         Int
     user             User   @relation(fields: [userId], references: [user_id])
     course           Course @relation(fields: [courseId], references: [course_id])
-
     @@unique([userId, courseId]) // Ensure a user can only have one certificate per course
   }

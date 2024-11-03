@@ -27,27 +27,51 @@ const Skills = () => {
 
   const fetchCourseData = () => {
     const userData = JSON.parse(localStorage.getItem('user'));
-    const userId = userData.userId;
-    axios.post(`http://${myIP}:3000/course/getall`, { userId })
-
-      .then((response) => {
-        const fetchedData = response.data;
-
-        // Filter courses by course_type
-        const filteredCourses = fetchedData.filter(
-          (course) => course.course_type === courseType
-        );
-
-        // Shuffle the filtered courses
-        const shuffledCourses = shuffleArray(filteredCourses);
-
-        setCourseData(shuffledCourses);
-        setLoading(false); // Data has been fetched, so stop loading
-      })
-      .catch((error) => {
-        console.error("Error fetching course data:", error);
-        setLoading(false); // Even on error, stop loading
-      });
+    if(userData !=null){
+      const userId = userData.userId;
+      axios.post(`http://${myIP}:3000/course/getall`, { userId })
+  
+        .then((response) => {
+          const fetchedData = response.data;
+  
+          // Filter courses by course_type
+          const filteredCourses = fetchedData.filter(
+            (course) => course.course_type === courseType
+          );
+  
+          // Shuffle the filtered courses
+          const shuffledCourses = shuffleArray(filteredCourses);
+  
+          setCourseData(shuffledCourses);
+          setLoading(false); // Data has been fetched, so stop loading
+        })
+        .catch((error) => {
+          console.error("Error fetching course data:", error);
+          setLoading(false); // Even on error, stop loading
+        });
+    }else{
+      axios.post(`http://${myIP}:3000/course/getall`)
+  
+        .then((response) => {
+          const fetchedData = response.data;
+  
+          // Filter courses by course_type
+          const filteredCourses = fetchedData.filter(
+            (course) => course.course_type === courseType
+          );
+  
+          // Shuffle the filtered courses
+          const shuffledCourses = shuffleArray(filteredCourses);
+  
+          setCourseData(shuffledCourses);
+          setLoading(false); // Data has been fetched, so stop loading
+        })
+        .catch((error) => {
+          console.error("Error fetching course data:", error);
+          setLoading(false); // Even on error, stop loading
+        });
+    }
+   
   };
 
   useEffect(() => {

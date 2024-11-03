@@ -19,8 +19,9 @@ const SubNavbar = () => {
 
     useEffect(() => {
         const userData = JSON.parse(localStorage.getItem('user'));
-        const userId = userData.userId;
-        axios.post(`http://${myIP}:3000/course/getall`,{userId})
+        if(userData != null){
+            const userId = userData.userId;
+            axios.post(`http://${myIP}:3000/course/getall`,{userId})
             .then((response) => {
                 setCourse_data(response.data);
                 setCourse_types([...new Set(response.data.map(item => item.course_type))]);
@@ -30,6 +31,20 @@ const SubNavbar = () => {
                 console.error("Error fetching course data:", error);
                 setLoading(false);
             });
+        }else{
+            axios.post(`http://${myIP}:3000/course/getall`)
+            .then((response) => {
+                setCourse_data(response.data);
+                setCourse_types([...new Set(response.data.map(item => item.course_type))]);
+                setLoading(false);
+            })
+            .catch((error) => {
+                console.error("Error fetching course data:", error);
+                setLoading(false);
+            });   
+        }
+        
+
     }, []);
 
     const startDragging = (e) => {

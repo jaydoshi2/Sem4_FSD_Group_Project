@@ -1,138 +1,192 @@
 const pdf = require('html-pdf');
 const fs = require('fs');
 const path=require('path')
+
+// Install node-html-to-image:
+// npm install node-html-to-image
+
+const nodeHtmlToImage = require('node-html-to-image');
+
 exports.getCertificate = async (req, res) => {
-  const { username,courseName } = req.body;
-  const htmlContent = `<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Certificate of Completion</title>
-    <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            background-color: #f0f0f0;
-            padding: 5vh 2vw;
-            margin: 0;
-        }
-        .certificate {
-            width: 90vw;
-            max-width: 80vh;
-            margin: 0 auto;
-            background-color: #fff;
-            padding: 5vh 4vw;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            border-radius: 2vh;
-            box-sizing: border-box;
-        }
-        .header {
-            text-align: center;
-            margin-bottom: 5vh;
-        }
-        .logo-container {
-            width: 40%;
-            max-width: 200px;
-            margin: 0 auto 3vh;
-        }
-        .logo {
-            width: 100%;
-            height: auto;
-            border-radius: 50%;
-            aspect-ratio:1/1;
-            object-fit: cover;
-            object-fit:contain;
-        }
-        .title {
-            font-size: calc(1.5rem + 1.5vw);
-            margin: 2vh 0;
-            color: #333;
-            text-transform: uppercase;
-        }
-        .separator {
-            width: 100%;
-            height: 0.5vh;
-            background-color: #333;
-            margin: 2vh 0;
-        }
-        .content {
-            font-size: calc(0.8rem + 0.8vw);
-            color: #555;
-            text-align: center;
-        }
-        .content p {
-            margin-bottom: 2vh;
-        }
-
-        @media (max-width: 600px) {
-            .certificate {
-                width: 95vw;
-                padding: 4vh 3vw;
+    const { username, courseName } = req.body;
+    const htmlContent = `
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Certificate of Completion</title>
+        <style>
+            body {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                min-height: 100vh;
+                background-color: #f0f2f5;
+                font-family: Arial, sans-serif;
+                color: #333;
+                margin: 0;
             }
-            .logo-container {
-                width: 50%;
+    
+            .certificate-container {
+                text-align: center;
+                background-color: #e5e8ec;
+                padding: 2rem;
+                border-radius: 8px;
+                width: 100%;
+                max-width: 600px;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             }
-            .title {
-                font-size: calc(1.2rem + 2vw);
+    
+            .logo {
+                width: 100px;
+                margin: 0 auto 1rem;
+                border-radius: 50%;
+                overflow: hidden;
             }
-            .content {
-                font-size: calc(0.9rem + 1vw);
+    
+            .logo img {
+                width: 100%;
+                height: auto;
+                object-fit: cover;
             }
-        }
-
-        @media (max-width: 400px) {
-            .certificate {
-                width: 98vw;
-                padding: 3vh 2vw;
+    
+            .certificate-title {
+                font-size: 1.5rem;
+                font-weight: bold;
+                color: #333;
+                margin: 1rem 0;
+                text-transform: uppercase;
             }
-            .logo-container {
-                width: 60%;
+    
+            .separator {
+                height: 2px;
+                background-color: #333;
+                margin: 1.5rem 0;
+                width: 80%;
+                margin-left: auto;
+                margin-right: auto;
             }
-            .title {
-                font-size: calc(1rem + 2.5vw);
+    
+            .congratulations {
+                font-size: 1rem;
+                color: #555;
             }
-            .content {
-                font-size: calc(0.8rem + 1.2vw);
+    
+            .highlight {
+                font-weight: bold;
+                color: #333;
             }
-        }
-    </style>
-</head>
-<body>
-    <div class="certificate">
-        <div class="header">
-            <div class="logo-container">
-                <img src="img1.png" alt="Logo" class="logo">
+        </style>
+    </head>
+    <body>
+        <div class="certificate-container">
+            <div class="logo">
+                <img src="logo.png" alt="Logo">
             </div>
-            <h1 class="title">Certificate of Completion PYTHON</h1>
+            <div class="certificate-title">
+                Certificate of Completion<br>JavaScript Fundamentals
+            </div>
+            <div class="separator"></div>
+            <div class="congratulations">
+               <p>Congratulations <strong>${username}</strong> For Successfully Completion Of ${courseName} Course.</p>
+            </div>
         </div>
-        <div class="separator"></div>
-        <div class="content">
-            <p>Congratulations <strong>${username}</strong> For Successfully Completion Of ${courseName} Course.</p>
-        </div>
-    </div>
-</body>
-</html>`
-     
+    </body>
+    </html>
     
-    const filePath = path.join(__dirname, `../image/${username}-certificate.pdf`);
     
-    pdf.create(htmlContent, { format: 'Letter', border: '10mm' }).toFile(filePath, (err, response) => {
-        if (err) {
-            return res.status(500).send(err);
-        }
-        res.download(filePath, (err) => {
-            if (err) {
-                return res.status(500).send(err);
+    `
+    try {
+        const image = await nodeHtmlToImage({
+            html: htmlContent,
+            quality: 100,
+            type: 'png',
+            puppeteerArgs: {
+                args: ['--no-sandbox']
             }
-            // Clean up: delete the file after sending it
-            fs.unlink(filePath, (err) => {
-                if (err) {
-                    console.error('Error deleting file:', err);
-                }
-            });
         });
-    });
+
+        res.writeHead(200, {
+            'Content-Type': 'image/png',
+            'Content-Disposition': `attachment; filename=${username}-certificate.png`
+        });
+        res.end(image);
+
+    } catch (error) {
+        console.error('Error generating certificate:', error);
+        res.status(500).json({ error: 'Failed to generate certificate' });
+    }
+};
+
+
+// Check if certificate exists
+exports.checkCertificate = async (req, res) => {
+    const { userId, courseId } = req.query;
     
+    try {
+        const existingCertificate = await prisma.certificates.findUnique({
+            where: {
+                userId_courseId: {
+                    userId: userId,
+                    courseId: parseInt(courseId)
+                }
+            }
+        });
+
+        if (existingCertificate) {
+            return res.json({
+                exists: true,
+                certificateUrl: existingCertificate.certificate_link
+            });
+        }
+
+        return res.json({ exists: false });
+    } catch (error) {
+        console.error('Error checking certificate:', error);
+        return res.status(500).json({ error: 'Failed to check certificate' });
+    }
+};
+    
+// Store certificate image URL
+exports.storeImage = async (req, res) => {
+    const { userId, courseId, imageUrl } = req.body;
+    
+    try {
+        // Check if certificate already exists
+        const existingCertificate = await prisma.certificates.findUnique({
+            where: {
+                userId_courseId: {
+                    userId: userId,
+                    courseId: parseInt(courseId)
+                }
+            }
+        });
+
+        if (existingCertificate) {
+            return res.status(409).json({ 
+                message: 'Certificate already exists',
+                certificateUrl: existingCertificate.certificate_link 
+            });
+        }
+
+        // Create new certificate
+        const newCertificate = await prisma.certificates.create({
+            data: {
+                certificate_link: imageUrl,
+                userId: userId,
+                courseId: parseInt(courseId)
+            }
+        });
+        console.log(newCertificate)
+        res.status(201).json({
+            message: 'Certificate stored successfully',
+            certificate: newCertificate
+        });
+    } catch (error) {
+        console.error('Error storing certificate:', error);
+        res.status(500).json({ error: 'Failed to store certificate' });
+    }
 };
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();

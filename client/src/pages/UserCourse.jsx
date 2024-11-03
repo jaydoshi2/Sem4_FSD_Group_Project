@@ -155,8 +155,8 @@ const UserCoursesPage = () => {
                     </div>
                     <div className="mt-4 flex justify-center">
                       {course.completed_course === 100 ? (
-                        <button className="bg-green-500 text-white px-4 py-2 rounded-lg" onClick={() => viewCertificate(course)}>
-                          View Certificate
+                        <button className="bg-green-500 text-white px-4 py-2 rounded-lg" onClick={() => resumeCourse(course.course)}>
+                          Course Completed
                         </button>
                       ) : (
                         <button className="bg-blue-500 text-white px-4 py-2 rounded-lg" onClick={() => resumeCourse(course.course)}>

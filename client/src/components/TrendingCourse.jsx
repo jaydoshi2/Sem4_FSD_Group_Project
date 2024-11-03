@@ -35,25 +35,47 @@ const CustomSlider = () => {
 
     useEffect(() => {
         const fetchTrendingCourses = async () => {
-            const userId = JSON.parse(localStorage.getItem('user')).userId;
-            try {
-                const response = await fetch(`http://${myIP}:3000/course/trending`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ userId }),
-                });
-
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
+            const userData = JSON.parse(localStorage.getItem('user'));
+            if(userData != null){
+                const userId= userData.userId;
+                try {
+                    const response = await fetch(`http://${myIP}:3000/course/trending`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ userId }),
+                    });
+    
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    const result = await response.json();
+                    setData(result);
+                } catch (error) {
+                    console.error('Error fetching trending courses:', error);
+                } finally {
+                    setLoading(false);
                 }
-                const result = await response.json();
-                setData(result);
-            } catch (error) {
-                console.error('Error fetching trending courses:', error);
-            } finally {
-                setLoading(false);
+            }else{
+                try {
+                    const response = await fetch(`http://${myIP}:3000/course/trending`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                    });
+    
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    const result = await response.json();
+                    setData(result);
+                } catch (error) {
+                    console.error('Error fetching trending courses:', error);
+                } finally {
+                    setLoading(false);
+                }   
             }
         };
 
@@ -70,12 +92,6 @@ const CustomSlider = () => {
 
         return () => clearInterval(interval);
     }, [data]);
-
-    const viewCertificate = (course) => {
-        setLoading1(true);
-        navigate(`/certificate/${course.course_id}`);
-        setLoading1(false);
-    };
 
     const resumeCourse = async (course) => {
         setLoading1(true);
@@ -147,9 +163,9 @@ const CustomSlider = () => {
                                                 {course.completed_course === 100 ? (
                                                     <button
                                                         className="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition-colors"
-                                                        onClick={() => viewCertificate(course)}
+                                                        onClick={() => resumeCourse(course)}
                                                     >
-                                                        Download Certificate
+                                                        Course Completed
                                                     </button>
                                                 ) : course.purchased ? (
                                                     <button
