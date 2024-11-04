@@ -32,50 +32,51 @@ const MCQ = ({ props, onClose }) => {
             const response = await fetch(`http://${myIP}:3000/vid/generate-mcqs`, {
                 method: 'POST',
                 headers: {
-                'Content-Type': 'application/json',
-            },
+                    'Content-Type': 'application/json',
+                },
                 body: JSON.stringify({ videoId: ytvideoId }),
                 credentials: 'include'
             });
 
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
 
-        const data = await response.json();
+            const data = await response.json();
 
-        if (data.success) {
-            const response2 = await fetch(`http://${myIP}:3000/vid/generate-mcqs`, { method: 'GET' ,credentials:'include'});
+            if (data.success) {
+                const response2 = await fetch(`http://${myIP}:3000/vid/generate-mcqs`, { method: 'GET', credentials: 'include' });
                 const data2 = await response2.json();
 
-            const que = data2.questions || [];
-            const opt = data2.options || [];
-            const ans = data2.answers || [];
+                const que = data2.questions || [];
+                const opt = data2.options || [];
+                const ans = data2.answers || [];
 
-            const mappedQuestions = que.map((question, index) => ({
-                questionText: question,
-                options: opt[index],
-                correctAnswer: ans[index]
-            }));
+                const mappedQuestions = que.map((question, index) => ({
+                    questionText: question,
+                    options: opt[index],
+                    correctAnswer: ans[index]
+                }));
 
-            setQuestions(mappedQuestions);
-        } else {
-            setError('Error generating MCQs. Please try again.');
+                setQuestions(mappedQuestions);
+            } else {
+                setError('Error generating MCQs. Please try again.');
+            }
+        } catch (error) {
+            console.error("An error occurred. Please try again later.");
+            setError('An error occurred. Please try again later.');
+        } finally {
+            setLoading(false);
         }
-    } catch (error) {
-        console.error("An error occurred. Please try again later.");
-        setError('An error occurred. Please try again later.');
-    } finally {
-        setLoading(false);
-    }
-};
+    };
 
     const closeModal = () => {
         onClose();
-        const url = window.location.search;
-        // navigate('/course' + url); // Redirect to VideoPage
-        navigate('/video' + url, { state: { shouldRender: true } });
-
+        if(submitted){
+            const url = window.location.search;
+            window.location.reload()
+            navigate('/video' + url, { state: { shouldRender: true } });
+        }
     };
 
     const resetQuiz = () => {
@@ -116,6 +117,7 @@ const MCQ = ({ props, onClose }) => {
         } else {
             setFeedback(`Your score is: ${newScore} / ${questions.length}`);
             try {
+                setLoading(true)
                 const queryParams = new URLSearchParams(window.location.search);
                 const userData = JSON.parse(localStorage.getItem('user'));
                 const userId = userData.userId;
@@ -129,9 +131,13 @@ const MCQ = ({ props, onClose }) => {
                     chapterId,
                     courseId
                 });
-
+                const response2 = await axios.post(`http://${myIP}:3000/vid/update-progress`, {
+                    userId,
+                    courseId
+                })
                 if (response.data.success) {
                     console.log('Video progress updated successfully');
+                    setLoading(false)
                 } else {
                     console.error('Failed to update video progress:', response.data.message);
                 }
@@ -156,11 +162,7 @@ const MCQ = ({ props, onClose }) => {
     return (
         <div className="App">
             {loading && (
-                <div className="d-flex justify-content-center" id='loader1'>
-                    <div className="spinner-border" role="status">
-                        <span className="visually-hidden"><BookLoader /></span>
-                    </div>
-                </div>
+                <BookLoader />
             )}
             {!loading && (
                 <div className="modal show">

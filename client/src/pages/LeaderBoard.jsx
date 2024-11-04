@@ -1,7 +1,7 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import BookLoader from '../components/BookLoader';
-
+import profile from '../assets/images/profile.png'
 const LeaderboardPage = () => {
     const [leaderboardData, setLeaderboardData] = useState([]);
     const [currentUser, setCurrentUser] = useState(null);
@@ -33,12 +33,12 @@ const LeaderboardPage = () => {
     const renderLeaderboardTable = () => (
         <div className="overflow-x-auto border-2 border-indigo-300 rounded-xl mt-2 shadow-md">
             <table className="w-full bg-white shadow-lg rounded-xl">
-                <thead className="bg-indigo-700 text-white rounded-t-xl">
+                <thead className="bg-indigo-500 text-white rounded-t-xl">
                     <tr>
-                        <th className="py-3 px-4 text-center w-1/4 rounded-tl-xl">Rank</th>
-                        <th className="py-3 px-4 text-left">Profile</th>
-                        <th className="py-3 px-4 text-center w-1/4">Username</th>
-                        <th className="py-3 px-4 text-center w-1/4 rounded-tr-xl">Points</th>
+                        <th className="py-3 px-4 text-center w-1/4 rounded-tl-xl text-indigo-50">Rank</th>
+                        <th className="py-3 px-4 text-left text-indigo-50">Profile</th>
+                        <th className="py-3 px-4 text-center w-1/4 text-indigo-50">Username</th>
+                        <th className="py-3 px-4 text-center w-1/4 rounded-tr-xl text-indigo-50">Points</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -49,8 +49,8 @@ const LeaderboardPage = () => {
                         >
                             <td className="py-4 px-4 text-center">{index + 1}</td>
                             <td className="py-4 px-4 flex items-center">
-                                <img src={user.profilePic} alt={user.username} className="w-10 h-10 rounded-full mr-3" />
-                                <span>{`${user.first_name} ${user.last_name}`}</span>
+                                <img src={user.profilePic} alt={profile} className="w-10 h-10 rounded-full mr-3" />
+                                <span>{`${user.first_name} ${user.last_name}`}</span>   
                             </td>
                             <td className="py-4 px-4 text-center">{user.username}</td>
                             <td className="py-4 px-4 text-center">{user.points}</td>
@@ -91,6 +91,8 @@ const LeaderboardPage = () => {
         <div className="flex flex-col min-h-screen bg-indigo-200">
             <div className="flex-grow mt-11 p-6">
                 <h1 className="text-5xl font-bold text-indigo-800 text-center">Leaderboard</h1>
+                <span className="block w-32 h-0.5 bg-[#5c8bf5] mx-auto mt-4"></span>
+
                 {loading ? (
                     <BookLoader />
                 ) : (

@@ -2,7 +2,7 @@ import React from 'react';
 import Avatar1 from '../assets/Avatar1.svg';
 import Avatar2 from '../assets/Avatar2.svg';
 import Avatar3 from '../assets/Avatar3.svg';
-import '../styles/Testimonials.css'
+
 const testimonials = [
   {
     name: "— Archan Patel",
@@ -24,28 +24,31 @@ const testimonials = [
 const Testimonials = () => {
   return (
     <div>
-      <div className="container section-title text-center" data-aos="fade-up">
-        <h2 className="styled-header">Testimonials</h2>
+      <div className="container mx-auto text-center">
+        <h2 className="text-4xl font-bold text-[#324aad] relative inline-block pb-2">
+          Testimonials
+          <span className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-16 h-[3px] bg-[#5c8bf5]"></span>
+        </h2>
       </div>
-      <div className="testimonials-container">
+      <div className="flex flex-col gap-5 p-5 px-12 mt-20">
         {testimonials.map((testimonial, index) => (
           <div
             key={index}
-            className="testimonial bg-indigo-300"
-            data-aos="fade-up"
+            className="flex items-center p-5 rounded-lg shadow-md bg-indigo-300 md:flex-row flex-col md:items-start"
           >
             <img
               src={testimonial.imgSrc}
-              alt="not found"
-              className="testimonial-img"
+              alt="testimonial avatar"
+              className="rounded-full w-32 h-32 mb-4 md:mb-0 md:mr-5"
             />
-            <p className="testimonial-text">“{testimonial.text}”</p>
-            <p className="testimonial-name">{testimonial.name}</p>
+            <div className="text-center md:text-left">
+              <p className="text-lg mb-2">“{testimonial.text}”</p>
+              <p className="font-bold text-xl text-gray-800">{testimonial.name}</p>
+            </div>
           </div>
         ))}
       </div>
     </div>
-
   );
 };
 

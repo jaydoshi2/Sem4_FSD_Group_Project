@@ -1,7 +1,5 @@
 // ProtectedRoute.jsx
 import React, { useContext } from 'react';
-import { Navigate } from 'react-router-dom';
-import AuthContext from '../contexts/authContexts';
 import LoginModal from './LoginModal';
 import { useAuthUser } from '../contexts/AuthUserContexts';
 

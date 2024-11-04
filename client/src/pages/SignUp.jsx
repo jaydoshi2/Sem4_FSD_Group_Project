@@ -1,3 +1,5 @@
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
@@ -12,14 +14,14 @@ const Signup = () => {
     email: "",
     password: "",
     profilePic: "",
-    username: "",  // Added username field
+    username: "",
   });
   const [error, setError] = useState("");
-  const [imageFile, setImageFile] = useState(null); // Added state to store the image file
+  const [imageFile, setImageFile] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [user, setUser] = useState(null);
   const [uploading, setUploading] = useState(false);
-  const [loading, setLoading] = useState(false); // Loading for auth check
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
@@ -31,13 +33,16 @@ const Signup = () => {
   }, []);
 
   const checkAuthStatus = async () => {
-    // setLoading(true);
     try {
       const response = await axios.get(`http://${myIP}:3000/auth/check-auth`, { withCredentials: true });
       if (response.data.isAuthenticated) {
         localStorage.setItem("user", JSON.stringify(response.data.user));
         setUser(response.data.user);
         setIsAuthenticated(true);
+        toast.info("You're already logged in!", {
+          position: "top-right",
+          autoClose: 3000
+        });
         navigate("/");
       }
     } catch (error) {
@@ -54,11 +59,26 @@ const Signup = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setUploading(true);
-    try {
-      let updatedData = { ...data }; // Copy the data object
 
-      // Upload the image if an image file is selected
+    // Password validation
+    if (data.password.length < 6) {
+      toast.error("Password must be at least 6 characters long", {
+        position: "top-right",
+        autoClose: 3000
+      });
+      setUploading(false);
+      return;
+    }
+
+    try {
+      let updatedData = { ...data };
+
       if (imageFile) {
+        toast.info("Uploading image...", {
+          position: "top-right",
+          autoClose: 2000
+        });
+
         const mimeType = imageFile.type;
         const response = await axios.get(`${BACKEND_URL}/auth/presignedurl`, {
           params: { mimeType }
@@ -84,18 +104,48 @@ const Signup = () => {
         });
 
         const imageUrl = `${CLOUDFRONT_URL}/${response.data.fields["key"]}`;
-        console.log(imageUrl);
-        updatedData = { ...updatedData, profilePic: imageUrl }; // Update profilePic in the copied data object
+        updatedData = { ...updatedData, profilePic: imageUrl };
+
+        toast.success("Image uploaded successfully!", {
+          position: "top-right",
+          autoClose: 2000
+        });
       }
 
-      // Submit the form data with the updated data object
       const url = `${BACKEND_URL}/auth/signup`;
       await axios.post(url, updatedData);
-      navigate("/login");
+
+      toast.success("Account created successfully! Redirecting to login...", {
+        position: "top-right",
+        autoClose: 2000
+      });
+
+      // Delay navigation to allow toast to be visible
+      setTimeout(() => {
+        navigate("/login");
+      }, 2000);
+
     } catch (error) {
       if (error.response && error.response.status >= 400 && error.response.status <= 500) {
-        setError(error.response.data.message);
+        const errorMessage = error.response.data.message;
+
+        if (errorMessage.includes('Email already exists')) {
+          toast.error("This email is already registered. Please use a different email.", {
+            position: "top-right",
+            autoClose: 3000
+          });
+        } else {
+          toast.error(errorMessage || "Signup failed. Please try again.", {
+            position: "top-right",
+            autoClose: 3000
+          });
+        }
+        setError(errorMessage);
       } else {
+        toast.error("An unexpected error occurred. Please try again.", {
+          position: "top-right",
+          autoClose: 3000
+        });
         setError("An unexpected error occurred. Please try again.");
       }
     } finally {
@@ -106,94 +156,131 @@ const Signup = () => {
   const handleImageUpload = async (e) => {
     try {
       const file = e.target.files[0];
+
+      // Validate file size (e.g., max 5MB)
+      if (file.size > 5 * 1024 * 1024) {
+        toast.error("Image size should be less than 5MB", {
+          position: "top-right",
+          autoClose: 3000
+        });
+        return;
+      }
+
+      // Validate file type
+      if (!file.type.match(/image\/(jpeg|png|gif)/)) {
+        toast.error("Please upload a valid image file (JPEG, PNG, or GIF)", {
+          position: "top-right",
+          autoClose: 3000
+        });
+        return;
+      }
+
       setImageFile(file);
       let profilePic = document.getElementById("profile-pic");
       profilePic.src = URL.createObjectURL(file);
+
+      toast.success("Image selected successfully!", {
+        position: "top-right",
+        autoClose: 2000
+      });
     } catch (error) {
       console.error("Error handling image upload:", error);
+      toast.error("Failed to handle image upload. Please try again.", {
+        position: "top-right",
+        autoClose: 3000
+      });
       setError("Failed to handle image upload. Please try again.");
     }
   };
 
-  if (loading) return <div><BookLoader/></div>; // Loading screen for auth check
+  if (loading) return <div><BookLoader /></div>;
 
   return (
-    <div className="signup_container">
-      <div className="signup_form_container">
-        <div className="left">
-          <h1>Welcome Back</h1>
+    <div className="flex flex-col items-center min-h-screen bg-indigo-50 px-4 pt-10 pb-10">
+      <ToastContainer />
+      <h1 className="text-[#324aad] text-3xl md:text-4xl font-bold relative inline-block pb-2.5 mb-6">
+        SignUp
+        <span className="block w-16 h-0.5 bg-[#5c8bf5] mx-auto mt-2"></span>
+      </h1>
+      <div className="w-full max-w-4xl h-auto md:h-[500px] flex flex-col md:flex-row rounded-lg shadow-lg border border-indigo-950">
+        <div className="flex-1 flex flex-col items-center justify-center bg-indigo-400 p-6 md:rounded-l-lg rounded-t-lg md:rounded-t-none">
+          <h1 className="text-indigo-50 text-2xl md:text-3xl mb-4 font-black">Welcome Back</h1>
           <Link to="/login">
-            <button type="button" className="white_btn">
+            <button className="bg-indigo-900 text-indigo-50 rounded-full px-6 py-2 md:px-8 md:py-3 font-bold">
               Sign in
             </button>
           </Link>
-          <div className="card">
-            <h1>UPLOAD YOUR IMAGE HERE</h1>
-            <img src={data.profilePic || defaultProfilePic} alt="Profile" id="profile-pic"></img>
-            <label htmlFor="input-file">
+          <div className="flex flex-col items-center mt-6">
+            <h1 className="text-indigo-50 text-sm md:text-base mb-4">UPLOAD YOUR IMAGE HERE</h1>
+            <img
+              id="profile-pic"
+              src={data.profilePic || defaultProfilePic}
+              alt="Profile"
+              className="w-24 h-24 md:w-28 md:h-28 rounded-full mb-6"
+            />
+            <label htmlFor="input-file" className="bg-indigo-900 text-indigo-50 text-center rounded-full px-6 py-2 md:px-8 md:py-3 font-bold cursor-pointer">
               {uploading ? "Uploading..." : "Upload image"}
             </label>
             <input
               type="file"
               accept="image/jpeg, image/png, image/gif"
-              className="input_file"
               id="input-file"
               name="file"
+              className="hidden"
               onChange={handleImageUpload}
               disabled={uploading}
             />
           </div>
         </div>
-        <div className="right">
-          <form className="form_container" onSubmit={handleSubmit}>
-            <h1>Create Account</h1>
+        <div className="flex-1 flex flex-col items-center justify-center bg-indigo-200 p-6 md:rounded-r-lg rounded-b-lg md:rounded-b-none">
+          <form className="w-full flex flex-col items-center" onSubmit={handleSubmit}>
+            <h1 className="text-2xl md:text-3xl mb-4 text-indigo-700 font-bold">Create Account</h1>
             <input
               type="text"
               placeholder="First Name"
               name="first_name"
+              className="w-full md:w-80 p-4 rounded-lg bg-indigo-50 mb-2 text-base"
               onChange={handleChange}
               value={data.first_name}
               required
-              className="input"
             />
             <input
               type="text"
               placeholder="Last Name"
               name="last_name"
+              className="w-full md:w-80 p-4 rounded-lg bg-indigo-50 mb-2 text-base"
               onChange={handleChange}
               value={data.last_name}
               required
-              className="input"
             />
             <input
               type="text"
               placeholder="Username"
               name="username"
+              className="w-full md:w-80 p-4 rounded-lg bg-indigo-50 mb-2 text-base"
               onChange={handleChange}
               value={data.username}
               required
-              className="input"
             />
             <input
               type="email"
               placeholder="Email"
               name="email"
+              className="w-full md:w-80 p-4 rounded-lg bg-indigo-50 mb-2 text-base"
               onChange={handleChange}
               value={data.email}
               required
-              className="input"
             />
             <input
               type="password"
               placeholder="Password"
               name="password"
+              className="w-full md:w-80 p-4 rounded-lg bg-indigo-50 mb-2 text-base"
               onChange={handleChange}
               value={data.password}
               required
-              className="input"
             />
-            {error && <div className="error_msg">{error}</div>}
-            <button type="submit" className="green_btn" disabled={uploading}>
+            <button type="submit" className="bg-indigo-400 text-indigo-50 rounded-full px-6 py-2 md:px-8 md:py-3 font-bold mt-4" disabled={uploading}>
               Sign Up
             </button>
           </form>

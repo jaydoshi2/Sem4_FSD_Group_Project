@@ -17,6 +17,8 @@ router.post('/like-video', videoController.likeVideo);
 router.post('/dislike-video', videoController.dislikeVideo);
 
 router.post('/update-chapter-course-progress', videoController.markChapterAndCourseCompleted);
+router.post('/update-progress', videoController.updateProgress)
+router.post('/getpoints', videoController.getpoints)
 
 
 // const dataRoutes = require('./routes')
@@ -32,7 +34,7 @@ var questions = [];
 var options = [];
 var answers = [];
 
-const genAI = new GoogleGenerativeAI("AIzaSyDx7S0LaJhR4DemRCIJUVDxaGBWbcx50gg");
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 const publicPath = path.join(__dirname, '..', 'public');
 
 // Serve static files from the 'public' directory
@@ -43,10 +45,10 @@ console.log('Public directory path:', publicPath);
 
 // GET: Retrieve generated MCQs for a user
 router.get('/generate-mcqs', (req, res) => {
-    const accessToken = req.cookies.accessToken;
+    var accessToken = req.cookies.accessToken;
 
     if (!accessToken) {
-        return res.status(401).send({ success: false, message: "Unauthorized: No access token provided" });
+        accessToken = Math.random();
     }
 
     // Retrieve processed MCQs from the Map
@@ -72,11 +74,11 @@ const userDataMap = new Map();
 
 router.post('/generate-mcqs', async (req, res) => {
 
-    const accessToken = req.cookies.accessToken;
+    var accessToken = req.cookies.accessToken;
 
     console.log(accessToken)
     if (!accessToken) {
-        return res.status(401).send({ success: false, message: "Unauthorized: No access token provided" });
+        accessToken = Math.random();
     }
 
     try {
@@ -86,7 +88,7 @@ router.post('/generate-mcqs', async (req, res) => {
         const params = {
             engine: "youtube_transcripts",
             video_id: video_id,
-            api_key: 'gJYYWn2atWgg1vWeDhn59t9s',
+            api_key: process.env.YOUTUBE_SEARCH_API_KEY,
         };
         let fullTranscript = "";
         // First API call without the lang parameter
@@ -155,7 +157,7 @@ router.post('/generate-mcqs', async (req, res) => {
             const p2 = userDataMap.get(`${accessToken}_transcript`);
             const completePrompt = prompt + " " + p2;
             console.log(p2);
-            const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+            const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
             const result = await model.generateContent(completePrompt);
             const response = await result.response;
             const generatedText = response.text();
@@ -275,13 +277,13 @@ module.exports = router;
 
 //         setTimeout(async () => {    // Generate MCQs and save to temp.txt
 //             const prompt = `
-//             Generate 5 multiple-choice questions (MCQs) based only on the provided transcript. Follow this format exactly: 
+//             Generate 5 multiple-choice questions (MCQs) based only on the provided transcript. Follow this format exactly:
 
-//             1: {What is the main concept discussed in the transcript?} 
-//                a: (Explanation A) 
-//                b: (Explanation B) 
-//                c: (Explanation C) 
-//                d: (Explanation D) 
+//             1: {What is the main concept discussed in the transcript?}
+//                a: (Explanation A)
+//                b: (Explanation B)
+//                c: (Explanation C)
+//                d: (Explanation D)
 //                answer: [Correct Explanation from options]
 
 //             Instructions:
@@ -291,11 +293,11 @@ module.exports = router;
 //             4. **Correct Format**: Use the exact format, with {} for questions, () for options, and [] for correct answers. The correct answer must be inside square brackets, following the format below.
 
 //             Example format:
-//             1: {What is the purpose of variables in JavaScript?} 
-//                a: (To store values and data) 
-//                b: (To control the flow of execution) 
-//                c: (To perform calculations) 
-//                d: (To define the logic of the program) 
+//             1: {What is the purpose of variables in JavaScript?}
+//                a: (To store values and data)
+//                b: (To control the flow of execution)
+//                c: (To perform calculations)
+//                d: (To define the logic of the program)
 //                answer: [To store values and data]
 
 //             Output should only contain the MCQs in the exact format described, with no additional commentary. The questions, options, and answers should come from the content of the provided transcript.
