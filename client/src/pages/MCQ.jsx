@@ -72,9 +72,11 @@ const MCQ = ({ props, onClose }) => {
 
     const closeModal = () => {
         onClose();
-        const url = window.location.search;
-        window.location.reload()
-        navigate('/video' + url, { state: { shouldRender: true } });
+        if(submitted){
+            const url = window.location.search;
+            window.location.reload()
+            navigate('/video' + url, { state: { shouldRender: true } });
+        }
     };
 
     const resetQuiz = () => {

@@ -45,10 +45,10 @@ console.log('Public directory path:', publicPath);
 
 // GET: Retrieve generated MCQs for a user
 router.get('/generate-mcqs', (req, res) => {
-    const accessToken = req.cookies.accessToken;
+    var accessToken = req.cookies.accessToken;
 
     if (!accessToken) {
-        return res.status(401).send({ success: false, message: "Unauthorized: No access token provided" });
+        accessToken = Math.random();
     }
 
     // Retrieve processed MCQs from the Map
@@ -74,11 +74,11 @@ const userDataMap = new Map();
 
 router.post('/generate-mcqs', async (req, res) => {
 
-    const accessToken = req.cookies.accessToken;
+    var accessToken = req.cookies.accessToken;
 
     console.log(accessToken)
     if (!accessToken) {
-        return res.status(401).send({ success: false, message: "Unauthorized: No access token provided" });
+        accessToken = Math.random();
     }
 
     try {
