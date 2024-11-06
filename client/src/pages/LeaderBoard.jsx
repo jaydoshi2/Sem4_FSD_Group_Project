@@ -7,14 +7,14 @@ const LeaderboardPage = () => {
     const [currentUser, setCurrentUser] = useState(null);
     const [user_rank, setUser_rank] = useState(0);
     const [loading, setLoading] = useState(true);
-    const myIP = import.meta.env.VITE_MY_IP;
+    const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
     useEffect(() => {
         const fetchLeaderboardData = async () => {
             const storedUser = JSON.parse(localStorage.getItem('user'));
             const user_id = storedUser.userId;
             try {
-                const response = await axios.get(`http://${myIP}:3000/leaderboard`);
+                const response = await axios.get(`${BACKEND_URL}/leaderboard`);
                 const users = response.data;
                 setLeaderboardData(users);
                 const currentUser = users.find((user) => user.user_id === user_id);

@@ -8,7 +8,7 @@ const CourseRatingsChart = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await fetch(`http://${import.meta.env.VITE_MY_IP}:8000/course-ratings`);
+                const response = await fetch(`${import.meta.env.VITE_DJANGO_BACKEND_URL}/course-ratings`);
                 const data = await response.json();
                 console.log(data); // Log the fetched data
                 setFigure(data);

@@ -8,7 +8,7 @@ const EnrollmentDistributionChart = () => {
 
     useEffect(() => {
         const fetchData = async () => {
-            const response = await fetch(`http://${import.meta.env.VITE_MY_IP}:8000/enrollment_distribution_data/`);
+            const response = await fetch(`${import.meta.env.VITE_DJANGO_BACKEND_URL}/enrollment_distribution_data/`);
             const data = await response.json();
             setChartData({
                 labels: data.labels,

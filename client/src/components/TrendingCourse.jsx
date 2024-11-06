@@ -9,7 +9,7 @@ const CustomSlider = () => {
     const [loading, setLoading] = useState(true);
     const [loading1, setLoading1] = useState(false);
     const [currentSlide, setCurrentSlide] = useState(0);
-    const myIP = import.meta.env.VITE_MY_IP;
+    const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
     const navigate = useNavigate();
     const [visibleSlides, setVisibleSlides] = useState(4); // default for large screens
 
@@ -39,7 +39,7 @@ const CustomSlider = () => {
             if(userData != null){
                 const userId= userData.userId;
                 try {
-                    const response = await fetch(`http://${myIP}:3000/course/trending`, {
+                    const response = await fetch(`${BACKEND_URL}/course/trending`, {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
@@ -59,7 +59,7 @@ const CustomSlider = () => {
                 }
             }else{
                 try {
-                    const response = await fetch(`http://${myIP}:3000/course/trending`, {
+                    const response = await fetch(`${BACKEND_URL}/course/trending`, {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
@@ -97,7 +97,7 @@ const CustomSlider = () => {
         setLoading1(true);
         const courseId = course.course_id;
         try {
-            const response = await axios.get(`http://${myIP}:3000/from/first-chapter-video/${courseId}`);
+            const response = await axios.get(`${BACKEND_URL}/from/first-chapter-video/${courseId}`);
             const data = response.data;
             if (response.status === 200) {
                 const chapter_id = data.chapter_id;

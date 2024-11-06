@@ -104,7 +104,7 @@ return (
                 <div className="md:hidden bg-blue-800 w-full"> {/* Change from sm:hidden to md:hidden */}
                     <nav className="flex flex-col items-center space-y-4 py-4">
                         <Link to="/" onClick={() => setIsMenuOpen(false)} className="text-white hover:text-gray-200">Home</Link>
-                        <Link to="/about" onClick={() => setIsMenuOpen(false)} className="text-white hover:text-gray-200">About</Link>
+                        <Link to="/aboutpage" onClick={() => setIsMenuOpen(false)} className="text-white hover:text-gray-200">About</Link>
                         <Link to="/course" onClick={() => setIsMenuOpen(false)} className="text-white hover:text-gray-200">Courses</Link>
                         <Link to="/contact" onClick={() => setIsMenuOpen(false)} className="text-white hover:text-gray-200">Contact</Link>
                         <Link to="/leaderBoard" onClick={() => setIsMenuOpen(false)} className="text-white hover:text-gray-200">LeaderBoard</Link>

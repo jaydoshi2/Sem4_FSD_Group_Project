@@ -26,13 +26,13 @@ const Profile = () => {
   }, []);
 
   const fetchUserDetails = async () => {
-    const MY_IP = import.meta.env.VITE_MY_IP;
+    const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
     try {
       if (!user || !user.userId) {
         throw new Error('No user data found');
       }
 
-      const response = await axios.post(`http://${MY_IP}:3000/profile/getuser`, {
+      const response = await axios.post(`${BACKEND_URL}/profile/getuser`, {
         userId: user.userId
       });
 
@@ -74,9 +74,9 @@ const Profile = () => {
       setImageUploading(true); // Set uploading state to true when starting upload
 
       if (file) {
-        const MY_IP = import.meta.env.VITE_MY_IP;
+        const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
         const mimeType = file.type;
-        const response = await axios.get(`http://${MY_IP}:3000/auth/presignedurl`, {
+        const response = await axios.get(`${BACKEND_URL}/auth/presignedurl`, {
           params: { mimeType }
         });
 
@@ -115,7 +115,7 @@ const Profile = () => {
         throw new Error('No user data found');
       }
 
-      const response = await axios.put(`http://${MY_IP}:3000/profile/update`, {
+      const response = await axios.put(`${BACKEND_URL}/profile/update`, {
         userId: user.userId,
         ...formData
       });

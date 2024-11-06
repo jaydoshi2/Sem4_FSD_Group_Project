@@ -9,12 +9,12 @@ export const AuthUserProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [loading, setLoading] = useState(true);
-  const myIP = import.meta.env.VITE_MY_IP;
+  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await axios.get(`http://${myIP}:3000/auth/check-auth`, {
+        const response = await axios.get(`${BACKEND_URL}/auth/check-auth`, {
           withCredentials: true,
         });
 
@@ -46,7 +46,7 @@ export const AuthUserProvider = ({ children }) => {
     };
 
     fetchUserData();
-  }, [myIP]);
+  }, [BACKEND_URL]);
   
   const updateUser = (newUserData) => {
     setUser(newUserData);
@@ -61,7 +61,7 @@ export const AuthUserProvider = ({ children }) => {
 
   const logout = async () => {
     try {
-      await axios.post(`http://${myIP}:3000/auth/logout`, {}, { withCredentials: true });
+      await axios.post(`${BACKEND_URL}/auth/logout`, {}, { withCredentials: true });
       setUser(null);
       setIsAuthenticated(false);
       localStorage.clear();

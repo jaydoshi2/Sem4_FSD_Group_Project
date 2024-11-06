@@ -33,7 +33,8 @@ SECRET_KEY = 'django-insecure-n(z3l#)i)ssrr7@cws4obmgb1ry@*f75l&g6#ut5_8vlk0x##r
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 MY_IP = os.getenv('MY_IP')
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '192.168.5.65',f"{MY_IP}"]  # Make sure your IP is added here
+FRONTEND_URL =  os.getenv('FRONTEND_URL')
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '192.168.5.65',f"{MY_IP}",f"{FRONTEND_URL}"]  # Make sure your IP is added here
 
 # Fetch MY_IP from environment variables
 
@@ -44,6 +45,7 @@ CORS_ALLOWED_ORIGINS = [
     f"http://{MY_IP}:5173",  # Dynamically insert MY_IP
     'http://127.0.0.1:5173',  # Localhost fallback
     'http://localhost:5173',
+    f"{FRONTEND_URL}",
 ]
 
 # CSRF trusted origins
@@ -51,6 +53,7 @@ CSRF_TRUSTED_ORIGINS = [
     f"http://{MY_IP}:5173",  # Dynamically insert MY_IP
     'http://127.0.0.1:5173',
     'http://localhost:5173',
+    f"{FRONTEND_URL}",
 ]
 
 # CSRF_COOKIE settings

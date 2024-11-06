@@ -50,12 +50,12 @@ const CourseDisplay = () => {
   const [displayCounts, setDisplayCounts] = useState({}); // State to manage displayed courses
   const [showMore, setShowMore] = useState({}); // State to track show more/less
   const navigate = useNavigate(); // Initialize useNavigate
-  const myIP = import.meta.env.VITE_MY_IP;
+  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
   const userData = JSON.parse(localStorage.getItem('user'));
   const fetchCourseData = () => {
     
     if(userData==null){
-      axios.post(`http://${myIP}:3000/course/getall`)
+      axios.post(`${BACKEND_URL}/course/getall`)
       .then((response) => {
         const fetchedData = response.data;
         console.log(response.data)
@@ -77,7 +77,7 @@ const CourseDisplay = () => {
       });
     }else{
       const userId = userData.userId;
-      axios.post(`http://${myIP}:3000/course/getall`, { userId })
+      axios.post(`${BACKEND_URL}/course/getall`, { userId })
       .then((response) => {
         const fetchedData = response.data;
         console.log(response.data)
@@ -149,7 +149,7 @@ const CourseDisplay = () => {
     setLoading1(true)
     const courseId = course.course_id
     console.log("resuming", courseId)
-    const response = await axios.get(`http://${myIP}:3000/from/first-chapter-video/${courseId}`);
+    const response = await axios.get(`${BACKEND_URL}/from/first-chapter-video/${courseId}`);
     const data = response.data;
     if (response.status === 200) {
       const chapter_id = data.chapter_id;

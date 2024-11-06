@@ -8,12 +8,12 @@ export const AuthProvider = ({ children }) => {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
-    const myIP = import.meta.env.VITE_MY_IP;
+    const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
     useEffect(() => {
         const fetchUserData = async () => {
             try {
-                const response = await axios.get(`http://${myIP}:3000/auth/check-auth`, {
+                const response = await axios.get(`${BACKEND_URL}/auth/check-auth`, {
                     withCredentials: true,
                 });
                 if (response.data.isAuthenticated) {
@@ -44,7 +44,7 @@ export const AuthProvider = ({ children }) => {
         };
 
         fetchUserData();
-    }, [myIP]);
+    }, [BACKEND_URL]);
 
     return (
         <AuthContext.Provider value={{ isAuthenticated, user, loading }}>

@@ -5,7 +5,7 @@ const UserEngagementOverTimeChart = () => {
     const [figure, setFigure] = useState(null);
 
     useEffect(() => {
-        fetch(`http://${import.meta.env.VITE_MY_IP}:8000/user_engagement_over_time`)
+        fetch(`${import.meta.env.VITE_DJANGO_BACKEND_URL}/user_engagement_over_time`)
             .then(response => response.json())
             .then(data => {
                 console.log('Fetched figure:', data); // Log the entire figure structure

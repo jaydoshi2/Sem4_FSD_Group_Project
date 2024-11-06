@@ -5,13 +5,13 @@ const ForgotPassword = () => {
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
-  const myIP = import.meta.env.VITE_MY_IP;
+  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     try {
-      const url =`http://${myIP}:3000/auth/forgot-password`;
+      const url =`${BACKEND_URL}/auth/forgot-password`;
       const response = await axios.post(url, { email });
       setMessage(response.data.message);
     } catch (error) {

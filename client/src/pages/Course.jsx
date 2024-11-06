@@ -11,12 +11,12 @@ const Course = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const carouselRef = useRef(null);
   const navigate = useNavigate();
-  const myIP = import.meta.env.VITE_MY_IP;
+  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await axios.get(`http://${myIP}:3000/auth/check-auth`, {
+        const response = await axios.get(`${BACKEND_URL}/auth/check-auth`, {
           withCredentials: true
         });
         if (response.data.isAuthenticated) {
@@ -43,7 +43,7 @@ const Course = () => {
     const fetchCourses = async () => {
       try {
         setLoading(true);
-        const response = await axios.get(`http://${myIP}:3000/course`);
+        const response = await axios.get(`${BACKEND_URL}/course`);
         if (response.data) {
           setCourses(response.data);
         }
@@ -77,7 +77,7 @@ const Course = () => {
   };
 
   const logout = () => {
-    axios.post(`http://${myIP}:3000/auth/logout`, {}, { withCredentials: true })
+    axios.post(`${BACKEND_URL}/auth/logout`, {}, { withCredentials: true })
       .then(() => {
         localStorage.removeItem('user');
         setUser(null);

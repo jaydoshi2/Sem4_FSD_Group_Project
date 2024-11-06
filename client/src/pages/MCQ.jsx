@@ -5,7 +5,7 @@ import '../styles/MCQ.css';
 import BookLoader from '../components/BookLoader'
 const MCQ = ({ props, onClose }) => {
     const navigate = useNavigate();
-    const myIP = import.meta.env.VITE_MY_IP;
+    const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
     const [questions, setQuestions] = useState([]);
     const [loading, setLoading] = useState(false);
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -29,7 +29,7 @@ const MCQ = ({ props, onClose }) => {
     const fetchQuestions = async () => {
         setLoading(true);
         try {
-            const response = await fetch(`http://${myIP}:3000/vid/generate-mcqs`, {
+            const response = await fetch(`${BACKEND_URL}/vid/generate-mcqs`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -45,7 +45,7 @@ const MCQ = ({ props, onClose }) => {
             const data = await response.json();
 
             if (data.success) {
-                const response2 = await fetch(`http://${myIP}:3000/vid/generate-mcqs`, { method: 'GET', credentials: 'include' });
+                const response2 = await fetch(`${BACKEND_URL}/vid/generate-mcqs`, { method: 'GET', credentials: 'include' });
                 const data2 = await response2.json();
 
                 const que = data2.questions || [];
@@ -125,13 +125,13 @@ const MCQ = ({ props, onClose }) => {
                 const chapterId = queryParams.get('chapter_id');
                 const courseId = queryParams.get('course_id');
 
-                const response = await axios.post(`http://${myIP}:3000/vid/update-chapter-course-progress`, {
+                const response = await axios.post(`${BACKEND_URL}/vid/update-chapter-course-progress`, {
                     userId,
                     videoId,
                     chapterId,
                     courseId
                 });
-                const response2 = await axios.post(`http://${myIP}:3000/vid/update-progress`, {
+                const response2 = await axios.post(`${BACKEND_URL}/vid/update-progress`, {
                     userId,
                     courseId
                 })

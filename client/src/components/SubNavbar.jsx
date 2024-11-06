@@ -15,13 +15,13 @@ const SubNavbar = () => {
     const [scrollInterval, setScrollInterval] = useState(null);
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
-    const myIP = import.meta.env.VITE_MY_IP;
+    const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
     useEffect(() => {
         const userData = JSON.parse(localStorage.getItem('user'));
         if(userData != null){
             const userId = userData.userId;
-            axios.post(`http://${myIP}:3000/course/getall`,{userId})
+            axios.post(`${BACKEND_URL}/course/getall`,{userId})
             .then((response) => {
                 setCourse_data(response.data);
                 setCourse_types([...new Set(response.data.map(item => item.course_type))]);
@@ -32,7 +32,7 @@ const SubNavbar = () => {
                 setLoading(false);
             });
         }else{
-            axios.post(`http://${myIP}:3000/course/getall`)
+            axios.post(`${BACKEND_URL}/course/getall`)
             .then((response) => {
                 setCourse_data(response.data);
                 setCourse_types([...new Set(response.data.map(item => item.course_type))]);

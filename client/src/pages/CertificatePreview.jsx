@@ -12,7 +12,7 @@ const CertificatePreview = () => {
     const { courseId } = useParams();
     // Extract courseId from the URL params
 
-    const myIP = import.meta.env.VITE_MY_IP;
+    const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
     useEffect(() => {
         const fetchData = async () => {
             setLoading(true)
@@ -26,7 +26,7 @@ const CertificatePreview = () => {
             }
 
             try {
-                const response = await axios.post(`http://${myIP}:3000/certificate`, {
+                const response = await axios.post(`${BACKEND_URL}/certificate`, {
                     userId,  // Pass userId in the request body
                     courseId // Pass courseId in the request body
                 });

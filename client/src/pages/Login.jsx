@@ -13,7 +13,7 @@ const Login = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const location = useLocation();
-  const myIP = import.meta.env.VITE_MY_IP;
+  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
   const { login } = useAuthUser();
 
   useEffect(() => {
@@ -38,7 +38,7 @@ const Login = () => {
 
     try {
       setLoading(true);
-      const url = `http://${myIP}:3000/auth/login`;
+      const url = `${BACKEND_URL}/auth/login`;
 
       const response = await axios.post(url, data, {
         withCredentials: true,
@@ -102,7 +102,7 @@ const Login = () => {
     flow: 'implicit',
     onSuccess: async (tokenResponse) => {
       try {
-        const res = await axios.post(`http://${myIP}:3000/api/auth/google`, {
+        const res = await axios.post(`${BACKEND_URL}/api/auth/google`, {
           token: tokenResponse.access_token,
         });
         await login(res.data.user);

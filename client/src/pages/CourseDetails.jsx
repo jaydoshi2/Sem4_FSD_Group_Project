@@ -15,13 +15,13 @@ function CourseDetail() {
   const navigate = useNavigate();
   const userData = JSON.parse(localStorage.getItem('user'));
   const userId = userData.userId;
-  const myIP = import.meta.env.VITE_MY_IP;
+  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
   console.log("user id ", userId)
   useEffect(() => { console.log("in course display") }, [])
   useEffect(() => {
     const fetchCourseDetails = async () => {
       try {
-        const response = await axios.get(`http://${myIP}:3000/course/${courseId}`);
+        const response = await axios.get(`${BACKEND_URL}/course/${courseId}`);
         setCourse(response.data);
         setAmount(response.data.price);
       } catch (err) {
@@ -33,7 +33,7 @@ function CourseDetail() {
     };
 
     fetchCourseDetails();
-  }, [courseId, myIP]);
+  }, [courseId]);
 
   useEffect(() => {
     if (navigationData) {
@@ -49,7 +49,7 @@ function CourseDetail() {
     setError(null);
 
     try {
-      const orderUrl = `http://${myIP}:3000/user/make-payment`;
+      const orderUrl = `${BACKEND_URL}/user/make-payment`;
       const response = await axios.post(orderUrl, {
         amount,
         currency: 'INR',
@@ -68,13 +68,13 @@ function CourseDetail() {
           order_id: id,
           handler: async function (paymentResponse) {
             try {
-              const response = await axios.post(`http://${myIP}:3000/user/enroll-course`, {
+              const response = await axios.post(`${BACKEND_URL}/user/enroll-course`, {
                 userId,
                 courseId,
               });
 
               if (response) {
-                const response1 = await axios.get(`http://${myIP}:3000/from/first-chapter-video/${courseId}`);
+                const response1 = await axios.get(`${BACKEND_URL}/from/first-chapter-video/${courseId}`);
                 const data = response1.data;
 
                 if (response1.status === 200 && data) {

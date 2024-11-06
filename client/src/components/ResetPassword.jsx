@@ -9,7 +9,7 @@ const ResetPassword = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [message, setMessage] = useState('');
   const [isError, setIsError] = useState(false);
-  const myIP = import.meta.env.VITE_MY_IP;
+  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
   // const validatePassword = (pass) => {
   //   const regex =/^(?=.[a-z])(?=.\d)(?=.[!@#$%^&()_+\-=\[\]{};':"\\|,.<>/?]).{8,}$/;
@@ -34,7 +34,7 @@ const ResetPassword = () => {
 
     try {
       console.log(token)
-      const url = `http://${myIP}:3000/auth/reset-password/${token}`;
+      const url = `${BACKEND_URL}/auth/reset-password/${token}`;
         await axios.post(url, { password });
 
       setMessage('Password has been reset successfully!');

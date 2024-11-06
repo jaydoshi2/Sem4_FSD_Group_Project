@@ -10,7 +10,7 @@ const VideoPage = () => {
     const location = useLocation();
     const navigate = useNavigate();
     const [userId, setUserId] = useState();
-    const myIP = import.meta.env.VITE_MY_IP;
+    const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
     const [vlink, setVlink] = useState('');
     const [loader, setLoader] = useState(false);
     const [likes, setLikes] = useState(0);
@@ -59,7 +59,7 @@ const VideoPage = () => {
         const handleCourseCompletion = async () => {
             // if (progress === 100 && courseCompleted && !pointsUpdated && userId && courseId) {
             //     try {
-            //         await axios.post(`http://${myIP}:3000/vid/getpoints`, {
+            //         await axios.post(`${BACKEND_URL}/vid/getpoints`, {
             //             userId,
             //             courseId
             //         });
@@ -71,14 +71,14 @@ const VideoPage = () => {
             // }
 
             // try {
-            //     const response = await axios.post(`http://${myIP}:3000/certificate/storeCertificate`,{userId,courseId})
+            //     const response = await axios.post(`${BACKEND_URL}/certificate/storeCertificate`,{userId,courseId})
             // } catch (error) {
 
             // }
             console.log("user id ",userId)
             if(userId){
                 console.log(true)
-                const checkCertificate = await axios.get(`http://${myIP}:3000/certificate/check`, {
+                const checkCertificate = await axios.get(`${BACKEND_URL}/certificate/check`, {
                     params: {
                         userId,
                         courseId
@@ -89,7 +89,7 @@ const VideoPage = () => {
                     console.log("POINTS GIVEN ",true)
                     // Certificate.storeImageInDB();
                     try {
-                        await axios.post(`http://${myIP}:3000/vid/getpoints`, {
+                        await axios.post(`${BACKEND_URL}/vid/getpoints`, {
                             userId,
                             courseId
                         });
@@ -103,14 +103,14 @@ const VideoPage = () => {
         };
 
         handleCourseCompletion();
-    }, [progress, courseCompleted, userId, courseId, myIP]);
+    }, [progress, courseCompleted, userId, courseId, BACKEND_URL]);
 
     const fetchData = async (courseId, videoId, userId) => {
         try {
             setLoader(true);
 
             if (videoId) {
-                const videoResponse = await axios.get(`http://${myIP}:3000/vid/video-details/${videoId}`);
+                const videoResponse = await axios.get(`${BACKEND_URL}/vid/video-details/${videoId}`);
                 const videoData = videoResponse.data;
                 const url = videoData.videoLink;
                 const videoID = url.split('/').pop().split('?')[0];
@@ -124,7 +124,7 @@ const VideoPage = () => {
             }
 
             if (courseId && userId) {
-                const progressResponse = await axios.post(`http://${myIP}:3000/vid/course-progress/${courseId}`, { userId });
+                const progressResponse = await axios.post(`${BACKEND_URL}/vid/course-progress/${courseId}`, { userId });
                 setProgress(progressResponse.data.completed_course);
 
                 if (progressResponse.data.completed) {
@@ -154,7 +154,7 @@ const VideoPage = () => {
                 setUserDisliked(false);
             }
 
-            await axios.post(`http://${myIP}:3000${endpoint}`, { videoId, userId });
+            await axios.post(`${BACKEND_URL}${endpoint}`, { videoId, userId });
         } catch (error) {
             console.error('Error liking the video:', error);
             setLikes(prevLikes => userLiked ? prevLikes + 1 : prevLikes - 1);
@@ -177,7 +177,7 @@ const VideoPage = () => {
                 setUserLiked(false);
             }
 
-            await axios.post(`http://${myIP}:3000${endpoint}`, { videoId, userId });
+            await axios.post(`${BACKEND_URL}${endpoint}`, { videoId, userId });
         } catch (error) {
             console.error('Error disliking the video:', error);
             setDislikes(prevDislikes => userDisliked ? prevDislikes + 1 : prevDislikes - 1);

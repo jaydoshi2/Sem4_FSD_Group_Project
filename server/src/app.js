@@ -23,12 +23,14 @@ dotenv.config();
 const app = express();
 const prisma = new PrismaClient();
 const MYIP = process.env.MY_IP;
+const FRONTEND_URL = process.env.FRONTEND_URL;
 console.log(MYIP)
 const allowedOrigins = [
   `http://${MYIP}:5173`, 
   'http://localhost:5173',
   'https://tpmljttm-5173.inc1.devtunnels.ms',
   'https://14d7-2409-40c1-e-1b30-bc44-9a71-aca-7325.ngrok-free.app',
+  `${FRONTEND_URL}`
 ];
 
 app.use(errorHandler);

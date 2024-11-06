@@ -34,13 +34,13 @@ const UserCoursesPage = () => {
   const [recommendations, setRecommendations] = useState([]);
   const [noCourses, setNoCourses] = useState(false);
   const navigate = useNavigate();
-  const myIP = import.meta.env.VITE_MY_IP;
+  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
   const resumeCourse = async (course) => {
     setLoading(true);
     const courseId = course.course_id;
     console.log("resuming", courseId);
-    const response = await axios.get(`http://${myIP}:3000/from/first-chapter-video/${courseId}`);
+    const response = await axios.get(`${BACKEND_URL}/from/first-chapter-video/${courseId}`);
     const data = response.data;
     if (response.status === 200) {
       const chapter_id = data.chapter_id;
@@ -80,7 +80,7 @@ const UserCoursesPage = () => {
           description: course.course.description,
         }));
         const recResponse = await axios.post(
-          `http://${myIP}:8000/course_recommendations/getrecommendations/`,
+          `${import.meta.env.VITE_DJANGO_BACKEND_URL}/course_recommendations/getrecommendations/`,
           { user_courses: enrolledCourses },
           { headers: { 'Content-Type': 'application/json' } }
         );

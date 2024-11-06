@@ -5,7 +5,7 @@ const CourseDistributionChart = () => {
     const [fig, setFig] = useState(null);
 
     useEffect(() => {
-        fetch(`http://${import.meta.env.VITE_MY_IP}:8000/course-enrollment_secondary/`)
+        fetch(`${import.meta.env.VITE_DJANGO_BACKEND_URL}/course-enrollment_secondary/`)
             .then(response => response.json())
             .then(data => {
                 console.log('Fetched data:', data); // Log the data
