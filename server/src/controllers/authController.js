@@ -176,7 +176,7 @@ exports.forgotPassword = async (req, res, next) => {
   try {
     const { email } = req.body;
     const resetToken = await authService.createPasswordResetToken(email);
-    const resetUrl =`http://${process.env.MY_IP}:5173/reset-password/${resetToken}`;
+    const resetUrl =`${process.env.FRONTEND_URL}/reset-password/${resetToken}`;
 
       await sendEmail({
         to: email,
