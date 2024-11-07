@@ -16,6 +16,11 @@ router.post('/like-video', videoController.likeVideo);
 // Dislike a video
 router.post('/dislike-video', videoController.dislikeVideo);
 
+
+router.post('/unlike-video',videoController.unlikeVideo)
+
+router.post('/undislike-video',videoController.undislikeVideo)
+
 router.post('/update-chapter-course-progress', videoController.markChapterAndCourseCompleted);
 router.post('/update-progress', videoController.updateProgress)
 router.post('/getpoints', videoController.getpoints)
@@ -48,12 +53,12 @@ router.get('/generate-mcqs', (req, res) => {
     var accessToken = req.cookies.accessToken;
 
     if (!accessToken) {
-        accessToken = Math.random();
+        accessToken = 1234;
     }
 
     // Retrieve processed MCQs from the Map
     const mcqs = userDataMap.get(`${accessToken}_processed_mcqs`);
-
+    console.log("MCQSSSSS    ",mcqs)
     if (mcqs) {
         res.status(200).json({
             success: true,
@@ -78,7 +83,7 @@ router.post('/generate-mcqs', async (req, res) => {
 
     console.log(accessToken)
     if (!accessToken) {
-        accessToken = Math.random();
+        accessToken = 1234;
     }
 
     try {

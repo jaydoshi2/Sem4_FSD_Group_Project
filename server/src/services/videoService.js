@@ -135,6 +135,72 @@ exports.dislikeVideo = async (userId, videoId) => {
     }
 };
 
+exports.unlikeVideo = async (userId, videoId) => {
+    try {
+        const videoIdInt = parseInt(videoId, 10);
+
+        // Find interaction by composite key
+        const interaction = await prisma.videoInteraction.findUnique({
+            where: { userId_videoId: { userId, videoId: videoIdInt } },
+        });
+
+        if (interaction) {
+            if (interaction.liked) return interaction;
+
+            // Update video like/dislike counts
+            await prisma.video.update({
+                where: { video_id: videoIdInt },
+                data: {
+                    likesCount: { decrement: 1 },
+                },
+            });
+
+            // Update interaction
+            return await prisma.videoInteraction.update({
+                where: { userId_videoId: { userId, videoId: videoIdInt } },
+                data: { liked: false, dislike: false },
+            });
+        }
+    } catch (error) {
+        console.error('Error liking the video:', error);
+        throw new Error('Failed to like the video');
+    }
+};
+
+// Dislike a video
+exports.undislikeVideo = async (userId, videoId) => {
+    try {
+        const videoIdInt = parseInt(videoId, 10);
+
+        // Find interaction by composite key
+        const interaction = await prisma.videoInteraction.findUnique({
+            where: { userId_videoId: { userId, videoId: videoIdInt } },
+        });
+
+        if (interaction) {
+            if (interaction.dislike) return interaction;
+
+            // Update video like/dislike counts
+            await prisma.video.update({
+                where: { video_id: videoIdInt },
+                data: {
+                    dislikesCount: { decrement: 1 },
+                },
+            });
+
+            // Update interaction to dislike the video
+            return await prisma.videoInteraction.update({
+                where: { userId_videoId: { userId, videoId: videoIdInt } },
+                data: { liked: false, dislike: false },
+            });
+        }
+    } catch (error) {
+        console.error('Error disliking the video:', error);
+        throw new Error('Failed to dislike the video');
+    }
+};
+
+
 exports.fetchVideoDetails = async (videoId, userId) => {
     const video = await prisma.video.findUnique({
         where: { video_id: videoId },

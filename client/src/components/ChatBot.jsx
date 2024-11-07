@@ -1,8 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react';
-import Avatar from '../assets/Avatar1.svg'
+import Avatar from '../assets/Avatar1.svg';
+
 const Chatbot = () => {
-  const [isOpen, setIsOpen] = useState(false); // Control the state of the chatbox
+  const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
   const [inputMessage, setInputMessage] = useState('');
   const messagesEndRef = useRef(null);
 
@@ -19,8 +21,8 @@ const Chatbot = () => {
 
     const userMessage = { name: 'User', message: inputMessage };
     setMessages([...messages, userMessage]);
-    console.log(messages)
     setInputMessage('');
+    setIsLoading(true);
 
     try {
       const response = await fetch(`${import.meta.env.VITE_DJANGO_BACKEND_URL}/api/predict/`, {
@@ -31,11 +33,11 @@ const Chatbot = () => {
         body: JSON.stringify({ message: inputMessage }),
       });
 
-      const textResponse = await response.text(); // Read response as plain text
+      const textResponse = await response.text();
       console.log('Response from Flask:', textResponse);
 
       try {
-        const data = JSON.parse(textResponse); // Try parsing the JSON response
+        const data = JSON.parse(textResponse);
         const botMessage = { name: 'Sam', message: data.answer };
         setMessages((prevMessages) => [...prevMessages, botMessage]);
       } catch (jsonError) {
@@ -43,9 +45,10 @@ const Chatbot = () => {
       }
     } catch (error) {
       console.error('Error fetching from server:', error);
+    } finally {
+      setIsLoading(false);
     }
   };
-
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -63,7 +66,6 @@ const Chatbot = () => {
         {isOpen && (
           <div className="absolute bottom-16 right-0 w-80 sm:w-96 md:w-96 bg-white rounded-xl shadow-2xl overflow-hidden transition-transform duration-300 ease-in-out transform scale-100 origin-bottom-right">
             <div className="flex items-center bg-gradient-to-r from-indigo-700 via-indigo-600 to-indigo-500 p-4 text-white">
-              {/* Robot Image */}
               <img
                 src={Avatar}
                 alt="Chatbot"
@@ -74,12 +76,12 @@ const Chatbot = () => {
                 <p className="text-sm opacity-80">Hi, I'm Sam. How can I assist you today?</p>
               </div>
             </div>
+
             <div className="h-64 sm:h-80 md:h-80 overflow-y-auto p-4 bg-gray-50">
               {messages.map((msg, index) => (
                 <div
                   key={index}
-                  className={`mb-4 ${msg.name === 'Sam' ? 'text-left' : 'text-right'
-                    }`}
+                  className={`mb-4 ${msg.name === 'Sam' ? 'text-left' : 'text-right'}`}
                 >
                   <div
                     className={`inline-block p-3 rounded-lg ${msg.name === 'Sam'
@@ -92,7 +94,15 @@ const Chatbot = () => {
                 </div>
               ))}
               <div ref={messagesEndRef} />
+              {isLoading && (
+                <div className="flex justify-start">
+                  <div className="inline-block p-3 rounded-lg bg-gray-300 text-gray-700">
+                    <LoadingDots />
+                  </div>
+                </div>
+              )}
             </div>
+            
             <div className="p-2 bg-white border-t border-gray-200">
               <div className="flex items-center space-x-3">
                 <input
@@ -111,13 +121,21 @@ const Chatbot = () => {
                 </button>
               </div>
             </div>
-
-
           </div>
         )}
       </div>
     </div>
   );
+
+  function LoadingDots() {
+    return (
+      <div className="flex space-x-1">
+        <div className="animate-bounce w-2 h-2 bg-gray-700 rounded-full" style={{ animationDelay: '0s' }}></div>
+        <div className="animate-bounce w-2 h-2 bg-gray-700 rounded-full" style={{ animationDelay: '0.2s' }}></div>
+        <div className="animate-bounce w-2 h-2 bg-gray-700 rounded-full" style={{ animationDelay: '0.4s' }}></div>
+      </div>
+    );
+  }
 };
 
 export default Chatbot;

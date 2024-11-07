@@ -75,8 +75,8 @@ const VideoPage = () => {
             // } catch (error) {
 
             // }
-            console.log("user id ",userId)
-            if(userId){
+            console.log("user id ", userId)
+            if (userId) {
                 console.log(true)
                 const checkCertificate = await axios.get(`${BACKEND_URL}/certificate/check`, {
                     params: {
@@ -84,22 +84,22 @@ const VideoPage = () => {
                         courseId
                     }
                 });
-    
+
                 if (!checkCertificate.data.exists) {
-                    console.log("POINTS GIVEN ",true)
+                    console.log("POINTS GIVEN ", true)
                     // Certificate.storeImageInDB();
                     try {
                         await axios.post(`${BACKEND_URL}/vid/getpoints`, {
                             userId,
                             courseId
                         });
-                        
+
                     } catch (error) {
                         console.log(error)
                     }
                 }
             }
-          
+
         };
 
         handleCourseCompletion();
@@ -298,20 +298,25 @@ const VideoPage = () => {
                                         />
                                     </div>
                                 </div>
-
                                 <div className="flex mt-4 space-x-4">
                                     <button
                                         onClick={handleLike}
-                                        className="flex items-center space-x-2 px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition duration-300"
+                                        className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition duration-300 ${userLiked
+                                                ? 'bg-green-600 text-white hover:bg-green-700'
+                                                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                                            }`}
                                     >
-                                        <FaThumbsUp />
+                                        <FaThumbsUp className={userLiked ? 'text-white' : 'text-gray-700'} />
                                         <span>{likes}</span>
                                     </button>
                                     <button
                                         onClick={handleDislike}
-                                        className="flex items-center space-x-2 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition duration-300"
+                                        className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition duration-300 ${userDisliked
+                                                ? 'bg-red-600 text-white hover:bg-red-700'
+                                                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                                            }`}
                                     >
-                                        <FaThumbsDown />
+                                        <FaThumbsDown className={userDisliked ? 'text-white' : 'text-gray-700'} />
                                         <span>{dislikes}</span>
                                     </button>
                                 </div>

@@ -27,7 +27,7 @@ const Certificate = () => {
             }
 
             try {
-                const response = await axios.post(`${BACKEND_URL}:3000/certificate`, {
+                const response = await axios.post(`${BACKEND_URL}/certificate`, {
                     userId,
                     courseId
                 });
@@ -63,7 +63,7 @@ const Certificate = () => {
             canvas.toBlob(async (blob) => {
                 const imageFile = new File([blob], `${username}-certificate.png`, { type: 'image/png' });
                 const mimeType = imageFile.type;
-                const response = await axios.get(`${BACKEND_URL}:3000/auth/presignedurl`, {
+                const response = await axios.get(`${BACKEND_URL}/auth/presignedurl`, {
                     params: { mimeType }
                 });
                 const presignedUrl = response.data.url;
@@ -87,7 +87,7 @@ const Certificate = () => {
 
                 const imageUrl = `${import.meta.VITE_CLOUDFRONT_URL}/${response.data.fields["key"]}`;
 
-                await axios.post(`${BACKEND_URL}:3000/certificate/storeImage`, {
+                await axios.post(`${BACKEND_URL}/certificate/storeImage`, {
                     userId,
                     courseId,
                     imageUrl

@@ -59,6 +59,31 @@ exports.dislikeVideo = async (req, res) => {
     }
 };
 
+exports.unlikeVideo = async (req, res) => {
+    const { videoId, userId } = req.body;
+
+    try {
+        const updatedVideo = await videoService.likeVideo(userId, videoId);
+        res.json(updatedVideo);
+    } catch (error) {
+        console.error('Error liking the video:', error);
+        res.status(500).json({ error: 'Error liking the video' });
+    }
+};
+
+// Dislike a video
+exports.undislikeVideo = async (req, res) => {
+    const { videoId, userId } = req.body;
+
+    try {
+        const updatedVideo = await videoService.dislikeVideo(userId, videoId);
+        res.json(updatedVideo);
+    } catch (error) {
+        console.error('Error disliking the video:', error);
+        res.status(500).json({ error: 'Error disliking the video' });
+    }
+};
+
 
 exports.markChapterAndCourseCompleted = async (req, res) => {
     const { userId, videoId, chapterId, courseId } = req.body;
