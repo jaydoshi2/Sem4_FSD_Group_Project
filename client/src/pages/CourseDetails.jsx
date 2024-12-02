@@ -16,6 +16,8 @@ function CourseDetail() {
   const userData = JSON.parse(localStorage.getItem('user'));
   const userId = userData.userId;
   const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+  const key_id = import.meta.env.VITE_RAZORPAY_KEY_ID;
+
   console.log("user id ", userId)
   useEffect(() => { console.log("in course display") }, [])
   useEffect(() => {
@@ -60,7 +62,7 @@ function CourseDetail() {
 
       if (window.Razorpay) {
         const options = {
-          key: 'rzp_test_pVMPiZnpHDsa6g',
+          key: key_id,
           amount: orderAmount,
           currency,
           name: 'Your Company Name',
