@@ -6,8 +6,8 @@ const prisma = new PrismaClient();
 const Razorpay = require('razorpay');
 
 const razorpay = new Razorpay({
-  key_id: 'rzp_test_pVMPiZnpHDsa6g',
-  key_secret: '0ZiI8iZ185Dx20ZY9S1Mck12'
+  key_id: process.env.RAZORPAY_KEY_ID,
+  key_secret: process.env.RAZORPAY_KEY_SECRET
 });
 
 exports.getUserCourses = async (req, res) => {
